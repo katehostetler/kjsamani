@@ -552,7 +552,7 @@ canvas {
     <p style="color:#D4A843;font-size:0.8rem;margin-bottom:10px;letter-spacing:0.1em;">COLLECT THESE:</p>
     <div style="display:flex;flex-direction:column;gap:6px;">
       <div style="color:#FFF8F0;font-size:0.8rem;display:flex;align-items:center;gap:8px;">
-        <span style="color:#9945FF;font-size:1.1rem;">&#x25CE;</span> <b>SOL coins</b> &mdash; 10 pts, collect 10 for coin magnet
+        <span style="color:#9945FF;font-size:1.1rem;">&#x25CE;</span> <b>$SOL</b> &mdash; 10 pts, collect 10 for coin magnet
       </div>
       <div style="color:#FFF8F0;font-size:0.8rem;display:flex;align-items:center;gap:8px;">
         <span style="color:#FF6B81;font-size:1.1rem;">&#x1F377;</span> <b>Ros&eacute;</b> &mdash; 5 pts + shield power-up
@@ -561,7 +561,7 @@ canvas {
         <span style="color:#E8B816;font-size:1.1rem;">&#x2600;</span> <b>St. Moritz Sun</b> &mdash; 5 pts + speed boost
       </div>
       <div style="color:#FFF8F0;font-size:0.8rem;display:flex;align-items:center;gap:8px;">
-        <span style="color:#39FF14;font-size:1.1rem;">&#x1F964;</span> <b>Mtn Dew</b> &mdash; 5 pts + 3 super jumps
+        <span style="color:#8B4513;font-size:1.1rem;">&#x1F36B;</span> <b>Swiss Chocolate</b> &mdash; 5 pts + 3 super jumps
       </div>
       <div style="color:#FFF8F0;font-size:0.8rem;display:flex;align-items:center;gap:8px;">
         <span style="color:#FFD700;font-size:1.1rem;">&#x1F48D;</span> <b>Ring</b> &mdash; 25 pts + 2x score multiplier
@@ -659,10 +659,10 @@ const EVENTS = [
 ];
 
 const COLLECT_TYPES = [
-  { id:'sol', name:'Solana', color:'#9945FF', pts:10, freq:0.30, r:18 },
+  { id:'sol', name:'$SOL', color:'#9945FF', pts:10, freq:0.30, r:18 },
   { id:'rose', name:'Ros\u00e9', color:'#FF6B81', pts:5, freq:0.20, r:20 },
   { id:'sun', name:'St. Moritz Sun', color:'#E8B816', pts:5, freq:0.15, r:20 },
-  { id:'dew', name:'Mtn Dew', color:'#39FF14', pts:5, freq:0.15, r:28 },
+  { id:'choc', name:'Swiss Chocolate', color:'#8B4513', pts:5, freq:0.15, r:24 },
   { id:'ring', name:'Ring', color:'#FFD700', pts:25, freq:0.05, r:24 },
 ];
 
@@ -689,7 +689,7 @@ const G = {
 
   scrollX: 0, speed: PHYS.baseSpeed,
   score: 0, distance: 0,
-  collected: { sol:0, rose:0, sun:0, dew:0, ring:0 },
+  collected: { sol:0, rose:0, sun:0, choc:0, ring:0 },
   bestJump: 0, totalFlips: 0,
   currentJumpStart: 0,
 
@@ -1638,19 +1638,37 @@ function drawCollectibles() {
       ctx.font = 'bold 7px "IBM Plex Serif", serif';
       ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       ctx.fillText('KJ', 0, 1);
-    } else if (c.type === 'dew') {
-      ctx.fillStyle = '#006400';
+    } else if (c.type === 'choc') {
+      // Swiss chocolate - wrapped with red + white Swiss flag
+      // Gold foil wrapper
+      ctx.fillStyle = '#C8960A';
       ctx.beginPath();
-      ctx.roundRect(-9, -14, 18, 28, 3);
+      ctx.roundRect(-10, -8, 20, 16, 3);
       ctx.fill();
+      // Red wrapper band
+      ctx.fillStyle = '#FF0000';
       ctx.beginPath();
-      ctx.roundRect(-9, -14, 18, 28, 3);
+      ctx.roundRect(-10, -5, 20, 10, 0);
+      ctx.fill();
+      // White Swiss cross on red
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(-1.5, -4, 3, 8);
+      ctx.fillRect(-4, -1.5, 8, 3);
+      // Gold foil top/bottom edges
+      ctx.fillStyle = '#DAA520';
+      ctx.fillRect(-10, -8, 20, 3);
+      ctx.fillRect(-10, 5, 20, 3);
+      // Wrapper twist ends
+      ctx.strokeStyle = '#C8960A'; ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(-10, 0); ctx.lineTo(-14, -3); ctx.moveTo(-10, 0); ctx.lineTo(-14, 3);
+      ctx.moveTo(10, 0); ctx.lineTo(14, -3); ctx.moveTo(10, 0); ctx.lineTo(14, 3);
       ctx.stroke();
-      ctx.fillStyle = '#39FF14';
-      ctx.font = 'bold 7px sans-serif';
-      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillText('MTN', 0, -3);
-      ctx.fillText('DEW', 0, 5);
+      // Outline
+      ctx.strokeStyle = 'rgba(255,255,255,0.5)'; ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.roundRect(-10, -8, 20, 16, 3);
+      ctx.stroke();
     } else if (c.type === 'ring') {
       // Ring with massive diamond
       const sparkle = Math.sin(Date.now() * 0.008) * 0.4;
@@ -2210,7 +2228,7 @@ function drawHUD() {
     { id:'sol', icon:'\u25CE', c:'#9945FF' },
     { id:'rose', icon:'\u{1F377}', c:'#FF6B81' },
     { id:'sun', icon:'\u2600', c:'#E8B816' },
-    { id:'dew', icon:'\u{1F964}', c:'#39FF14' },
+    { id:'choc', icon:'\u{1F36B}', c:'#8B4513' },
     { id:'ring', icon:'\u{1F48D}', c:'#FFD700' },
   ];
   items.forEach(it => {
@@ -2639,9 +2657,9 @@ function checkCollisions() {
         G.tintAlpha = 1.0;
         G.powerUps.invincible = 180; // 3 seconds at 60fps
         spawnParticle(sx, c.y - 30, 'SHIELD!', '#FF6B81', 16);
-      } else if (c.type === 'dew') {
+      } else if (c.type === 'choc') {
         G.powerUps.superJumps += 3;
-        spawnParticle(sx, c.y - 30, 'SUPER JUMP x3!', '#39FF14', 16);
+        spawnParticle(sx, c.y - 30, 'SUPER JUMP x3!', '#8B4513', 16);
       } else if (c.type === 'sol' && G.collected.sol % 10 === 0 && G.collected.sol > 0) {
         G.moonMode = true;
         G.moonTimer = 150;
@@ -2846,7 +2864,7 @@ function resetGame() {
   G.speed = PHYS.baseSpeed;
   G.score = 0;
   G.distance = 0;
-  G.collected = { sol:0, rose:0, pepper:0, dew:0, ring:0 };
+  G.collected = { sol:0, rose:0, sun:0, choc:0, ring:0 };
   G.bestJump = 0;
   G.totalFlips = 0;
   G.currentEvent = 0;
