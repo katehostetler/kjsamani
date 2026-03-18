@@ -1,0 +1,3319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Kyle & Jill's St. Moritz Wedding Adventure</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: #1a0505;
+  font-family: 'IBM Plex Serif', Georgia, serif;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+}
+canvas {
+  display: block;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+}
+
+/* ===== OVERLAY SCREENS ===== */
+.screen {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  z-index: 10;
+  transition: opacity 0.6s ease;
+  pointer-events: auto;
+}
+.screen.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* TITLE SCREEN */
+#titleScreen {
+  background: radial-gradient(ellipse at 50% 40%, #5a0609 0%, #2a0808 60%, #1a0505 100%);
+}
+#titleScreen .monogram {
+  width: 200px; height: 200px;
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+@keyframes pulseGlow {
+  0%, 100% { filter: drop-shadow(0 0 15px rgba(212,168,67,0.4)); }
+  50% { filter: drop-shadow(0 0 30px rgba(212,168,67,0.7)); }
+}
+#titleScreen h1 {
+  font-size: 2.4rem;
+  font-weight: 300;
+  letter-spacing: 0.15em;
+  color: #D4A843;
+  margin-top: 24px;
+}
+#titleScreen h2 {
+  font-size: 1rem;
+  font-weight: 300;
+  font-style: italic;
+  color: rgba(212,168,67,0.7);
+  margin-top: 8px;
+  letter-spacing: 0.1em;
+}
+#titleScreen .date {
+  font-size: 0.8rem;
+  color: rgba(255,248,240,0.5);
+  margin-top: 20px;
+  letter-spacing: 0.2em;
+}
+#titleScreen .tap {
+  font-size: 0.9rem;
+  color: rgba(255,248,240,0.6);
+  margin-top: 40px;
+  animation: tapPulse 2s ease-in-out infinite;
+}
+@keyframes tapPulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+#titleScreen .lockup-bottom {
+  position: absolute;
+  bottom: 24px;
+  width: 48px; height: 48px;
+  opacity: 0.35;
+}
+#endScreen .lockup-bottom {
+  width: 44px; height: 44px;
+  opacity: 0.35;
+  margin-top: 16px;
+}
+
+/* SELECT SCREEN */
+#selectScreen {
+  background: radial-gradient(ellipse at 50% 30%, #2a0808 0%, #0d0303 100%);
+  padding: 20px;
+}
+#selectScreen h2 {
+  font-size: 1.3rem;
+  font-weight: 300;
+  color: #D4A843;
+  letter-spacing: 0.1em;
+  margin-bottom: 30px;
+}
+.char-grid {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 500px;
+}
+.char-card {
+  width: min(140px, 28vw);
+  padding: 16px 10px;
+  background: rgba(212,168,67,0.08);
+  border: 1px solid rgba(212,168,67,0.2);
+  border-radius: 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.char-card:hover, .char-card:active {
+  background: rgba(212,168,67,0.15);
+  border-color: rgba(212,168,67,0.5);
+  transform: translateY(-4px);
+}
+.char-card .avatar {
+  width: 60px; height: 70px;
+  margin: 0 auto 12px;
+}
+.char-card .name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #FFF8F0;
+}
+.char-card .subtitle {
+  font-size: 0.7rem;
+  color: rgba(212,168,67,0.7);
+  margin-top: 4px;
+  font-style: italic;
+}
+.char-card .desc {
+  font-size: 0.75rem;
+  color: rgba(255,248,240,0.5);
+  margin-top: 8px;
+}
+
+/* TOAST OVERLAY */
+#toastOverlay {
+  position: fixed;
+  top: 15%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  z-index: 14;
+  text-align: center;
+  padding: 16px 32px;
+  background: rgba(133,9,15,0.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(212,168,67,0.4);
+  border-radius: 16px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  min-width: 220px;
+}
+#toastOverlay.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+#toastOverlay .toast-emoji {
+  font-size: 2.2rem;
+  margin-bottom: 6px;
+}
+#toastOverlay .toast-name {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #D4A843;
+  letter-spacing: 0.05em;
+}
+#toastOverlay .toast-venue {
+  font-size: 0.75rem;
+  color: rgba(255,248,240,0.8);
+  margin-top: 4px;
+  font-style: italic;
+}
+
+/* COUNTDOWN */
+#countdown {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 15;
+  background: rgba(0,0,0,0.5);
+  pointer-events: none;
+}
+#countdown.hidden { display: none; }
+#countdown .num {
+  font-size: 6rem;
+  font-weight: 700;
+  color: #D4A843;
+  text-shadow: 0 0 40px rgba(212,168,67,0.5);
+  animation: countPop 0.8s ease-out;
+}
+@keyframes countPop {
+  0% { transform: scale(2); opacity: 0; }
+  50% { transform: scale(1); opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* TUTORIAL HINT */
+#tutorial {
+  position: fixed;
+  bottom: 25%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 12;
+  text-align: center;
+  pointer-events: none;
+  transition: opacity 1s ease;
+}
+#tutorial.hidden { opacity: 0; }
+#tutorial .hint {
+  font-size: 0.85rem;
+  color: rgba(255,248,240,0.7);
+  text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+}
+
+/* END SCREEN */
+#endScreen {
+  background: radial-gradient(ellipse at 50% 30%, #2a0808 0%, #0d0303 100%);
+  text-align: center;
+  padding: 24px;
+  overflow-y: auto;
+}
+#endScreen h1 {
+  font-size: 1.6rem;
+  color: #D4A843;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+}
+#endScreen h2 {
+  font-size: 2rem;
+  color: #FFF8F0;
+  font-weight: 700;
+  margin-top: 4px;
+}
+#endScreen .final-score {
+  font-size: 3rem;
+  color: #D4A843;
+  font-weight: 700;
+  margin: 16px 0;
+}
+#endScreen .stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  max-width: 320px;
+  margin: 16px auto;
+}
+#endScreen .stat {
+  background: rgba(212,168,67,0.08);
+  border: 1px solid rgba(212,168,67,0.15);
+  border-radius: 8px;
+  padding: 12px 8px;
+}
+#endScreen .stat .val {
+  font-size: 1.4rem;
+  color: #D4A843;
+  font-weight: 600;
+}
+#endScreen .stat .label {
+  font-size: 0.65rem;
+  color: rgba(255,248,240,0.5);
+  margin-top: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+#endScreen .quip {
+  font-size: 0.95rem;
+  color: rgba(255,248,240,0.8);
+  font-style: italic;
+  margin: 20px auto;
+  max-width: 300px;
+  line-height: 1.5;
+}
+.btn {
+  display: inline-block;
+  padding: 12px 32px;
+  background: transparent;
+  border: 1px solid rgba(212,168,67,0.5);
+  color: #D4A843;
+  font-family: 'IBM Plex Serif', serif;
+  font-size: 0.9rem;
+  border-radius: 6px;
+  cursor: pointer;
+  margin: 6px;
+  transition: all 0.3s;
+  letter-spacing: 0.05em;
+}
+.btn:hover, .btn:active {
+  background: rgba(212,168,67,0.15);
+  border-color: #D4A843;
+}
+
+/* MUTE BUTTON */
+#muteBtn {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 20;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(212,168,67,0.3);
+  background: rgba(0,0,0,0.4);
+  color: #D4A843;
+  font-size: 16px;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+#muteBtn.show { display: flex; }
+</style>
+</head>
+<body>
+
+<canvas id="gameCanvas"></canvas>
+
+<!-- TITLE SCREEN -->
+<div id="titleScreen" class="screen">
+  <svg class="monogram" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <polygon id="sr" points="0,-52 -5,-76 0,-96 5,-76" fill="#C89A10"/>
+      <path id="wr" d="M-3,-52 C-10,-68 -3,-84 0,-96 C3,-84 10,-68 3,-52 Z" fill="#DAA520"/>
+    </defs>
+    <g transform="translate(100,100)">
+      <!-- 16 straight rays -->
+      <use href="#sr" transform="rotate(0)"/><use href="#sr" transform="rotate(22.5)"/>
+      <use href="#sr" transform="rotate(45)"/><use href="#sr" transform="rotate(67.5)"/>
+      <use href="#sr" transform="rotate(90)"/><use href="#sr" transform="rotate(112.5)"/>
+      <use href="#sr" transform="rotate(135)"/><use href="#sr" transform="rotate(157.5)"/>
+      <use href="#sr" transform="rotate(180)"/><use href="#sr" transform="rotate(202.5)"/>
+      <use href="#sr" transform="rotate(225)"/><use href="#sr" transform="rotate(247.5)"/>
+      <use href="#sr" transform="rotate(270)"/><use href="#sr" transform="rotate(292.5)"/>
+      <use href="#sr" transform="rotate(315)"/><use href="#sr" transform="rotate(337.5)"/>
+      <!-- 16 wavy/flame rays -->
+      <use href="#wr" transform="rotate(11.25)"/><use href="#wr" transform="rotate(33.75)"/>
+      <use href="#wr" transform="rotate(56.25)"/><use href="#wr" transform="rotate(78.75)"/>
+      <use href="#wr" transform="rotate(101.25)"/><use href="#wr" transform="rotate(123.75)"/>
+      <use href="#wr" transform="rotate(146.25)"/><use href="#wr" transform="rotate(168.75)"/>
+      <use href="#wr" transform="rotate(191.25)"/><use href="#wr" transform="rotate(213.75)"/>
+      <use href="#wr" transform="rotate(236.25)"/><use href="#wr" transform="rotate(258.75)"/>
+      <use href="#wr" transform="rotate(281.25)"/><use href="#wr" transform="rotate(303.75)"/>
+      <use href="#wr" transform="rotate(326.25)"/><use href="#wr" transform="rotate(348.75)"/>
+      <!-- Central sun disc -->
+      <circle cx="0" cy="0" r="48" fill="#E8B816"/>
+      <circle cx="0" cy="0" r="44" fill="#F0CA30"/>
+      <!-- KJ Lockup -->
+      <text x="0" y="14" text-anchor="middle" fill="#9B7511" font-family="'IBM Plex Serif', serif" font-size="44" font-weight="400" letter-spacing="-4">KJ</text>
+    </g>
+  </svg>
+  <h1>JILL &amp; KYLE</h1>
+  <h2>St. Moritz Wedding Adventure</h2>
+  <p class="date">MARCH 18 – 22, 2026</p>
+  <p class="tap">Tap to Begin</p>
+  <svg class="lockup-bottom" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <defs><polygon id="sr2" points="0,-52 -5,-76 0,-96 5,-76" fill="#C89A10"/><path id="wr2" d="M-3,-52 C-10,-68 -3,-84 0,-96 C3,-84 10,-68 3,-52 Z" fill="#DAA520"/></defs>
+    <g transform="translate(100,100)">
+      <use href="#sr2" transform="rotate(0)"/><use href="#sr2" transform="rotate(45)"/><use href="#sr2" transform="rotate(90)"/><use href="#sr2" transform="rotate(135)"/><use href="#sr2" transform="rotate(180)"/><use href="#sr2" transform="rotate(225)"/><use href="#sr2" transform="rotate(270)"/><use href="#sr2" transform="rotate(315)"/>
+      <use href="#wr2" transform="rotate(22.5)"/><use href="#wr2" transform="rotate(67.5)"/><use href="#wr2" transform="rotate(112.5)"/><use href="#wr2" transform="rotate(157.5)"/><use href="#wr2" transform="rotate(202.5)"/><use href="#wr2" transform="rotate(247.5)"/><use href="#wr2" transform="rotate(292.5)"/><use href="#wr2" transform="rotate(337.5)"/>
+      <circle cx="0" cy="0" r="48" fill="#E8B816"/><circle cx="0" cy="0" r="44" fill="#F0CA30"/>
+      <text x="0" y="14" text-anchor="middle" fill="#9B7511" font-family="'IBM Plex Serif', serif" font-size="44" font-weight="400" letter-spacing="-4">KJ</text>
+    </g>
+  </svg>
+</div>
+
+<!-- CHARACTER SELECT -->
+<div id="selectScreen" class="screen hidden">
+  <h2>Choose Your Adventurer</h2>
+  <div class="char-grid">
+    <div class="char-card" data-char="jill">
+      <svg class="avatar" viewBox="0 0 60 70">
+        <!-- Jill - Glamorous Skier -->
+        <!-- Hair behind (volume) -->
+        <path d="M22 8 Q15 14 14 28 Q14 36 16 40" fill="#F5DEB3" stroke="none"/>
+        <path d="M38 8 Q45 14 46 28 Q46 36 44 40" fill="#F5DEB3" stroke="none"/>
+        <!-- Head -->
+        <circle cx="30" cy="14" r="10" fill="#FDBCB4"/>
+        <!-- Hair on top -->
+        <path d="M20 12 Q22 3 30 4 Q38 3 40 12 Q38 7 30 6 Q22 7 20 12 Z" fill="#F5DEB3"/>
+        <!-- Hair flowing strands -->
+        <path d="M21 10 Q16 20 15 35" stroke="#F5DEB3" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M22 11 Q17 22 16 32" stroke="#EBC882" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M39 10 Q44 20 45 35" stroke="#F5DEB3" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M38 11 Q43 22 44 32" stroke="#EBC882" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <!-- Sunglasses on head -->
+        <rect x="23" y="8" width="14" height="4" rx="2" fill="rgba(30,30,30,0.65)"/>
+        <!-- Eyes -->
+        <circle cx="27" cy="15" r="1.2" fill="#4A3520"/>
+        <circle cx="33" cy="15" r="1.2" fill="#4A3520"/>
+        <!-- Smile -->
+        <path d="M28 18 Q30 20 32 18" stroke="#C49080" stroke-width="0.7" fill="none"/>
+        <!-- Cheeks -->
+        <circle cx="25" cy="17" r="2" fill="rgba(255,150,150,0.25)"/>
+        <circle cx="35" cy="17" r="2" fill="rgba(255,150,150,0.25)"/>
+        <!-- White ski suit body (fitted) -->
+        <path d="M24 23 Q22 30 23 44 L37 44 Q38 30 36 23 Z" fill="#FAFAFA" stroke="#E8E0D4" stroke-width="0.5"/>
+        <!-- Fur collar -->
+        <path d="M24 23 Q27 26 30 25 Q33 26 36 23" stroke="#F0E6D4" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+        <!-- Gold belt -->
+        <line x1="24" y1="34" x2="36" y2="34" stroke="#C9A84C" stroke-width="1.2"/>
+        <!-- Legs -->
+        <line x1="27" y1="44" x2="25" y2="57" stroke="#FAFAFA" stroke-width="2.5"/>
+        <line x1="33" y1="44" x2="35" y2="57" stroke="#FAFAFA" stroke-width="2.5"/>
+        <!-- Fur cuffs on boots -->
+        <ellipse cx="25" cy="57" rx="3.5" ry="1.5" fill="#F0E6D4"/>
+        <ellipse cx="35" cy="57" rx="3.5" ry="1.5" fill="#F0E6D4"/>
+        <!-- White skis with hearts -->
+        <line x1="14" y1="60" x2="38" y2="60" stroke="#FAFAFA" stroke-width="2.5"/>
+        <line x1="22" y1="60" x2="46" y2="60" stroke="#FAFAFA" stroke-width="2.5"/>
+        <text x="22" y="63" font-size="5" fill="#CC0000">&#9829;</text>
+        <text x="36" y="63" font-size="5" fill="#CC0000">&#9829;</text>
+        <!-- Silver poles -->
+        <line x1="18" y1="30" x2="8" y2="59" stroke="#C9A84C" stroke-width="1.2"/>
+        <line x1="42" y1="30" x2="52" y2="59" stroke="#C9A84C" stroke-width="1.2"/>
+      </svg>
+      <div class="name">Jill</div>
+      <div class="subtitle">The Glamorous Skier</div>
+      <div class="desc">Elegant on every slope</div>
+    </div>
+    <div class="char-card" data-char="kyle">
+      <svg class="avatar" viewBox="0 0 60 70">
+        <!-- Kyle - Tuxedo Shredder -->
+        <!-- Head -->
+        <circle cx="30" cy="14" r="10" fill="#FDBCB4"/>
+        <!-- Dark hair / slicked -->
+        <path d="M20 12 Q22 4 30 3 Q38 4 40 12 Q38 6 30 5 Q22 6 20 12 Z" fill="#3A2518"/>
+        <!-- Black beanie -->
+        <path d="M21 11 Q25 5 30 4 Q35 5 39 11" fill="#1A1A1A"/>
+        <circle cx="30" cy="4.5" r="2" fill="#1A1A1A"/>
+        <!-- Eyes -->
+        <circle cx="27" cy="14" r="1.3" fill="#3A2518"/>
+        <circle cx="33" cy="14" r="1.3" fill="#3A2518"/>
+        <!-- Brow -->
+        <line x1="25" y1="12" x2="29" y2="12.5" stroke="#3A2518" stroke-width="0.6"/>
+        <line x1="31" y1="12.5" x2="35" y2="12" stroke="#3A2518" stroke-width="0.6"/>
+        <!-- Grin -->
+        <path d="M27 17 Q30 19.5 33 17" stroke="#C49080" stroke-width="0.8" fill="none"/>
+        <!-- Tuxedo body -->
+        <path d="M23 22 Q22 32 23 44 L37 44 Q38 32 37 22 Z" fill="#1A1A1A" rx="2"/>
+        <!-- White shirt front V -->
+        <path d="M27 22 L29.5 40 L30.5 40 L33 22 Z" fill="#FAFAFA"/>
+        <!-- Lapels -->
+        <path d="M23 22 L27.5 30" stroke="#FAFAFA" stroke-width="1.5"/>
+        <path d="M37 22 L32.5 30" stroke="#FAFAFA" stroke-width="1.5"/>
+        <!-- Bow tie -->
+        <path d="M27 23 L30 25 L33 23 L30 21 Z" fill="#CC0000"/>
+        <!-- Pocket square -->
+        <path d="M24 28 L25 26 L26.5 28.5" fill="#FAFAFA" stroke="none"/>
+        <!-- Legs -->
+        <line x1="27" y1="44" x2="23" y2="56" stroke="#1A1A1A" stroke-width="2.5"/>
+        <line x1="33" y1="44" x2="37" y2="56" stroke="#1A1A1A" stroke-width="2.5"/>
+        <!-- Black snowboard with red stripe -->
+        <ellipse cx="30" cy="60" rx="18" ry="4" fill="#1A1A1A"/>
+        <line x1="14" y1="60" x2="46" y2="60" stroke="#CC0000" stroke-width="1.5"/>
+      </svg>
+      <div class="name">Kyle</div>
+      <div class="subtitle">The Crypto Shredder</div>
+      <div class="desc">To the moon! &#x1F3C2;</div>
+    </div>
+    <div class="char-card" data-char="banksy">
+      <svg class="avatar" viewBox="0 0 60 70">
+        <!-- Banksy - Wedding Pup -->
+        <!-- Tail (behind body) -->
+        <path d="M12 34 Q5 22 9 14" stroke="#F5F0E8" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+        <!-- Body white/cream -->
+        <ellipse cx="30" cy="38" rx="19" ry="11" fill="#F5F0E8"/>
+        <!-- Red jacket vest -->
+        <path d="M14 35 Q30 28 46 35 Q46 42 30 44 Q14 42 14 35 Z" fill="#CC0000"/>
+        <!-- Head (bigger, cuter) -->
+        <circle cx="43" cy="27" r="9" fill="#F5F0E8"/>
+        <!-- Ear -->
+        <ellipse cx="49" cy="20" rx="4.5" ry="7.5" fill="#E8E0D0" transform="rotate(15,49,20)"/>
+        <ellipse cx="49" cy="20" rx="2.5" ry="5" fill="#F2CCC0" transform="rotate(15,49,20)"/>
+        <!-- Eye (bigger, cuter) -->
+        <circle cx="45" cy="26" r="2.5" fill="#3A2518"/>
+        <circle cx="46" cy="25" r="1" fill="#FFF"/>
+        <!-- Pink nose -->
+        <ellipse cx="49" cy="30" rx="3" ry="2.2" fill="#FFB6C1"/>
+        <!-- Mouth -->
+        <path d="M47 32 Q49 33.5 51 32" stroke="#D4928C" stroke-width="0.6" fill="none"/>
+        <!-- Veil (flowing) -->
+        <path d="M40 20 Q34 12 26 18 Q20 12 14 18" stroke="white" stroke-width="1.5" fill="rgba(255,255,255,0.35)" stroke-linecap="round"/>
+        <path d="M38 22 Q30 14 20 20" stroke="rgba(255,255,255,0.4)" stroke-width="1" fill="none"/>
+        <!-- Tiny bow on veil -->
+        <path d="M40 19 L42 17 L40 18 L42 19 Z" fill="rgba(255,255,255,0.6)"/>
+        <!-- Legs -->
+        <line x1="21" y1="48" x2="19" y2="56" stroke="#F5F0E8" stroke-width="3"/>
+        <line x1="27" y1="48" x2="26" y2="56" stroke="#F5F0E8" stroke-width="3"/>
+        <line x1="33" y1="48" x2="34" y2="56" stroke="#F5F0E8" stroke-width="3"/>
+        <line x1="39" y1="48" x2="41" y2="56" stroke="#F5F0E8" stroke-width="3"/>
+        <!-- Paws -->
+        <circle cx="19" cy="57" r="2" fill="#F5F0E8"/>
+        <circle cx="26" cy="57" r="2" fill="#F5F0E8"/>
+        <circle cx="34" cy="57" r="2" fill="#F5F0E8"/>
+        <circle cx="41" cy="57" r="2" fill="#F5F0E8"/>
+        <!-- Red snowboard -->
+        <ellipse cx="30" cy="61" rx="19" ry="3.5" fill="#CC0000"/>
+        <line x1="13" y1="61" x2="47" y2="61" stroke="#990000" stroke-width="0.8"/>
+      </svg>
+      <div class="name">Banksy</div>
+      <div class="subtitle">The Wedding Pup</div>
+      <div class="desc">The one and only</div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST OVERLAY (auto-dismiss checkpoint notification) -->
+<div id="toastOverlay">
+  <div class="toast-emoji" id="toastEmoji"></div>
+  <div class="toast-name" id="toastName"></div>
+  <div class="toast-venue" id="toastVenue"></div>
+</div>
+
+<!-- COUNTDOWN -->
+<div id="countdown" class="hidden">
+  <div class="num" id="countNum"></div>
+</div>
+
+<!-- MISSION BRIEFING -->
+<div id="missionBrief" class="screen hidden" style="background:rgba(26,5,5,0.95);padding:24px;z-index:16;">
+  <h2 style="color:#D4A843;font-size:1.2rem;font-weight:300;letter-spacing:0.1em;margin-bottom:16px;">YOUR MISSION</h2>
+  <p style="color:#FFF8F0;font-size:0.95rem;max-width:340px;line-height:1.6;margin-bottom:20px;" id="missionText"></p>
+  <div style="text-align:left;max-width:300px;margin:0 auto 20px;">
+    <p style="color:#D4A843;font-size:0.8rem;margin-bottom:10px;letter-spacing:0.1em;">COLLECT THESE:</p>
+    <div style="display:flex;flex-direction:column;gap:6px;">
+      <div style="color:#FFF8F0;font-size:0.8rem;display:flex;align-items:center;gap:8px;">
+        <span style="color:#9945FF;font-size:1.1rem;">&#x25CE;</span> <b>SOL coins</b> &mdash; 10 pts, collect 10 for coin magnet
+      </div>
+      <div style="color:#FFF8F0;font-size:0.8rem;display:flex;align-items:center;gap:8px;">
+        <span style="color:#FF6B81;font-size:1.1rem;">&#x1F377;</span> <b>Ros&eacute;</b> &mdash; 5 pts + shield power-up
+      </div>
+      <div style="color:#FFF8F0;font-size:0.8rem;display:flex;align-items:center;gap:8px;">
+        <span style="color:#FF4500;font-size:1.1rem;">&#x1F336;</span> <b>Peppercino</b> &mdash; 5 pts + fire speed boost
+      </div>
+      <div style="color:#FFF8F0;font-size:0.8rem;display:flex;align-items:center;gap:8px;">
+        <span style="color:#39FF14;font-size:1.1rem;">&#x1F964;</span> <b>Mtn Dew</b> &mdash; 5 pts + 3 super jumps
+      </div>
+      <div style="color:#FFF8F0;font-size:0.8rem;display:flex;align-items:center;gap:8px;">
+        <span style="color:#FFD700;font-size:1.1rem;">&#x1F48D;</span> <b>Ring</b> &mdash; 25 pts + 2x score multiplier
+      </div>
+    </div>
+    <p style="color:rgba(255,248,240,0.5);font-size:0.75rem;margin-top:12px;">Tap to jump &middot; Tap in air for tricks &middot; Chain tricks for combos</p>
+  </div>
+  <p style="color:rgba(255,248,240,0.5);font-size:0.85rem;animation:tapPulse 2s ease-in-out infinite;">Tap to start</p>
+</div>
+
+<!-- TUTORIAL HINT -->
+<div id="tutorial" class="hidden">
+  <div class="hint">Tap to jump &middot; Tap in air for tricks</div>
+</div>
+
+<!-- END SCREEN -->
+<div id="endScreen" class="screen hidden">
+  <h1>Adventure Complete!</h1>
+  <h2 id="endTitle"></h2>
+  <div class="final-score" id="finalScore"></div>
+  <div class="stats-grid" id="statsGrid"></div>
+  <div class="quip" id="endQuip"></div>
+  <button class="btn" id="btnPlayAgain">Play Again</button>
+  <button class="btn" id="btnShare">Share Score</button>
+  <svg class="lockup-bottom" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <defs><polygon id="sr2" points="0,-52 -5,-76 0,-96 5,-76" fill="#C89A10"/><path id="wr2" d="M-3,-52 C-10,-68 -3,-84 0,-96 C3,-84 10,-68 3,-52 Z" fill="#DAA520"/></defs>
+    <g transform="translate(100,100)">
+      <use href="#sr2" transform="rotate(0)"/><use href="#sr2" transform="rotate(45)"/><use href="#sr2" transform="rotate(90)"/><use href="#sr2" transform="rotate(135)"/><use href="#sr2" transform="rotate(180)"/><use href="#sr2" transform="rotate(225)"/><use href="#sr2" transform="rotate(270)"/><use href="#sr2" transform="rotate(315)"/>
+      <use href="#wr2" transform="rotate(22.5)"/><use href="#wr2" transform="rotate(67.5)"/><use href="#wr2" transform="rotate(112.5)"/><use href="#wr2" transform="rotate(157.5)"/><use href="#wr2" transform="rotate(202.5)"/><use href="#wr2" transform="rotate(247.5)"/><use href="#wr2" transform="rotate(292.5)"/><use href="#wr2" transform="rotate(337.5)"/>
+      <circle cx="0" cy="0" r="48" fill="#E8B816"/><circle cx="0" cy="0" r="44" fill="#F0CA30"/>
+      <text x="0" y="14" text-anchor="middle" fill="#9B7511" font-family="'IBM Plex Serif', serif" font-size="44" font-weight="400" letter-spacing="-4">KJ</text>
+    </g>
+  </svg>
+</div>
+
+<!-- MUTE BUTTON -->
+<button id="muteBtn">&#x1F50A;</button>
+
+<script>
+(function() {
+'use strict';
+
+// ==========================================
+// CONFIGURATION
+// ==========================================
+const COL = {
+  burgundy: '#85090f',
+  burgundyDark: '#5a0609',
+  gold: '#D4A843',
+  goldLight: '#E8C96A',
+  cream: '#FFF8F0',
+  snow: '#FFFFFF',
+};
+
+const PHYS = {
+  gravity: 0.52,
+  jumpForce: -11.5,
+  superJumpForce: -17,
+  baseSpeed: 3.5,
+  maxSpeed: 7,
+};
+
+const CHARS = {
+  jill: {
+    name: 'Jill', equipment: 'skis', color: '#FAFAFA',
+    speedMod: 1.0, size: 32
+  },
+  kyle: {
+    name: 'Kyle', equipment: 'snowboard', color: '#1A1A1A',
+    speedMod: 0.95, size: 30
+  },
+  banksy: {
+    name: 'Banksy', equipment: 'snowboard', color: '#F5F0E8',
+    speedMod: 1.2, size: 20
+  }
+};
+
+const EVENTS = [
+  { name: 'Welcome Aperitif', venue: "Badrutt's Palace \u00b7 Grand Hall",
+    time: 'Wednesday 6:30 PM', message: 'The adventure begins!', emoji: '\u{1F942}',
+    sky: ['#2D1B4E','#C66B3D'] },
+  { name: 'Rehearsal Dinner', venue: 'Grand Hotel Kronenhof \u00b7 Pontresina',
+    time: 'Thursday 6:30 PM', message: 'Looking fancy!', emoji: '\u{1F37D}\uFE0F',
+    sky: ['#1A1A3E','#4A2D6E'] },
+  { name: 'Apr\u00e8s Ski', venue: 'White Marmot \u00b7 Corviglia',
+    time: 'Friday 12:30 PM', message: 'Best views in the Alps!', emoji: '\u{1F377}',
+    sky: ['#3A6FB5','#87CEEB'] },
+  { name: 'THE WEDDING', venue: 'Paradiso \u00b7 St. Moritz',
+    time: 'Saturday 1:00 PM', message: 'Kyle & Jill forever!', emoji: '\u{1F48D}',
+    sky: ['#C67030','#FFD700'] },
+  { name: 'After Party', venue: 'Embassy Ballroom',
+    time: 'Saturday 8:30 PM', message: "Let's dance!", emoji: '\u{1FAA9}',
+    sky: ['#0D0D2B','#1A0A3E'] }
+];
+
+const COLLECT_TYPES = [
+  { id:'sol', name:'Solana', color:'#9945FF', pts:10, freq:0.30, r:18 },
+  { id:'rose', name:'Ros\u00e9', color:'#FF6B81', pts:5, freq:0.20, r:20 },
+  { id:'pepper', name:'Peppercino', color:'#FF4500', pts:5, freq:0.15, r:20 },
+  { id:'dew', name:'Mtn Dew', color:'#39FF14', pts:5, freq:0.15, r:28 },
+  { id:'ring', name:'Ring', color:'#FFD700', pts:25, freq:0.05, r:24 },
+];
+
+const VENUE_DEFS = [
+  { type:'palace', width:600 },
+  { type:'kronenhof', width:600 },
+  { type:'marmot', width:600 },
+  { type:'paradiso', width:800 },
+  { type:'embassy', width:600 },
+];
+
+// ==========================================
+// GAME STATE
+// ==========================================
+const G = {
+  state: 'title',
+  canvas: null, ctx: null,
+  W: 0, H: 0, dpr: 1,
+
+  char: null,
+  px: 0, py: 0, pvy: 0,
+  grounded: true, jumping: false,
+  rotation: 0, flipCount: 0,
+
+  scrollX: 0, speed: PHYS.baseSpeed,
+  score: 0, distance: 0,
+  collected: { sol:0, rose:0, pepper:0, dew:0, ring:0 },
+  bestJump: 0, totalFlips: 0,
+  currentJumpStart: 0,
+
+  currentEvent: 0,
+  segLen: 3500,
+
+  collectibles: [], lastCollectX: 0,
+  trees: [], lastTreeX: 0,
+  particles: [],
+  snowflakes: [],
+  confetti: [],
+  clouds: [],
+
+  tintAlpha: 0,
+  superJump: false,
+  moonMode: false, moonTimer: 0,
+  speedBoost: false, speedTimer: 0,
+
+  // Enhanced power-ups
+  powerUps: {
+    magnet: 0,
+    invincible: 0,
+    fireTrail: 0,
+    superJumps: 0,
+    scoreMult: 0,
+  },
+  trails: [],
+
+  // Trick system
+  airTime: 0,
+  trickState: null,
+  trickTimer: 0,
+  comboCount: 0,
+  comboMultiplier: 1,
+  trickJumpId: 0,
+
+  // Venue zones
+  venues: [],
+  venuesSpawned: [false,false,false,false,false],
+
+  // Toast
+  toastTimer: 0,
+  toastActive: false,
+
+  // Spectators
+  spectators: [],
+  lastSpecX: 0,
+
+  tutorialShown: false, tutorialTimer: 0,
+  lastTime: 0,
+  running: false,
+  frameCount: 0,
+};
+
+// ==========================================
+// MUSIC STATE
+// ==========================================
+const MUSIC = {
+  ctx: null,
+  masterGain: null,
+  compressor: null,
+  muted: false,
+  started: false,
+  bpm: 120,
+  beatInterval: 0.5,
+  currentBeat: 0,
+  nextBeatTime: 0,
+  schedulerTimer: null,
+  state: 'off',
+  noiseBuffer: null,
+  padGain: null,
+  padOscs: [],
+  bassDrone: null,
+  bassDroneGain: null,
+  // Chord progressions per segment (MAJOR chords - happy/upbeat EDM)
+  chords: [
+    [261.63, 329.63, 392],     // C major (C4,E4,G4)
+    [293.66, 369.99, 440],     // D major (D4,F#4,A4)
+    [349.23, 440, 523.25],     // F major (F4,A4,C5)
+    [392, 493.88, 587.33],     // G major (G4,B4,D5)
+    [440, 554.37, 659.25],     // A major (A4,C#5,E5)
+  ],
+  bassNotes: [130.81, 146.83, 174.61, 196, 220],  // C3,D3,F3,G3,A3
+  currentChordIdx: 0,
+};
+
+// ==========================================
+// DOM REFS
+// ==========================================
+const $ = id => document.getElementById(id);
+const titleScreen = $('titleScreen');
+const selectScreen = $('selectScreen');
+const toastOverlay = $('toastOverlay');
+const countdownEl = $('countdown');
+const countNum = $('countNum');
+const tutorialEl = $('tutorial');
+const endScreen = $('endScreen');
+const muteBtn = $('muteBtn');
+const missionBrief = $('missionBrief');
+const missionText = $('missionText');
+
+// ==========================================
+// INIT
+// ==========================================
+function init() {
+  G.canvas = $('gameCanvas');
+  G.ctx = G.canvas.getContext('2d');
+  resize();
+  window.addEventListener('resize', resize);
+
+  for (let i = 0; i < 60; i++) G.snowflakes.push(mkSnow());
+  for (let i = 0; i < 6; i++) G.clouds.push(mkCloud(i));
+
+  setupInput();
+  G.running = true;
+  requestAnimationFrame(loop);
+}
+
+function resize() {
+  G.dpr = Math.min(window.devicePixelRatio || 1, 2);
+  G.W = window.innerWidth;
+  G.H = window.innerHeight;
+  G.canvas.width = G.W * G.dpr;
+  G.canvas.height = G.H * G.dpr;
+  G.canvas.style.width = G.W + 'px';
+  G.canvas.style.height = G.H + 'px';
+  G.ctx.setTransform(G.dpr, 0, 0, G.dpr, 0, 0);
+}
+
+// ==========================================
+// TERRAIN (segment-aware)
+// ==========================================
+function terrainH(wx) {
+  const seg = Math.max(0, Math.min(4, Math.floor(wx / G.segLen)));
+  const base = G.H * 0.62;
+  let h = base;
+
+  // Segment-specific terrain character
+  if (seg === 0) {
+    // Gentle rolling hills
+    h += Math.sin(wx * 0.0006 + 0.5) * 40;
+    h += Math.sin(wx * 0.003 + 2.3) * 18;
+    h += Math.sin(wx * 0.01 + 5.7) * 8;
+  } else if (seg === 1) {
+    // Moderate winding
+    h += Math.sin(wx * 0.0008 + 0.5) * 55;
+    h += Math.sin(wx * 0.004 + 2.3) * 28;
+    h += Math.sin(wx * 0.015 + 5.7) * 14;
+  } else if (seg === 2) {
+    // Steep, big jumps
+    h += Math.sin(wx * 0.001 + 0.5) * 72;
+    h += Math.sin(wx * 0.005 + 2.3) * 38;
+    h += Math.sin(wx * 0.012 + 5.7) * 20;
+  } else if (seg === 3) {
+    // Dramatic scenic
+    h += Math.sin(wx * 0.0007 + 0.5) * 48;
+    h += Math.sin(wx * 0.003 + 2.3) * 24;
+    h += Math.sin(wx * 0.008 + 5.7) * 10;
+  } else {
+    // Wild varied
+    h += Math.sin(wx * 0.001 + 0.5) * 65;
+    h += Math.sin(wx * 0.006 + 2.3) * 34;
+    h += Math.sin(wx * 0.018 + 5.7) * 18;
+  }
+
+  // Jump ramps - bigger in steep segments
+  const rampH = seg === 2 ? 60 : seg === 4 ? 52 : 42;
+  const rampMod = seg === 2 ? 600 : 700;
+  const p = ((wx % rampMod) + rampMod) % rampMod / rampMod;
+  if (p > 0.42 && p < 0.58) {
+    h -= Math.sin((p - 0.42) / 0.16 * Math.PI) * rampH;
+  }
+  return Math.max(G.H * 0.3, Math.min(G.H * 0.82, h));
+}
+
+function terrainSlope(wx) {
+  return (terrainH(wx + 3) - terrainH(wx - 3)) / 6;
+}
+
+// ==========================================
+// RENDERING
+// ==========================================
+function drawSky() {
+  const ctx = G.ctx;
+  const prog = Math.min(G.distance / (G.segLen * 5), 1);
+  const idx = Math.min(Math.floor(prog * 5), 4);
+  const ev = EVENTS[idx];
+  const nextEv = EVENTS[Math.min(idx + 1, 4)];
+  const localProg = (prog * 5) - idx;
+
+  const topR = lerp(parseInt(ev.sky[0].slice(1,3),16), parseInt(nextEv.sky[0].slice(1,3),16), localProg);
+  const topG2 = lerp(parseInt(ev.sky[0].slice(3,5),16), parseInt(nextEv.sky[0].slice(3,5),16), localProg);
+  const topB = lerp(parseInt(ev.sky[0].slice(5,7),16), parseInt(nextEv.sky[0].slice(5,7),16), localProg);
+  const botR = lerp(parseInt(ev.sky[1].slice(1,3),16), parseInt(nextEv.sky[1].slice(1,3),16), localProg);
+  const botG2 = lerp(parseInt(ev.sky[1].slice(3,5),16), parseInt(nextEv.sky[1].slice(3,5),16), localProg);
+  const botB = lerp(parseInt(ev.sky[1].slice(5,7),16), parseInt(nextEv.sky[1].slice(5,7),16), localProg);
+
+  const grad = ctx.createLinearGradient(0, 0, 0, G.H);
+  grad.addColorStop(0, `rgb(${Math.round(topR)},${Math.round(topG2)},${Math.round(topB)})`);
+  grad.addColorStop(1, `rgb(${Math.round(botR)},${Math.round(botG2)},${Math.round(botB)})`);
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, G.W, G.H);
+
+  // Stars at night
+  if (idx === 0 || idx === 1 || idx === 4) {
+    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+    for (let i = 0; i < 40; i++) {
+      const sx = (i * 137.5 + G.scrollX * 0.02) % G.W;
+      const sy = (i * 73.3) % (G.H * 0.35);
+      const sz = 0.5 + (i % 3) * 0.5;
+      const twinkle = 0.4 + Math.sin(Date.now() * 0.002 + i) * 0.3;
+      ctx.globalAlpha = twinkle;
+      ctx.beginPath();
+      ctx.arc(sx, sy, sz, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  // Aurora borealis for night segments
+  if (idx === 4 || (idx === 0 && localProg < 0.5)) {
+    drawAurora(ctx);
+  }
+
+  // Sun/Moon
+  drawCelestial(ctx, idx);
+}
+
+function drawAurora(ctx) {
+  const t = Date.now() * 0.0003;
+  ctx.save();
+  for (let band = 0; band < 3; band++) {
+    ctx.beginPath();
+    const baseY = G.H * 0.08 + band * 25;
+    ctx.moveTo(0, baseY);
+    for (let x = 0; x <= G.W; x += 8) {
+      const y = baseY + Math.sin(x * 0.008 + t + band * 1.5) * 18
+                       + Math.sin(x * 0.003 + t * 0.7) * 12;
+      ctx.lineTo(x, y);
+    }
+    ctx.lineTo(G.W, baseY + 40);
+    ctx.lineTo(0, baseY + 40);
+    ctx.closePath();
+    const g = ctx.createLinearGradient(0, baseY - 20, 0, baseY + 40);
+    g.addColorStop(0, `rgba(0,255,100,${0.04 - band * 0.01})`);
+    g.addColorStop(0.5, `rgba(100,255,150,${0.06 - band * 0.015})`);
+    g.addColorStop(1, `rgba(0,200,255,${0.03 - band * 0.008})`);
+    ctx.fillStyle = g;
+    ctx.fill();
+  }
+  ctx.restore();
+}
+
+function drawCelestial(ctx, segIdx) {
+  const cx = G.W * 0.8 - (G.scrollX * 0.01 % (G.W * 0.3));
+  if (segIdx === 2 || segIdx === 3) {
+    // Sun
+    const cy = segIdx === 3 ? G.H * 0.18 : G.H * 0.12;
+    const sunCol = segIdx === 3 ? '#FFB347' : '#FFE066';
+    ctx.save();
+    ctx.shadowColor = sunCol;
+    ctx.shadowBlur = 40;
+    ctx.fillStyle = sunCol;
+    ctx.beginPath();
+    ctx.arc(cx, cy, 22, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.shadowBlur = 0;
+    // Sun rays
+    ctx.strokeStyle = sunCol;
+    ctx.lineWidth = 1.5;
+    ctx.globalAlpha = 0.3;
+    for (let i = 0; i < 8; i++) {
+      const a = (i / 8) * Math.PI * 2 + Date.now() * 0.0005;
+      ctx.beginPath();
+      ctx.moveTo(cx + Math.cos(a) * 26, cy + Math.sin(a) * 26);
+      ctx.lineTo(cx + Math.cos(a) * 36, cy + Math.sin(a) * 36);
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+    ctx.restore();
+  } else {
+    // Moon
+    const cy = G.H * 0.1;
+    ctx.save();
+    ctx.shadowColor = '#C0C0C0';
+    ctx.shadowBlur = 20;
+    ctx.fillStyle = '#E8E8E8';
+    ctx.beginPath();
+    ctx.arc(cx, cy, 16, 0, Math.PI * 2);
+    ctx.fill();
+    // Moon shadow for crescent effect
+    ctx.fillStyle = `rgb(${Math.round(lerp(45,13,0.5))},${Math.round(lerp(27,13,0.5))},${Math.round(lerp(78,43,0.5))})`;
+    ctx.beginPath();
+    ctx.arc(cx + 5, cy - 2, 13, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
+function drawClouds() {
+  const ctx = G.ctx;
+  G.clouds.forEach(c => {
+    ctx.save();
+    ctx.globalAlpha = c.opacity;
+    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+    // Draw cloud as overlapping ellipses
+    const cx = c.x;
+    const cy = c.y;
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, c.w * 0.5, c.h * 0.5, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(cx - c.w * 0.3, cy + 2, c.w * 0.35, c.h * 0.4, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(cx + c.w * 0.3, cy + 2, c.w * 0.35, c.h * 0.4, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(cx + c.w * 0.1, cy - c.h * 0.2, c.w * 0.3, c.h * 0.35, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  });
+}
+
+function drawMtns() {
+  const ctx = G.ctx;
+  drawMtnLayer(0.08, G.H * 0.28, 'rgba(60,40,80,0.4)', 180, true);
+  drawMtnLayer(0.2, G.H * 0.38, 'rgba(45,30,65,0.5)', 140, true);
+  drawMtnLayer(0.35, G.H * 0.48, 'rgba(35,50,45,0.55)', 100, false);
+}
+
+function drawMtnLayer(par, baseY, col, peak, snowCaps) {
+  const ctx = G.ctx;
+  const off = G.scrollX * par;
+  ctx.fillStyle = col;
+  ctx.beginPath();
+  ctx.moveTo(-10, G.H);
+
+  const peaks = [];
+  for (let x = -10; x <= G.W + 10; x += 20) {
+    const wx = x + off;
+    const h = baseY
+      - Math.abs(Math.sin(wx * 0.002 + 0.7)) * peak
+      - Math.abs(Math.sin(wx * 0.005 + 2.1)) * (peak * 0.4);
+    ctx.lineTo(x, h);
+    peaks.push({ x, y: h });
+  }
+  ctx.lineTo(G.W + 10, G.H);
+  ctx.closePath();
+  ctx.fill();
+
+  // Snow caps on peaks
+  if (snowCaps) {
+    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+    for (let i = 1; i < peaks.length - 1; i++) {
+      if (peaks[i].y < peaks[i-1].y && peaks[i].y < peaks[i+1].y) {
+        // This is a peak
+        ctx.beginPath();
+        ctx.moveTo(peaks[i].x, peaks[i].y);
+        ctx.lineTo(peaks[i].x - 15, peaks[i].y + peak * 0.15);
+        ctx.lineTo(peaks[i].x + 15, peaks[i].y + peak * 0.15);
+        ctx.closePath();
+        ctx.fill();
+      }
+    }
+  }
+
+  // Tree line silhouette for middle layer
+  if (par > 0.15 && par < 0.3) {
+    ctx.fillStyle = 'rgba(20,40,20,0.35)';
+    for (let x = -10; x <= G.W + 10; x += 12) {
+      const wx = x + off;
+      const mtnH = baseY
+        - Math.abs(Math.sin(wx * 0.002 + 0.7)) * peak
+        - Math.abs(Math.sin(wx * 0.005 + 2.1)) * (peak * 0.4);
+      const treeBase = mtnH + peak * 0.5;
+      if (treeBase < G.H * 0.7) {
+        const th = 6 + Math.sin(wx * 0.03) * 3;
+        ctx.beginPath();
+        ctx.moveTo(x, treeBase);
+        ctx.lineTo(x - 4, treeBase + th);
+        ctx.lineTo(x + 4, treeBase + th);
+        ctx.closePath();
+        ctx.fill();
+      }
+    }
+  }
+}
+
+function drawTerrain() {
+  const ctx = G.ctx;
+
+  // Shadow under snow
+  ctx.fillStyle = 'rgba(180,170,160,0.3)';
+  ctx.beginPath();
+  ctx.moveTo(-5, G.H);
+  for (let x = -5; x <= G.W + 5; x += 3) {
+    ctx.lineTo(x, terrainH(x + G.scrollX) + 4);
+  }
+  ctx.lineTo(G.W + 5, G.H);
+  ctx.closePath();
+  ctx.fill();
+
+  // Snow surface with gradient
+  const snowGrad = ctx.createLinearGradient(0, G.H * 0.3, 0, G.H);
+  snowGrad.addColorStop(0, '#F8F4EE');
+  snowGrad.addColorStop(0.3, '#EDE6DC');
+  snowGrad.addColorStop(1, '#D8D0C6');
+  ctx.fillStyle = snowGrad;
+  ctx.beginPath();
+  ctx.moveTo(-5, G.H);
+  for (let x = -5; x <= G.W + 5; x += 3) {
+    ctx.lineTo(x, terrainH(x + G.scrollX));
+  }
+  ctx.lineTo(G.W + 5, G.H);
+  ctx.closePath();
+  ctx.fill();
+
+  // Ice/shadow patches on north-facing slopes
+  for (let x = 0; x <= G.W; x += 6) {
+    const slope = terrainSlope(x + G.scrollX);
+    if (slope < -0.15) {
+      const y = terrainH(x + G.scrollX);
+      ctx.fillStyle = `rgba(160,190,220,${Math.min(0.15, Math.abs(slope) * 0.3)})`;
+      ctx.fillRect(x - 3, y, 6, 8);
+    }
+  }
+
+  // Top highlight
+  ctx.strokeStyle = '#FFFFFF';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  for (let x = -5; x <= G.W + 5; x += 3) {
+    const y = terrainH(x + G.scrollX);
+    if (x === -5) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+}
+
+function drawTrees() {
+  const ctx = G.ctx;
+  G.trees.forEach(t => {
+    const sx = t.x - G.scrollX;
+    if (sx < -60 || sx > G.W + 60) return;
+    const ty = terrainH(t.x);
+
+    ctx.save();
+    ctx.translate(sx, ty);
+
+    if (t.type === 'bare') {
+      // Bare tree
+      ctx.strokeStyle = '#5D4037';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(0, -t.h * 0.7);
+      ctx.moveTo(0, -t.h * 0.3);
+      ctx.lineTo(-t.w * 0.3, -t.h * 0.5);
+      ctx.moveTo(0, -t.h * 0.4);
+      ctx.lineTo(t.w * 0.25, -t.h * 0.55);
+      ctx.moveTo(0, -t.h * 0.55);
+      ctx.lineTo(-t.w * 0.2, -t.h * 0.68);
+      ctx.stroke();
+      // Snow on branches
+      ctx.fillStyle = 'rgba(255,255,255,0.6)';
+      ctx.beginPath();
+      ctx.ellipse(-t.w * 0.3, -t.h * 0.5, 4, 2, 0, 0, Math.PI * 2);
+      ctx.fill();
+    } else if (t.type === 'snowy') {
+      // Heavy snow tree
+      ctx.fillStyle = '#5D4037';
+      ctx.fillRect(-3, -t.h * 0.3, 6, t.h * 0.3);
+      // One big snow-covered triangle
+      ctx.fillStyle = '#2D5F2D';
+      ctx.beginPath();
+      ctx.moveTo(0, -t.h * 0.85);
+      ctx.lineTo(-t.w * 0.5, -t.h * 0.1);
+      ctx.lineTo(t.w * 0.5, -t.h * 0.1);
+      ctx.closePath();
+      ctx.fill();
+      // Heavy snow coverage
+      ctx.fillStyle = 'rgba(255,255,255,0.85)';
+      ctx.beginPath();
+      ctx.moveTo(0, -t.h * 0.85);
+      ctx.lineTo(-t.w * 0.35, -t.h * 0.35);
+      ctx.lineTo(t.w * 0.35, -t.h * 0.35);
+      ctx.closePath();
+      ctx.fill();
+    } else {
+      // Standard tree
+      ctx.fillStyle = '#5D4037';
+      ctx.fillRect(-3, -t.h * 0.3, 6, t.h * 0.3);
+      const layers = 3;
+      for (let i = 0; i < layers; i++) {
+        const ly = -t.h * 0.3 - i * (t.h * 0.22);
+        const lw = t.w * (1 - i * 0.25);
+        ctx.fillStyle = i === 0 ? '#2D5F2D' : i === 1 ? '#357535' : '#3D8B3D';
+        ctx.beginPath();
+        ctx.moveTo(0, ly - t.h * 0.3);
+        ctx.lineTo(-lw / 2, ly);
+        ctx.lineTo(lw / 2, ly);
+        ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = 'rgba(255,255,255,0.7)';
+        ctx.beginPath();
+        ctx.moveTo(0, ly - t.h * 0.3 + 2);
+        ctx.lineTo(-lw * 0.3, ly - t.h * 0.08);
+        ctx.lineTo(lw * 0.3, ly - t.h * 0.08);
+        ctx.closePath();
+        ctx.fill();
+      }
+    }
+    ctx.restore();
+  });
+}
+
+// ==========================================
+// VENUE ZONES
+// ==========================================
+function drawVenueZones() {
+  const ctx = G.ctx;
+  G.venues.forEach(v => {
+    const startSX = v.startX - G.scrollX;
+    const endSX = startSX + v.width;
+    if (endSX < -100 || startSX > G.W + 100) return;
+    drawVenue(ctx, v, startSX);
+  });
+}
+
+function drawVenue(ctx, venue, sx) {
+  const type = venue.type;
+  const w = venue.width;
+  const groundY = terrainH(venue.startX + w * 0.5);
+
+  ctx.save();
+
+  if (type === 'palace') {
+    // Badrutt's Palace - grand building with gold windows
+    const bx = sx + w * 0.3;
+    const bw = w * 0.4;
+    const bh = 120;
+    const by = groundY - bh;
+
+    // Building silhouette
+    ctx.fillStyle = 'rgba(40,30,50,0.7)';
+    ctx.fillRect(bx, by, bw, bh);
+    // Peaked roof
+    ctx.beginPath();
+    ctx.moveTo(bx - 10, by);
+    ctx.lineTo(bx + bw / 2, by - 30);
+    ctx.lineTo(bx + bw + 10, by);
+    ctx.closePath();
+    ctx.fill();
+    // Gold-lit windows
+    for (let row = 0; row < 3; row++) {
+      for (let col = 0; col < 4; col++) {
+        const wx = bx + 12 + col * (bw - 24) / 3;
+        const wy = by + 15 + row * 30;
+        ctx.fillStyle = `rgba(255,220,100,${0.5 + Math.sin(Date.now() * 0.003 + col + row) * 0.2})`;
+        ctx.fillRect(wx, wy, 10, 14);
+      }
+    }
+    // Red carpet
+    ctx.fillStyle = 'rgba(180,20,30,0.5)';
+    ctx.fillRect(sx + w * 0.2, groundY - 2, w * 0.6, 4);
+    // String lights
+    ctx.strokeStyle = 'rgba(255,220,100,0.3)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(sx + w * 0.1, groundY - 60);
+    ctx.quadraticCurveTo(sx + w * 0.5, groundY - 45, sx + w * 0.9, groundY - 60);
+    ctx.stroke();
+    for (let i = 0; i < 8; i++) {
+      const lx = sx + w * 0.1 + i * w * 0.1;
+      const t2 = i / 7;
+      const ly = groundY - 60 + Math.sin(t2 * Math.PI) * 15;
+      ctx.fillStyle = `rgba(255,220,100,${0.5 + Math.sin(Date.now() * 0.005 + i) * 0.3})`;
+      ctx.beginPath();
+      ctx.arc(lx, ly, 2.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    // Silhouette people with champagne
+    for (let i = 0; i < 5; i++) {
+      drawSilhouette(ctx, sx + w * 0.15 + i * w * 0.14, groundY, 'champagne');
+    }
+
+  } else if (type === 'kronenhof') {
+    // Elegant restaurant
+    const bx = sx + w * 0.25;
+    const bw = w * 0.5;
+    const bh = 100;
+    const by = groundY - bh;
+
+    ctx.fillStyle = 'rgba(50,35,30,0.7)';
+    ctx.fillRect(bx, by, bw, bh);
+    // Arched windows
+    for (let col = 0; col < 5; col++) {
+      const wx = bx + 10 + col * (bw - 20) / 4;
+      const wy = by + 20;
+      ctx.fillStyle = `rgba(255,200,80,${0.4 + Math.sin(Date.now() * 0.002 + col) * 0.15})`;
+      ctx.beginPath();
+      ctx.arc(wx + 5, wy, 5, Math.PI, 0);
+      ctx.rect(wx, wy, 10, 16);
+      ctx.fill();
+    }
+    // Warm glow
+    const glow = ctx.createRadialGradient(bx + bw / 2, by + bh / 2, 10, bx + bw / 2, by + bh / 2, bw);
+    glow.addColorStop(0, 'rgba(255,180,60,0.08)');
+    glow.addColorStop(1, 'rgba(255,180,60,0)');
+    ctx.fillStyle = glow;
+    ctx.fillRect(bx - bw, by - 20, bw * 3, bh + 40);
+    // Tables with candles
+    for (let i = 0; i < 3; i++) {
+      const tx = sx + w * 0.2 + i * w * 0.25;
+      const ty = groundY - 1;
+      ctx.fillStyle = 'rgba(80,60,50,0.5)';
+      ctx.fillRect(tx - 8, ty - 12, 16, 2);
+      // Candle
+      ctx.fillStyle = `rgba(255,220,100,${0.6 + Math.sin(Date.now() * 0.006 + i) * 0.3})`;
+      ctx.beginPath();
+      ctx.arc(tx, ty - 16, 2.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    // Seated silhouettes
+    for (let i = 0; i < 4; i++) {
+      drawSilhouette(ctx, sx + w * 0.2 + i * w * 0.18, groundY, 'seated');
+    }
+
+  } else if (type === 'marmot') {
+    // Mountain lodge
+    const bx = sx + w * 0.2;
+    const bw = w * 0.5;
+    const bh = 90;
+    const by = groundY - bh;
+
+    // Lodge
+    ctx.fillStyle = 'rgba(60,40,30,0.7)';
+    ctx.fillRect(bx, by, bw, bh);
+    // Sloped roof
+    ctx.beginPath();
+    ctx.moveTo(bx - 15, by);
+    ctx.lineTo(bx + bw / 2, by - 25);
+    ctx.lineTo(bx + bw + 15, by);
+    ctx.closePath();
+    ctx.fill();
+    // Chimney
+    ctx.fillStyle = 'rgba(80,60,50,0.8)';
+    ctx.fillRect(bx + bw * 0.7, by - 25, 12, 20);
+    // Smoke
+    const smokeT = Date.now() * 0.001;
+    ctx.fillStyle = 'rgba(200,200,200,0.15)';
+    for (let i = 0; i < 4; i++) {
+      const smokeY = by - 30 - i * 12;
+      const smokeX = bx + bw * 0.7 + 6 + Math.sin(smokeT + i * 0.8) * 8;
+      ctx.beginPath();
+      ctx.arc(smokeX, smokeY, 5 + i * 2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    // Terrace
+    ctx.strokeStyle = 'rgba(100,70,50,0.5)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(bx + bw, by + bh * 0.4);
+    ctx.lineTo(bx + bw + 40, by + bh * 0.4);
+    ctx.lineTo(bx + bw + 40, groundY);
+    ctx.stroke();
+    // People on terrace
+    for (let i = 0; i < 3; i++) {
+      drawSilhouette(ctx, bx + bw + 8 + i * 12, groundY, 'champagne');
+    }
+    // Ski lift poles in background
+    ctx.strokeStyle = 'rgba(80,80,80,0.3)';
+    ctx.lineWidth = 2;
+    for (let i = 0; i < 3; i++) {
+      const px = sx + w * 0.7 + i * 50;
+      ctx.beginPath();
+      ctx.moveTo(px, groundY);
+      ctx.lineTo(px, groundY - 100);
+      ctx.stroke();
+    }
+    // Cable
+    ctx.strokeStyle = 'rgba(80,80,80,0.2)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(sx + w * 0.7, groundY - 98);
+    ctx.lineTo(sx + w * 0.7 + 100, groundY - 95);
+    ctx.stroke();
+
+  } else if (type === 'paradiso') {
+    // Wedding ceremony
+    const centerX = sx + w * 0.5;
+
+    // Ceremony arch
+    ctx.strokeStyle = 'rgba(212,168,67,0.6)';
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.arc(centerX, groundY - 10, 40, Math.PI, 0);
+    ctx.stroke();
+    // Flowers on arch
+    const flowerCols = ['#FF6B81', '#FFB6C1', '#FFF', '#FF69B4', '#E8C96A'];
+    for (let i = 0; i < 12; i++) {
+      const angle = Math.PI + (i / 11) * Math.PI;
+      const fx = centerX + Math.cos(angle) * 42;
+      const fy = groundY - 10 + Math.sin(angle) * 42;
+      ctx.fillStyle = flowerCols[i % flowerCols.length];
+      ctx.beginPath();
+      ctx.arc(fx, fy, 3, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    // Arch legs
+    ctx.strokeStyle = 'rgba(212,168,67,0.6)';
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo(centerX - 40, groundY - 10);
+    ctx.lineTo(centerX - 40, groundY);
+    ctx.moveTo(centerX + 40, groundY - 10);
+    ctx.lineTo(centerX + 40, groundY);
+    ctx.stroke();
+    // Rows of chairs
+    ctx.fillStyle = 'rgba(80,60,50,0.4)';
+    for (let row = 0; row < 3; row++) {
+      for (let col = 0; col < 5; col++) {
+        const chairX = centerX - 80 + col * 18;
+        const chairY = groundY - 2 + row * 5;
+        ctx.fillRect(chairX, chairY - 8, 8, 8);
+      }
+      for (let col = 0; col < 5; col++) {
+        const chairX = centerX + 20 + col * 18;
+        const chairY = groundY - 2 + row * 5;
+        ctx.fillRect(chairX, chairY - 8, 8, 8);
+      }
+    }
+    // Standing guests
+    for (let i = 0; i < 6; i++) {
+      drawSilhouette(ctx, centerX - 100 + i * 35, groundY, 'cheering');
+    }
+    // Flower petals falling
+    const petT = Date.now() * 0.001;
+    for (let i = 0; i < 15; i++) {
+      const px = centerX - 60 + (i * 37 + petT * 20) % 120;
+      const py = groundY - 80 + ((i * 53 + petT * 30) % 80);
+      ctx.fillStyle = flowerCols[i % flowerCols.length];
+      ctx.globalAlpha = 0.5;
+      ctx.save();
+      ctx.translate(px, py);
+      ctx.rotate(petT + i);
+      ctx.fillRect(-2, -1, 4, 2);
+      ctx.restore();
+    }
+    ctx.globalAlpha = 1;
+
+  } else if (type === 'embassy') {
+    // Ballroom / after party
+    const bx = sx + w * 0.2;
+    const bw = w * 0.5;
+    const bh = 100;
+    const by = groundY - bh;
+
+    ctx.fillStyle = 'rgba(20,15,40,0.75)';
+    ctx.fillRect(bx, by, bw, bh);
+    // Large windows with colored lights
+    const discoColors = ['#FF0066','#00CCFF','#FFCC00','#CC00FF','#00FF66'];
+    for (let col = 0; col < 4; col++) {
+      const wx = bx + 10 + col * (bw - 20) / 3;
+      const wy = by + 10;
+      const colIdx = (col + Math.floor(Date.now() * 0.003)) % discoColors.length;
+      ctx.fillStyle = discoColors[colIdx] + '66';
+      ctx.fillRect(wx, wy, 14, 30);
+      // Dancing silhouettes in windows
+      const danceOff = Math.sin(Date.now() * 0.008 + col) * 3;
+      ctx.fillStyle = 'rgba(0,0,0,0.6)';
+      ctx.beginPath();
+      ctx.arc(wx + 7, wy + 12 + danceOff, 3, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillRect(wx + 5, wy + 15 + danceOff, 4, 10);
+    }
+    // Disco ball reflections on terrain
+    for (let i = 0; i < 12; i++) {
+      const dotX = sx + w * 0.1 + (i * 47 + Date.now() * 0.05) % (w * 0.8);
+      const dotY = groundY - Math.random() * 3;
+      const dcol = discoColors[i % discoColors.length];
+      ctx.fillStyle = dcol + '33';
+      ctx.beginPath();
+      ctx.arc(dotX, dotY, 3, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    // Strobe pulse
+    const pulse = Math.sin(Date.now() * 0.01) * 0.5 + 0.5;
+    ctx.fillStyle = `rgba(255,255,255,${pulse * 0.03})`;
+    ctx.fillRect(bx - 20, by - 10, bw + 40, bh + 20);
+  }
+
+  ctx.restore();
+}
+
+function drawSilhouette(ctx, x, y, type) {
+  ctx.fillStyle = 'rgba(30,20,40,0.55)';
+  // Head
+  ctx.beginPath();
+  ctx.arc(x, y - 22, 4, 0, Math.PI * 2);
+  ctx.fill();
+  // Body
+  ctx.beginPath();
+  ctx.moveTo(x - 5, y - 18);
+  ctx.lineTo(x - 6, y - 2);
+  ctx.lineTo(x + 6, y - 2);
+  ctx.lineTo(x + 5, y - 18);
+  ctx.closePath();
+  ctx.fill();
+
+  if (type === 'champagne') {
+    ctx.strokeStyle = 'rgba(212,168,67,0.5)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(x + 6, y - 14);
+    ctx.lineTo(x + 10, y - 22);
+    ctx.stroke();
+    // Glass
+    ctx.fillStyle = 'rgba(212,168,67,0.4)';
+    ctx.beginPath();
+    ctx.moveTo(x + 10, y - 22);
+    ctx.lineTo(x + 8, y - 26);
+    ctx.lineTo(x + 12, y - 26);
+    ctx.closePath();
+    ctx.fill();
+  } else if (type === 'seated') {
+    // Shorter, seated position
+    ctx.fillStyle = 'rgba(30,20,40,0.4)';
+    ctx.fillRect(x - 5, y - 6, 10, 4);
+  } else if (type === 'cheering') {
+    // Arms up
+    ctx.strokeStyle = 'rgba(30,20,40,0.55)';
+    ctx.lineWidth = 2;
+    const wave = Math.sin(Date.now() * 0.006 + x * 0.1) * 4;
+    ctx.beginPath();
+    ctx.moveTo(x - 5, y - 16);
+    ctx.lineTo(x - 10, y - 28 + wave);
+    ctx.moveTo(x + 5, y - 16);
+    ctx.lineTo(x + 10, y - 28 - wave);
+    ctx.stroke();
+  }
+}
+
+// ==========================================
+// COLLECTIBLES (bigger, outlined, rotating)
+// ==========================================
+function drawCollectibles() {
+  const ctx = G.ctx;
+  G.collectibles.forEach(c => {
+    if (c.got) return;
+    const sx = c.x - G.scrollX;
+    if (sx < -50 || sx > G.W + 50) return;
+    const bob = Math.sin(Date.now() * 0.004 + c.x * 0.1) * 5;
+    const type = COLLECT_TYPES.find(t => t.id === c.type);
+
+    ctx.save();
+    ctx.translate(sx, c.y + bob);
+    ctx.shadowColor = type.color;
+    ctx.shadowBlur = 18;
+
+    // White outline for all
+    ctx.strokeStyle = 'rgba(255,255,255,0.7)';
+    ctx.lineWidth = 2;
+
+    if (c.type === 'sol') {
+      // Rotating coin with Solana logo
+      const rot = Date.now() * 0.003;
+      const scaleX = Math.cos(rot);
+      ctx.scale(Math.abs(scaleX) * 0.8 + 0.2, 1);
+      // Purple-to-teal gradient circle
+      ctx.fillStyle = '#9945FF';
+      ctx.beginPath(); ctx.arc(0, 0, 18, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(0, 0, 18, 0, Math.PI * 2); ctx.stroke();
+      // Solana "S" logo - three horizontal bars with arrow ends
+      ctx.strokeStyle = '#14F195'; ctx.lineWidth = 2.5; ctx.lineCap = 'butt';
+      // Top bar (arrow pointing right)
+      ctx.beginPath(); ctx.moveTo(-8, -7); ctx.lineTo(6, -7); ctx.lineTo(8, -5); ctx.stroke();
+      // Middle bar (arrow pointing left)
+      ctx.beginPath(); ctx.moveTo(8, 1); ctx.lineTo(-6, 1); ctx.lineTo(-8, 3); ctx.stroke();
+      // Bottom bar (arrow pointing right)
+      ctx.beginPath(); ctx.moveTo(-8, 7); ctx.lineTo(6, 7); ctx.lineTo(8, 9); ctx.stroke();
+    } else if (c.type === 'rose') {
+      // Wine glass
+      ctx.fillStyle = '#FF6B81';
+      ctx.beginPath();
+      ctx.moveTo(0, -14); ctx.lineTo(-9, 2); ctx.lineTo(9, 2);
+      ctx.closePath(); ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(0, -14); ctx.lineTo(-9, 2); ctx.lineTo(9, 2);
+      ctx.closePath(); ctx.stroke();
+      ctx.strokeStyle = '#FF6B81'; ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(0, 2); ctx.lineTo(0, 12);
+      ctx.moveTo(-6, 12); ctx.lineTo(6, 12);
+      ctx.stroke();
+    } else if (c.type === 'pepper') {
+      ctx.fillStyle = '#FF4500';
+      ctx.beginPath();
+      ctx.ellipse(0, 0, 8, 14, 0.2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.ellipse(0, 0, 8, 14, 0.2, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.fillStyle = '#228B22';
+      ctx.fillRect(-3, -17, 6, 6);
+    } else if (c.type === 'dew') {
+      ctx.fillStyle = '#006400';
+      ctx.beginPath();
+      ctx.roundRect(-9, -14, 18, 28, 3);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.roundRect(-9, -14, 18, 28, 3);
+      ctx.stroke();
+      ctx.fillStyle = '#39FF14';
+      ctx.font = 'bold 7px sans-serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('MTN', 0, -3);
+      ctx.fillText('DEW', 0, 5);
+    } else if (c.type === 'ring') {
+      // Ring with massive diamond
+      const sparkle = Math.sin(Date.now() * 0.008) * 0.4;
+      // Gold ring band
+      ctx.strokeStyle = '#FFD700'; ctx.lineWidth = 4;
+      ctx.beginPath(); ctx.arc(0, 4, 10, 0, Math.PI * 2); ctx.stroke();
+      // BIG diamond - faceted gem shape
+      ctx.fillStyle = '#E0F0FF';
+      ctx.beginPath();
+      // Diamond top (crown) - wide flat top with angled sides
+      ctx.moveTo(0, -20);
+      ctx.lineTo(-10, -10);
+      ctx.lineTo(-7, -6);
+      ctx.lineTo(7, -6);
+      ctx.lineTo(10, -10);
+      ctx.closePath();
+      ctx.fill();
+      // Diamond bottom (pavilion) - point
+      ctx.fillStyle = '#C8E8FF';
+      ctx.beginPath();
+      ctx.moveTo(-7, -6);
+      ctx.lineTo(0, 4);
+      ctx.lineTo(7, -6);
+      ctx.closePath();
+      ctx.fill();
+      // Facet lines
+      ctx.strokeStyle = 'rgba(150,200,255,0.5)'; ctx.lineWidth = 0.8;
+      ctx.beginPath();
+      ctx.moveTo(0, -20); ctx.lineTo(-3, -6);
+      ctx.moveTo(0, -20); ctx.lineTo(3, -6);
+      ctx.moveTo(-10, -10); ctx.lineTo(0, -6);
+      ctx.moveTo(10, -10); ctx.lineTo(0, -6);
+      ctx.moveTo(0, -6); ctx.lineTo(0, 4);
+      ctx.stroke();
+      // Outline
+      ctx.strokeStyle = 'rgba(255,255,255,0.9)'; ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(0, -20); ctx.lineTo(-10, -10); ctx.lineTo(-7, -6);
+      ctx.lineTo(7, -6); ctx.lineTo(10, -10); ctx.closePath();
+      ctx.stroke();
+      // Sparkle flashes
+      ctx.fillStyle = `rgba(255,255,255,${0.5 + sparkle})`;
+      ctx.beginPath(); ctx.arc(-6, -14, 2.5, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(8, -8, 2, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = `rgba(200,230,255,${0.4 + sparkle})`;
+      ctx.beginPath(); ctx.arc(3, -18, 1.5, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.restore();
+  });
+}
+
+// ==========================================
+// CHARACTER DRAWING (redesigned)
+// ==========================================
+function drawChar() {
+  const ctx = G.ctx;
+  const ch = CHARS[G.char];
+  const s = ch.size;
+
+  ctx.save();
+  ctx.translate(G.px, G.py);
+
+  // Trick visual rotation
+  if (G.trickState === 'grab') {
+    ctx.rotate(G.rotation * 0.3);
+  } else if (G.trickState === 'spin') {
+    ctx.rotate(G.rotation);
+  } else {
+    ctx.rotate(G.rotation);
+  }
+
+  // Power-up auras
+  if (G.powerUps.invincible > 0) {
+    ctx.save();
+    ctx.shadowColor = '#FF6B81';
+    ctx.shadowBlur = 20 + Math.sin(Date.now() * 0.01) * 8;
+    ctx.fillStyle = 'rgba(255,107,129,0.1)';
+    ctx.beginPath();
+    ctx.arc(0, -s * 0.5, s * 0.8, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+  if (G.powerUps.scoreMult > 0) {
+    ctx.save();
+    ctx.shadowColor = '#FFD700';
+    ctx.shadowBlur = 15 + Math.sin(Date.now() * 0.008) * 6;
+    ctx.strokeStyle = 'rgba(255,215,0,0.3)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(0, -s * 0.5, s * 0.85, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+  }
+  if (G.powerUps.superJumps > 0) {
+    ctx.save();
+    ctx.shadowColor = '#39FF14';
+    ctx.shadowBlur = 12;
+    ctx.fillStyle = 'rgba(57,255,20,0.08)';
+    ctx.beginPath();
+    ctx.arc(0, -s * 0.5, s * 0.7, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  if (G.char === 'banksy') {
+    drawBanksy(ctx, s);
+  } else if (G.char === 'kyle') {
+    drawKyle(ctx, s);
+  } else {
+    drawJill(ctx, s);
+  }
+
+  ctx.restore();
+
+  // Snow spray when grounded
+  if (G.grounded && G.state === 'playing') {
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    for (let i = 0; i < 6; i++) {
+      const ox = G.px - 10 - Math.random() * 16;
+      const oy = G.py + Math.random() * 6;
+      ctx.beginPath();
+      ctx.arc(ox, oy, 1.5 + Math.random() * 2.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  // Landing impact burst
+  if (G._landingBurst > 0) {
+    ctx.save();
+    const burstAlpha = G._landingBurst / 15;
+    ctx.globalAlpha = burstAlpha;
+    ctx.strokeStyle = '#FFF';
+    ctx.lineWidth = 1.5;
+    const burstR = (15 - G._landingBurst) * 3;
+    ctx.beginPath();
+    ctx.arc(G.px, G.py, burstR, 0, Math.PI * 2);
+    ctx.stroke();
+    // Burst particles
+    for (let i = 0; i < 6; i++) {
+      const angle = (i / 6) * Math.PI * 2;
+      const bx = G.px + Math.cos(angle) * burstR;
+      const by = G.py + Math.sin(angle) * burstR * 0.4;
+      ctx.fillStyle = '#FFF';
+      ctx.beginPath();
+      ctx.arc(bx, by, 2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+    G._landingBurst--;
+  }
+
+  // Trails
+  drawTrails(ctx);
+}
+
+function drawBanksy(ctx, s) {
+  const wag = Math.sin(Date.now() * 0.012) * 0.4;
+
+  // Body - white/cream
+  ctx.fillStyle = '#F5F0E8';
+  ctx.beginPath();
+  ctx.ellipse(0, -s * 0.3, s * 0.55, s * 0.28, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Red jacket/vest
+  ctx.fillStyle = '#CC0000';
+  ctx.beginPath();
+  ctx.ellipse(0, -s * 0.3, s * 0.48, s * 0.22, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Body underside peek
+  ctx.fillStyle = '#F5F0E8';
+  ctx.beginPath();
+  ctx.ellipse(0, -s * 0.18, s * 0.4, s * 0.12, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Head
+  ctx.fillStyle = '#F5F0E8';
+  ctx.beginPath();
+  ctx.arc(s * 0.4, -s * 0.5, s * 0.22, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Ear
+  ctx.fillStyle = '#E8E0D0';
+  ctx.beginPath();
+  ctx.ellipse(s * 0.55, -s * 0.7, s * 0.08, s * 0.15, 0.3, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Eye
+  ctx.fillStyle = '#333';
+  ctx.beginPath();
+  ctx.arc(s * 0.48, -s * 0.52, 2, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Pink nose
+  ctx.fillStyle = '#FFB6C1';
+  ctx.beginPath();
+  ctx.arc(s * 0.58, -s * 0.45, 2.5, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Veil (animated flutter)
+  const veilWave = Math.sin(Date.now() * 0.008) * 4;
+  ctx.strokeStyle = 'rgba(255,255,255,0.8)';
+  ctx.lineWidth = 1.5;
+  ctx.fillStyle = 'rgba(255,255,255,0.3)';
+  ctx.beginPath();
+  ctx.moveTo(s * 0.3, -s * 0.65);
+  ctx.quadraticCurveTo(s * 0.1, -s * 0.8 + veilWave, -s * 0.1, -s * 0.7 + veilWave * 0.5);
+  ctx.quadraticCurveTo(-s * 0.3, -s * 0.6 + veilWave, -s * 0.4, -s * 0.55);
+  ctx.quadraticCurveTo(-s * 0.2, -s * 0.6, s * 0.3, -s * 0.65);
+  ctx.fill();
+  ctx.stroke();
+
+  // Legs
+  ctx.strokeStyle = '#F5F0E8'; ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(-s * 0.3, -s * 0.05); ctx.lineTo(-s * 0.3, s * 0.15);
+  ctx.moveTo(-s * 0.1, -s * 0.05); ctx.lineTo(-s * 0.1, s * 0.15);
+  ctx.moveTo(s * 0.1, -s * 0.05); ctx.lineTo(s * 0.1, s * 0.15);
+  ctx.moveTo(s * 0.3, -s * 0.05); ctx.lineTo(s * 0.3, s * 0.15);
+  ctx.stroke();
+
+  // Red snowboard
+  ctx.fillStyle = '#CC0000';
+  ctx.beginPath();
+  ctx.ellipse(0, s * 0.18, s * 0.52, s * 0.07, 0, 0, Math.PI * 2);
+  ctx.fill();
+  // Board stripe
+  ctx.strokeStyle = '#990000'; ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(-s * 0.4, s * 0.18); ctx.lineTo(s * 0.4, s * 0.18);
+  ctx.stroke();
+
+  // Tail wag
+  ctx.strokeStyle = '#F5F0E8'; ctx.lineWidth = 3; ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(-s * 0.5, -s * 0.35);
+  ctx.quadraticCurveTo(-s * 0.7, -s * 0.8 + wag * 12, -s * 0.55, -s * 0.85);
+  ctx.stroke();
+}
+
+function drawKyle(ctx, s) {
+  // Tuxedo snowsuit body
+  ctx.fillStyle = '#1A1A1A';
+  ctx.beginPath();
+  ctx.roundRect(-s * 0.2, -s * 0.85, s * 0.4, s * 0.52, 3);
+  ctx.fill();
+
+  // White shirt front V
+  ctx.fillStyle = '#FAFAFA';
+  ctx.beginPath();
+  ctx.moveTo(-s * 0.06, -s * 0.85);
+  ctx.lineTo(-s * 0.01, -s * 0.33);
+  ctx.lineTo(s * 0.01, -s * 0.33);
+  ctx.lineTo(s * 0.06, -s * 0.85);
+  ctx.closePath();
+  ctx.fill();
+
+  // Lapels
+  ctx.strokeStyle = '#FAFAFA'; ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(-s * 0.18, -s * 0.83);
+  ctx.lineTo(-s * 0.06, -s * 0.6);
+  ctx.moveTo(s * 0.18, -s * 0.83);
+  ctx.lineTo(s * 0.06, -s * 0.6);
+  ctx.stroke();
+
+  // Bow tie
+  ctx.fillStyle = '#CC0000';
+  ctx.beginPath();
+  ctx.moveTo(-s * 0.08, -s * 0.82);
+  ctx.lineTo(0, -s * 0.78);
+  ctx.lineTo(s * 0.08, -s * 0.82);
+  ctx.lineTo(0, -s * 0.86);
+  ctx.closePath();
+  ctx.fill();
+
+  // Head
+  ctx.fillStyle = '#FDBCB4';
+  ctx.beginPath(); ctx.arc(0, -s * 0.95, s * 0.15, 0, Math.PI * 2); ctx.fill();
+
+  // Black beanie
+  ctx.fillStyle = '#1A1A1A';
+  ctx.beginPath(); ctx.arc(0, -s, s * 0.16, Math.PI, 0); ctx.fill();
+  ctx.beginPath(); ctx.arc(0, -s * 1.13, s * 0.04, 0, Math.PI * 2); ctx.fill();
+
+  // Eyes
+  ctx.fillStyle = '#333';
+  ctx.beginPath();
+  ctx.arc(-s * 0.05, -s * 0.95, 1.3, 0, Math.PI * 2);
+  ctx.arc(s * 0.05, -s * 0.95, 1.3, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Legs - dark pants
+  ctx.strokeStyle = '#1A1A1A'; ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(-s * 0.06, -s * 0.35); ctx.lineTo(-s * 0.15, -s * 0.12);
+  ctx.lineTo(-s * 0.1, s * 0.02);
+  ctx.moveTo(s * 0.06, -s * 0.35); ctx.lineTo(s * 0.15, -s * 0.12);
+  ctx.lineTo(s * 0.1, s * 0.02);
+  ctx.stroke();
+
+  // Black snowboard with red accent
+  ctx.fillStyle = '#1A1A1A';
+  ctx.beginPath();
+  ctx.ellipse(0, s * 0.06, s * 0.42, s * 0.06, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = '#CC0000'; ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(-s * 0.35, s * 0.06); ctx.lineTo(s * 0.35, s * 0.06);
+  ctx.stroke();
+}
+
+function drawJill(ctx, s) {
+  const hw = Math.sin(Date.now() * 0.005) * 4;
+
+  // White ski suit body (fitted hourglass)
+  ctx.fillStyle = '#FAFAFA';
+  ctx.beginPath();
+  ctx.moveTo(0, -s * 0.85);
+  ctx.quadraticCurveTo(-s * 0.2, -s * 0.7, -s * 0.18, -s * 0.55);
+  ctx.quadraticCurveTo(-s * 0.14, -s * 0.45, -s * 0.2, -s * 0.3);
+  ctx.lineTo(s * 0.2, -s * 0.3);
+  ctx.quadraticCurveTo(s * 0.14, -s * 0.45, s * 0.18, -s * 0.55);
+  ctx.quadraticCurveTo(s * 0.2, -s * 0.7, 0, -s * 0.85);
+  ctx.closePath();
+  ctx.fill();
+
+  // Fur collar
+  ctx.strokeStyle = '#F0E6D4'; ctx.lineWidth = 4; ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.arc(0, -s * 0.82, s * 0.16, 0.5, 2.64);
+  ctx.stroke();
+  // Fur cuff details
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(-s * 0.22, -s * 0.32);
+  ctx.lineTo(-s * 0.18, -s * 0.3);
+  ctx.moveTo(s * 0.22, -s * 0.32);
+  ctx.lineTo(s * 0.18, -s * 0.3);
+  ctx.stroke();
+
+  // Gold belt accent
+  ctx.strokeStyle = '#D4A843'; ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(-s * 0.14, -s * 0.45);
+  ctx.lineTo(s * 0.14, -s * 0.45);
+  ctx.stroke();
+
+  // Head
+  ctx.fillStyle = '#FDBCB4';
+  ctx.beginPath(); ctx.arc(0, -s * 0.95, s * 0.13, 0, Math.PI * 2); ctx.fill();
+
+  // Blonde hair - long flowing (wheat blonde, distinct from gold poles)
+  ctx.strokeStyle = '#F5DEB3'; ctx.lineWidth = 3; ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(-s * 0.06, -s);
+  ctx.quadraticCurveTo(-s * 0.3, -s * 0.75 + hw, -s * 0.28, -s * 0.35);
+  ctx.stroke();
+  ctx.strokeStyle = '#EBC882'; ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(-s * 0.03, -s * 1.02);
+  ctx.quadraticCurveTo(-s * 0.25, -s * 0.8 + hw, -s * 0.24, -s * 0.4);
+  ctx.stroke();
+  // Right side hair
+  ctx.strokeStyle = '#F5DEB3'; ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(s * 0.05, -s);
+  ctx.quadraticCurveTo(s * 0.22, -s * 0.78 + hw * 0.7, s * 0.25, -s * 0.38);
+  ctx.stroke();
+  ctx.strokeStyle = '#EBC882'; ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(s * 0.03, -s * 1.02);
+  ctx.quadraticCurveTo(s * 0.2, -s * 0.82 + hw * 0.7, s * 0.22, -s * 0.42);
+  ctx.stroke();
+
+  // Sunglasses on head
+  ctx.fillStyle = 'rgba(40,40,40,0.7)';
+  ctx.beginPath();
+  ctx.roundRect(-s * 0.1, -s * 1.04, s * 0.2, s * 0.06, 2);
+  ctx.fill();
+
+  // Eyes
+  ctx.fillStyle = '#333';
+  ctx.beginPath();
+  ctx.arc(-s * 0.04, -s * 0.95, 1.2, 0, Math.PI * 2);
+  ctx.arc(s * 0.04, -s * 0.95, 1.2, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Legs
+  ctx.strokeStyle = '#FAFAFA'; ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.moveTo(-s * 0.08, -s * 0.3); ctx.lineTo(-s * 0.1, s * 0.02);
+  ctx.moveTo(s * 0.08, -s * 0.3); ctx.lineTo(s * 0.1, s * 0.02);
+  ctx.stroke();
+  // Fur cuffs on boots
+  ctx.strokeStyle = '#F0E6D4'; ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(-s * 0.14, s * 0.0);
+  ctx.lineTo(-s * 0.06, s * 0.0);
+  ctx.moveTo(s * 0.06, s * 0.0);
+  ctx.lineTo(s * 0.14, s * 0.0);
+  ctx.stroke();
+
+  // White skis with red hearts
+  ctx.strokeStyle = '#FAFAFA'; ctx.lineWidth = 3; ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(-s * 0.35, s * 0.06); ctx.lineTo(s * 0.22, s * 0.06);
+  ctx.moveTo(-s * 0.18, s * 0.06); ctx.lineTo(s * 0.4, s * 0.06);
+  ctx.stroke();
+  // Hearts on skis
+  ctx.fillStyle = '#CC0000';
+  ctx.font = `${Math.max(6, s * 0.2)}px sans-serif`;
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('\u2665', -s * 0.08, s * 0.06);
+  ctx.fillText('\u2665', s * 0.12, s * 0.06);
+
+  // Gold/champagne poles
+  ctx.strokeStyle = '#D4A843'; ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(-s * 0.2, -s * 0.55); ctx.lineTo(-s * 0.38, s * 0.1);
+  ctx.moveTo(s * 0.18, -s * 0.55); ctx.lineTo(s * 0.35, s * 0.1);
+  ctx.stroke();
+  // Pole baskets
+  ctx.strokeStyle = '#D4A843'; ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.arc(-s * 0.38, s * 0.1, 3, 0, Math.PI * 2);
+  ctx.arc(s * 0.35, s * 0.1, 3, 0, Math.PI * 2);
+  ctx.stroke();
+}
+
+function drawTrails(ctx) {
+  // Fire trail for pepper boost
+  if (G.powerUps.fireTrail > 0) {
+    for (let i = G.trails.length - 1; i >= 0; i--) {
+      const t = G.trails[i];
+      const a = t.life / t.maxLife;
+      ctx.globalAlpha = a * 0.6;
+      ctx.fillStyle = t.color;
+      ctx.beginPath();
+      ctx.arc(t.x, t.y, t.size * a, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+  // Golden trail for magnet
+  if (G.powerUps.magnet > 0) {
+    for (let i = G.trails.length - 1; i >= 0; i--) {
+      const t = G.trails[i];
+      if (t.type !== 'gold') continue;
+      const a = t.life / t.maxLife;
+      ctx.globalAlpha = a * 0.4;
+      ctx.fillStyle = '#FFD700';
+      ctx.beginPath();
+      ctx.arc(t.x, t.y, 3 * a, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+}
+
+function drawSnow() {
+  const ctx = G.ctx;
+  G.snowflakes.forEach(s => {
+    ctx.fillStyle = `rgba(255,255,255,${s.op})`;
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.sz, 0, Math.PI * 2);
+    ctx.fill();
+  });
+}
+
+function drawParticles() {
+  const ctx = G.ctx;
+  G.particles.forEach(p => {
+    const a = p.life / p.maxLife;
+    ctx.globalAlpha = a;
+    ctx.fillStyle = p.color;
+    ctx.font = `bold ${p.fontSize || 15}px "IBM Plex Serif", serif`;
+    ctx.textAlign = 'center';
+    ctx.fillText(p.text, p.x, p.y);
+  });
+  ctx.globalAlpha = 1;
+}
+
+function drawConfetti() {
+  const ctx = G.ctx;
+  G.confetti.forEach(c => {
+    ctx.fillStyle = c.color;
+    ctx.globalAlpha = c.life / c.maxLife;
+    ctx.save();
+    ctx.translate(c.x, c.y);
+    ctx.rotate(c.rot);
+    ctx.fillRect(-3, -1.5, 6, 3);
+    ctx.restore();
+  });
+  ctx.globalAlpha = 1;
+}
+
+function drawHUD() {
+  const ctx = G.ctx;
+  const pad = 12;
+
+  // Score bg
+  ctx.fillStyle = 'rgba(133,9,15,0.65)';
+  ctx.beginPath();
+  ctx.roundRect(pad, pad, 110, 36, 6);
+  ctx.fill();
+
+  // Score multiplier indicator
+  if (G.powerUps.scoreMult > 0) {
+    ctx.fillStyle = 'rgba(255,215,0,0.3)';
+    ctx.beginPath();
+    ctx.roundRect(pad, pad, 110, 36, 6);
+    ctx.fill();
+  }
+
+  ctx.fillStyle = COL.gold;
+  ctx.font = '600 18px "IBM Plex Serif", serif';
+  ctx.textAlign = 'left';
+  ctx.fillText(G.score, pad + 12, pad + 25);
+
+  // 2x indicator
+  if (G.powerUps.scoreMult > 0) {
+    ctx.fillStyle = '#FFD700';
+    ctx.font = 'bold 12px sans-serif';
+    ctx.fillText('2x', pad + 88, pad + 25);
+  }
+
+  // Progress bar
+  const totalDist = G.segLen * 5;
+  const prog = Math.min(G.distance / totalDist, 1);
+  const barX = pad + 122;
+  const barW = G.W - barX - pad - 44; // Leave room for mute button
+  const barY = pad + 12;
+  const barH = 12;
+
+  ctx.fillStyle = 'rgba(0,0,0,0.25)';
+  ctx.beginPath(); ctx.roundRect(barX, barY, barW, barH, 6); ctx.fill();
+
+  ctx.fillStyle = COL.gold;
+  ctx.beginPath(); ctx.roundRect(barX, barY, barW * prog, barH, 6); ctx.fill();
+
+  // Event dots
+  for (let i = 0; i < 5; i++) {
+    const dx = barX + barW * ((i + 1) / 5);
+    ctx.fillStyle = i < G.currentEvent ? COL.gold : 'rgba(255,255,255,0.3)';
+    ctx.beginPath();
+    ctx.arc(dx, barY + barH / 2, 5, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Item counts (right side)
+  ctx.textAlign = 'right';
+  ctx.font = '13px "IBM Plex Serif", serif';
+  let iy = pad + 52;
+  const items = [
+    { id:'sol', icon:'\u25CE', c:'#9945FF' },
+    { id:'rose', icon:'\u{1F377}', c:'#FF6B81' },
+    { id:'pepper', icon:'\u{1F336}', c:'#FF4500' },
+    { id:'dew', icon:'\u{1F964}', c:'#39FF14' },
+    { id:'ring', icon:'\u{1F48D}', c:'#FFD700' },
+  ];
+  items.forEach(it => {
+    if (G.collected[it.id] > 0) {
+      ctx.fillStyle = it.c;
+      ctx.fillText(`${it.icon} ${G.collected[it.id]}`, G.W - pad - 44, iy);
+      iy += 20;
+    }
+  });
+
+  // Active power-up indicators (left side, below score)
+  let piy = pad + 52;
+  ctx.textAlign = 'left';
+  ctx.font = '11px sans-serif';
+  if (G.powerUps.magnet > 0) {
+    ctx.fillStyle = '#9945FF';
+    ctx.fillText('\u{1F9F2} MAGNET', pad, piy); piy += 16;
+  }
+  if (G.powerUps.invincible > 0) {
+    ctx.fillStyle = '#FF6B81';
+    ctx.fillText('\u{1F6E1}\uFE0F SHIELD', pad, piy); piy += 16;
+  }
+  if (G.powerUps.fireTrail > 0) {
+    ctx.fillStyle = '#FF4500';
+    ctx.fillText('\u{1F525} FIRE', pad, piy); piy += 16;
+  }
+  if (G.powerUps.superJumps > 0) {
+    ctx.fillStyle = '#39FF14';
+    ctx.fillText(`\u26A1 JUMP x${G.powerUps.superJumps}`, pad, piy); piy += 16;
+  }
+  if (G.powerUps.scoreMult > 0) {
+    ctx.fillStyle = '#FFD700';
+    ctx.fillText('\u2728 2x SCORE', pad, piy); piy += 16;
+  }
+
+  // Combo display
+  if (G.comboCount >= 2 && !G.grounded) {
+    ctx.save();
+    ctx.textAlign = 'center';
+    const comboScale = 1 + Math.sin(Date.now() * 0.01) * 0.1;
+    ctx.font = `bold ${Math.round(22 * comboScale)}px "IBM Plex Serif", serif`;
+    ctx.fillStyle = COL.gold;
+    ctx.shadowColor = COL.gold;
+    ctx.shadowBlur = 15;
+    ctx.fillText(`COMBO x${G.comboCount}!`, G.W / 2, G.H * 0.2);
+    ctx.restore();
+  }
+}
+
+function drawEffects() {
+  const ctx = G.ctx;
+
+  // Ros\u00e9 tint
+  if (G.tintAlpha > 0) {
+    ctx.fillStyle = `rgba(255,107,129,${G.tintAlpha * 0.12})`;
+    ctx.fillRect(0, 0, G.W, G.H);
+    G.tintAlpha = Math.max(0, G.tintAlpha - 0.008);
+  }
+
+  // Moon mode
+  if (G.moonMode) {
+    ctx.save();
+    ctx.fillStyle = COL.gold;
+    ctx.font = 'bold 36px "IBM Plex Serif", serif';
+    ctx.textAlign = 'center';
+    const my = G.H * 0.25 + Math.sin(Date.now() * 0.003) * 15;
+    ctx.shadowColor = COL.gold;
+    ctx.shadowBlur = 20;
+    ctx.fillText('\u{1F680} TO THE MOON! \u{1F680}', G.W / 2, my);
+    ctx.restore();
+    G.moonTimer--;
+    if (G.moonTimer <= 0) G.moonMode = false;
+  }
+}
+
+// ==========================================
+// GAME LOGIC
+// ==========================================
+function update() {
+  if (G.state !== 'playing') return;
+  G.frameCount++;
+
+  const speedMulti = G.powerUps.fireTrail > 0 ? 1.6 : (G.speedBoost ? 1.4 : 1);
+  const spd = G.speed * speedMulti;
+  G.scrollX += spd;
+  G.distance += spd;
+
+  // Speed boost timer (old pepper system, kept for compatibility)
+  if (G.speedBoost) {
+    G.speedTimer--;
+    if (G.speedTimer <= 0) G.speedBoost = false;
+  }
+
+  // Power-up timers
+  updatePowerUps();
+
+  // Player physics
+  const th = terrainH(G.scrollX + G.px);
+  const charS = CHARS[G.char].size;
+  const footY = th - charS * 0.05;
+
+  if (G.grounded) {
+    G.py = footY;
+    G.pvy = 0;
+    G.rotation = Math.atan(terrainSlope(G.scrollX + G.px)) * 0.6;
+    G.airTime = 0;
+    G.trickState = null;
+    G.trickTimer = 0;
+    if (G.comboCount >= 2) {
+      // Land combo bonus
+      const comboBonus = Math.round(G.comboCount * 50 * G.comboMultiplier);
+      const mult = G.powerUps.scoreMult > 0 ? 2 : 1;
+      G.score += comboBonus * mult;
+      spawnParticle(G.px, G.py - 60, `COMBO x${G.comboCount} +${comboBonus * mult}!`, COL.gold, 20);
+    }
+    G.comboCount = 0;
+    G.comboMultiplier = 1;
+  } else {
+    G.pvy += PHYS.gravity;
+    G.py += G.pvy;
+    G.airTime++;
+
+    // Flip rotation in air (only if doing backflip trick or free-rotating)
+    if (G.trickState === 'flip' || (G.jumping && G.trickState !== 'grab' && G.trickState !== 'spin')) {
+      if (G.trickState === 'flip') {
+        G.rotation += 0.12;
+      }
+      if (G.rotation > Math.PI * 2) {
+        G.rotation -= Math.PI * 2;
+        G.flipCount++;
+        G.totalFlips++;
+        const mult = G.powerUps.scoreMult > 0 ? 2 : 1;
+        G.score += 50 * mult;
+        spawnParticle(G.px, G.py - 40, `+${50 * mult} FLIP!`, COL.gold, 18);
+      }
+    }
+
+    // Trick animations
+    if (G.trickState === 'grab') {
+      G.trickTimer--;
+      if (G.trickTimer <= 0) G.trickState = null;
+    } else if (G.trickState === 'spin') {
+      G.rotation += 0.18;
+      G.trickTimer--;
+      if (G.trickTimer <= 0) {
+        G.trickState = null;
+      }
+    }
+
+    // Track jump height
+    const jumpH = footY - G.py;
+    if (jumpH > G.bestJump) G.bestJump = jumpH;
+
+    // Land
+    if (G.py >= footY) {
+      const hadFlips = G.flipCount;
+      G.py = footY;
+      G.pvy = 0;
+      G.grounded = true;
+      G.jumping = false;
+      G.rotation = Math.atan(terrainSlope(G.scrollX + G.px)) * 0.6;
+      G._landingBurst = 15;
+
+      if (hadFlips > 0) {
+        const bonus = hadFlips * 100;
+        const mult = G.powerUps.scoreMult > 0 ? 2 : 1;
+        G.score += bonus * mult;
+        spawnParticle(G.px, G.py - 50, `+${bonus * mult} LANDING!`, COL.goldLight, 20);
+        G.flipCount = 0;
+      }
+    }
+  }
+
+  // Trails
+  if (G.powerUps.fireTrail > 0 && G.frameCount % 2 === 0) {
+    G.trails.push({
+      x: G.px - 5 + Math.random() * 10,
+      y: G.py + Math.random() * 5,
+      size: 4 + Math.random() * 4,
+      color: Math.random() > 0.5 ? '#FF4500' : '#FF6600',
+      life: 20, maxLife: 20, type: 'fire'
+    });
+  }
+  if (G.powerUps.magnet > 0 && G.frameCount % 3 === 0) {
+    G.trails.push({
+      x: G.px + Math.random() * 8 - 4,
+      y: G.py - 5 + Math.random() * 5,
+      size: 3, color: '#FFD700',
+      life: 15, maxLife: 15, type: 'gold'
+    });
+  }
+  G.trails.forEach(t => { t.life--; t.x -= spd * 0.3; });
+  G.trails = G.trails.filter(t => t.life > 0);
+  if (G.trails.length > 60) G.trails = G.trails.slice(-60);
+
+  // Coin magnet
+  if (G.powerUps.magnet > 0) {
+    coinMagnet();
+  }
+
+  // Generate collectibles
+  genCollectibles();
+  // Generate trees
+  genTrees();
+  // Spawn venues
+  spawnVenues();
+
+  // Check collisions
+  checkCollisions();
+
+  // Update snow
+  updateSnow();
+  // Update clouds
+  updateClouds();
+  // Update particles
+  G.particles.forEach(p => { p.y += p.vy; p.life--; });
+  G.particles = G.particles.filter(p => p.life > 0);
+  // Update confetti
+  G.confetti.forEach(c => {
+    c.x += c.vx; c.y += c.vy; c.vy += 0.1;
+    c.rot += c.vr; c.life--;
+  });
+  G.confetti = G.confetti.filter(c => c.life > 0);
+
+  // Checkpoints (toast system)
+  checkCheckpoints();
+
+  // Toast timer
+  if (G.toastActive) {
+    G.toastTimer--;
+    if (G.toastTimer <= 0) {
+      hideToast();
+    }
+  }
+
+  // Tutorial
+  if (!G.tutorialShown) {
+    G.tutorialTimer++;
+    if (G.tutorialTimer > 60) {
+      tutorialEl.classList.remove('hidden');
+    }
+    if (G.tutorialTimer > 240) {
+      tutorialEl.classList.add('hidden');
+      G.tutorialShown = true;
+    }
+  }
+
+  // Game end
+  if (G.distance >= G.segLen * 5) {
+    G.state = 'finished';
+    hideToast();
+    showEnd();
+  }
+}
+
+function jump() {
+  if (G.state !== 'playing') return;
+
+  // If airborne, perform a trick instead
+  if (!G.grounded) {
+    performTrick();
+    return;
+  }
+
+  const hasSuper = G.powerUps.superJumps > 0;
+  G.pvy = hasSuper ? PHYS.superJumpForce : PHYS.jumpForce;
+  if (hasSuper) {
+    G.powerUps.superJumps--;
+    spawnParticle(G.px, G.py - 30, 'SUPER!', '#39FF14', 16);
+  }
+  G.grounded = false;
+  G.jumping = true;
+  G.flipCount = 0;
+  G.currentJumpStart = G.py;
+  G.trickJumpId++;
+  G.comboCount = 0;
+
+  if (!G.tutorialShown) {
+    tutorialEl.classList.add('hidden');
+    G.tutorialShown = true;
+  }
+}
+
+function performTrick() {
+  if (G.grounded || G.trickState) return;
+
+  const mult = G.powerUps.scoreMult > 0 ? 2 : 1;
+  let pts = 0;
+  let name = '';
+
+  if (G.airTime < 10) {
+    // Quick grab
+    G.trickState = 'grab';
+    G.trickTimer = 15;
+    pts = 30 * mult;
+    name = 'GRAB';
+  } else if (G.airTime < 25) {
+    // Backflip
+    G.trickState = 'flip';
+    G.trickTimer = 30;
+    pts = 50 * mult;
+    name = 'BACKFLIP';
+  } else if (G.airTime < 45) {
+    // 360 spin
+    G.trickState = 'spin';
+    G.trickTimer = 25;
+    pts = 100 * mult;
+    name = '360 SPIN';
+  } else {
+    // Double backflip
+    G.trickState = 'flip';
+    G.trickTimer = 40;
+    pts = 150 * mult;
+    name = 'DOUBLE FLIP';
+  }
+
+  G.comboCount++;
+  if (G.comboCount > 1) {
+    G.comboMultiplier = 1 + (G.comboCount - 1) * 0.5;
+    pts = Math.round(pts * G.comboMultiplier);
+  }
+
+  G.score += pts;
+  const colors = ['#00CCFF', '#FF6B81', '#FFD700', '#FF4500'];
+  spawnParticle(G.px, G.py - 50, `+${pts} ${name}!`, colors[G.comboCount % colors.length], 16);
+}
+
+function updatePowerUps() {
+  const pu = G.powerUps;
+  if (pu.magnet > 0) pu.magnet--;
+  if (pu.invincible > 0) pu.invincible--;
+  if (pu.fireTrail > 0) pu.fireTrail--;
+  if (pu.scoreMult > 0) pu.scoreMult--;
+}
+
+function coinMagnet() {
+  const px = G.px + G.scrollX;
+  const py = G.py;
+  const magnetRange = 150;
+
+  G.collectibles.forEach(c => {
+    if (c.got || c.type !== 'sol') return;
+    const dx = px - c.x;
+    const dy = py - c.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist < magnetRange) {
+      // Pull toward player
+      const pull = (1 - dist / magnetRange) * 4;
+      c.x += (dx / dist) * pull;
+      c.y += (dy / dist) * pull;
+    }
+  });
+}
+
+function genCollectibles() {
+  const ahead = G.scrollX + G.W + 200;
+  while (G.lastCollectX < ahead) {
+    G.lastCollectX += 100 + Math.random() * 180;
+    const rand = Math.random();
+    let cum = 0, type = COLLECT_TYPES[0];
+    for (const t of COLLECT_TYPES) {
+      cum += t.freq;
+      if (rand <= cum) { type = t; break; }
+    }
+    const th2 = terrainH(G.lastCollectX);
+    const y = th2 - 45 - Math.random() * 80;
+    G.collectibles.push({ x: G.lastCollectX, y, type: type.id, got: false });
+  }
+  G.collectibles = G.collectibles.filter(c => c.x > G.scrollX - 100);
+}
+
+function genTrees() {
+  const ahead = G.scrollX + G.W + 300;
+  while (G.lastTreeX < ahead) {
+    G.lastTreeX += 200 + Math.random() * 350;
+    const types = ['standard', 'standard', 'standard', 'snowy', 'bare'];
+    G.trees.push({
+      x: G.lastTreeX,
+      h: 35 + Math.random() * 40,
+      w: 22 + Math.random() * 16,
+      type: types[Math.floor(Math.random() * types.length)],
+    });
+  }
+  G.trees = G.trees.filter(t => t.x > G.scrollX - 100);
+}
+
+function spawnVenues() {
+  for (let i = 0; i < 5; i++) {
+    if (G.venuesSpawned[i]) continue;
+    const checkpointDist = (i + 1) * G.segLen;
+    const venueStart = checkpointDist - VENUE_DEFS[i].width - 200;
+    // Spawn when player is within 2000px of venue start
+    if (G.distance > venueStart - 2000) {
+      G.venues.push({
+        startX: venueStart,
+        width: VENUE_DEFS[i].width,
+        type: VENUE_DEFS[i].type,
+        eventIdx: i,
+      });
+      G.venuesSpawned[i] = true;
+    }
+  }
+}
+
+function checkCollisions() {
+  const px = G.px + G.scrollX;
+  const py = G.py;
+  const hr = CHARS[G.char].size * 0.7;
+
+  G.collectibles.forEach(c => {
+    if (c.got) return;
+    const dx = px - c.x, dy = py - c.y;
+    const hitR = hr + (COLLECT_TYPES.find(t => t.id === c.type).r * 0.7);
+    if (Math.sqrt(dx * dx + dy * dy) < hitR) {
+      c.got = true;
+      const type = COLLECT_TYPES.find(t => t.id === c.type);
+      const mult = G.powerUps.scoreMult > 0 ? 2 : 1;
+      G.score += type.pts * mult;
+      G.collected[c.type]++;
+
+      const sx = c.x - G.scrollX;
+      spawnParticle(sx, c.y - 10, `+${type.pts * mult}`, type.color);
+
+      // Enhanced power-up effects
+      if (c.type === 'rose') {
+        G.tintAlpha = 1.0;
+        G.powerUps.invincible = 180; // 3 seconds at 60fps
+        spawnParticle(sx, c.y - 30, 'SHIELD!', '#FF6B81', 16);
+      } else if (c.type === 'dew') {
+        G.powerUps.superJumps += 3;
+        spawnParticle(sx, c.y - 30, 'SUPER JUMP x3!', '#39FF14', 16);
+      } else if (c.type === 'sol' && G.collected.sol % 10 === 0 && G.collected.sol > 0) {
+        G.moonMode = true;
+        G.moonTimer = 150;
+        G.powerUps.magnet = 300; // 5 seconds
+        spawnParticle(sx, c.y - 30, 'COIN MAGNET!', '#9945FF', 16);
+      } else if (c.type === 'pepper') {
+        G.powerUps.fireTrail = 180; // 3 seconds
+        spawnParticle(sx, c.y - 30, '\u{1F525} FIRE MODE!', '#FF4500', 16);
+      } else if (c.type === 'ring') {
+        G.powerUps.scoreMult = 300; // 5 seconds
+        for (let i = 0; i < 25; i++) {
+          G.confetti.push(mkConfetti(sx, c.y));
+        }
+        spawnParticle(sx, c.y - 30, '2x SCORE!', '#FFD700', 18);
+      }
+    }
+  });
+}
+
+function checkCheckpoints() {
+  const next = (G.currentEvent + 1) * G.segLen;
+  if (G.distance >= next && G.currentEvent < 5) {
+    G.currentEvent++;
+    showToast(G.currentEvent - 1);
+    // Update music chord
+    if (MUSIC.started) {
+      MUSIC.currentChordIdx = Math.min(G.currentEvent, 4);
+      updatePadChord();
+    }
+  }
+}
+
+// ==========================================
+// PARTICLES / HELPERS
+// ==========================================
+function mkSnow() {
+  return {
+    x: Math.random() * (G.W || 400),
+    y: Math.random() * (G.H || 800),
+    sz: Math.random() * 2.5 + 0.5,
+    sx: (Math.random() - 0.5) * 0.8,
+    sy: Math.random() * 1.2 + 0.3,
+    op: Math.random() * 0.5 + 0.2,
+  };
+}
+
+function mkCloud(i) {
+  return {
+    x: (G.W || 400) * (i / 6) + Math.random() * 100,
+    y: (G.H || 800) * 0.05 + Math.random() * (G.H || 800) * 0.12,
+    w: 40 + Math.random() * 60,
+    h: 15 + Math.random() * 12,
+    speed: 0.1 + Math.random() * 0.15,
+    opacity: 0.15 + Math.random() * 0.15,
+  };
+}
+
+function updateSnow() {
+  G.snowflakes.forEach(s => {
+    s.x += s.sx - (G.state === 'playing' ? G.speed * 0.15 : 0);
+    s.y += s.sy;
+    if (s.y > G.H + 5) { s.y = -5; s.x = Math.random() * G.W; }
+    if (s.x < -5) s.x = G.W + 5;
+    if (s.x > G.W + 5) s.x = -5;
+  });
+}
+
+function updateClouds() {
+  G.clouds.forEach(c => {
+    c.x -= c.speed + (G.state === 'playing' ? G.speed * 0.05 : 0);
+    if (c.x + c.w < -20) {
+      c.x = G.W + 20 + Math.random() * 50;
+      c.y = G.H * 0.05 + Math.random() * G.H * 0.12;
+    }
+  });
+}
+
+function spawnParticle(x, y, text, color, fontSize) {
+  G.particles.push({ x, y, text, color, vy: -1.8, life: 55, maxLife: 55, fontSize: fontSize || 14 });
+}
+
+function mkConfetti(x, y) {
+  const colors = [COL.gold, COL.goldLight, '#FFF', COL.burgundy, '#FF6B81'];
+  return {
+    x, y,
+    vx: (Math.random() - 0.5) * 8,
+    vy: -Math.random() * 8 - 2,
+    rot: Math.random() * Math.PI * 2,
+    vr: (Math.random() - 0.5) * 0.3,
+    color: colors[Math.floor(Math.random() * colors.length)],
+    life: 80 + Math.random() * 40,
+    maxLife: 120,
+  };
+}
+
+function lerp(a, b, t) { return a + (b - a) * Math.max(0, Math.min(1, t)); }
+
+// ==========================================
+// SCREEN MANAGEMENT (Toast system)
+// ==========================================
+function showToast(idx) {
+  const ev = EVENTS[idx];
+
+  $('toastEmoji').textContent = ev.emoji;
+  $('toastName').textContent = ev.name;
+  $('toastVenue').textContent = ev.venue;
+  toastOverlay.classList.add('visible');
+  G.toastActive = true;
+  G.toastTimer = 120; // 2 seconds
+
+  // Confetti burst
+  for (let i = 0; i < 40; i++) {
+    G.confetti.push(mkConfetti(G.W / 2 + (Math.random() - 0.5) * G.W * 0.6, G.H * 0.4));
+  }
+}
+
+function hideToast() {
+  toastOverlay.classList.remove('visible');
+  G.toastActive = false;
+}
+
+function startCountdown() {
+  countdownEl.classList.remove('hidden');
+  let count = 3;
+  countNum.textContent = count;
+
+  const iv = setInterval(() => {
+    count--;
+    if (count > 0) {
+      countNum.textContent = count;
+      countNum.style.animation = 'none';
+      void countNum.offsetHeight;
+      countNum.style.animation = '';
+    } else if (count === 0) {
+      countNum.textContent = 'GO!';
+      countNum.style.animation = 'none';
+      void countNum.offsetHeight;
+      countNum.style.animation = '';
+    } else {
+      clearInterval(iv);
+      countdownEl.classList.add('hidden');
+      G.state = 'playing';
+      G.tutorialTimer = 0;
+      // Start music
+      startMusic();
+    }
+  }, 800);
+}
+
+function showEnd() {
+  const ch = CHARS[G.char];
+  const totalItems = Object.values(G.collected).reduce((a, b) => a + b, 0);
+
+  $('endTitle').textContent = `${ch.name}'s Adventure`;
+  $('finalScore').textContent = G.score;
+
+  const grid = $('statsGrid');
+  grid.innerHTML = '';
+  const stats = [
+    { val: totalItems, label: 'Items Collected' },
+    { val: G.totalFlips, label: 'Backflips' },
+    { val: `\u25CE ${G.collected.sol}`, label: 'SOL Earned' },
+    { val: `\u{1F377} ${G.collected.rose}`, label: 'Ros\u00e9 Consumed' },
+    { val: `\u{1F336} ${G.collected.pepper}`, label: 'Peppercinos' },
+    { val: `\u{1F48D} ${G.collected.ring}`, label: 'Rings Found' },
+  ];
+  stats.forEach(s => {
+    const div = document.createElement('div');
+    div.className = 'stat';
+    div.innerHTML = `<div class="val">${s.val}</div><div class="label">${s.label}</div>`;
+    grid.appendChild(div);
+  });
+
+  let quip = '';
+  if (G.char === 'jill') {
+    quip = `Jill rates your form ${Math.min(10, Math.round(G.score / 200))}/10. Your apr\u00e8s ski ros\u00e9 consumption was... impressive. The slopes of Corviglia have never looked so elegant.`;
+  } else if (G.char === 'kyle') {
+    quip = `Kyle's portfolio analysis: ${G.collected.sol} SOL collected. ${G.collected.sol >= 30 ? 'Diamond hands! \u{1F48E}\u{1F64C}' : G.collected.sol >= 15 ? 'WAGMI! \u{1F4C8}' : 'Paper hands... NGMI \u{1F4C9}'} He'd trade it all for Jill though.`;
+  } else {
+    quip = `Banksy completed ${G.totalFlips} zoomies! Every peppercino = 1 tail wag. ${G.collected.pepper >= 5 ? 'Tail is a BLUR right now! \u{1F415}\u{1F4A8}' : 'Good boy energy! \u{1F415}'} Cutest pup in all the Alps!`;
+  }
+  $('endQuip').textContent = quip;
+
+  // Fade music
+  fadeOutMusic();
+
+  setTimeout(() => {
+    endScreen.classList.remove('hidden');
+  }, 600);
+}
+
+function resetGame() {
+  G.state = 'title';
+  G.char = null;
+  G.scrollX = 0;
+  G.speed = PHYS.baseSpeed;
+  G.score = 0;
+  G.distance = 0;
+  G.collected = { sol:0, rose:0, pepper:0, dew:0, ring:0 };
+  G.bestJump = 0;
+  G.totalFlips = 0;
+  G.currentEvent = 0;
+  G.collectibles = [];
+  G.lastCollectX = 0;
+  G.trees = [];
+  G.lastTreeX = 0;
+  G.particles = [];
+  G.confetti = [];
+  G.trails = [];
+  G.tintAlpha = 0;
+  G.superJump = false;
+  G.moonMode = false;
+  G.speedBoost = false;
+  G.grounded = true;
+  G.jumping = false;
+  G.pvy = 0;
+  G.rotation = 0;
+  G.flipCount = 0;
+  G.tutorialShown = false;
+  G.tutorialTimer = 0;
+  G.airTime = 0;
+  G.trickState = null;
+  G.comboCount = 0;
+  G.comboMultiplier = 1;
+  G.powerUps = { magnet:0, invincible:0, fireTrail:0, superJumps:0, scoreMult:0 };
+  G.venues = [];
+  G.venuesSpawned = [false,false,false,false,false];
+  G.toastActive = false;
+  G.toastTimer = 0;
+  G._landingBurst = 0;
+  G.frameCount = 0;
+
+  hideToast();
+  endScreen.classList.add('hidden');
+  selectScreen.classList.add('hidden');
+  missionBrief.classList.add('hidden');
+  titleScreen.classList.remove('hidden');
+  muteBtn.classList.remove('show');
+
+  stopMusic();
+}
+
+function selectChar(charId) {
+  G.char = charId;
+  G.speed = PHYS.baseSpeed * CHARS[charId].speedMod;
+  G.px = G.W * 0.2;
+  G.py = terrainH(G.scrollX + G.px);
+  G._landingBurst = 0;
+
+  selectScreen.classList.add('hidden');
+
+  // Init music on first interaction
+  if (!MUSIC.ctx) {
+    initMusic();
+  }
+
+  // Show mission briefing
+  const ch = CHARS[charId];
+  missionText.textContent = `Help ${ch.name} shred through St. Moritz and make it to all five wedding events! Collect items, pull off tricks, and rack up the highest score.`;
+  missionBrief.classList.remove('hidden');
+  G.state = 'mission';
+}
+
+// ==========================================
+// INPUT
+// ==========================================
+function setupInput() {
+  document.addEventListener('touchstart', (e) => {
+    // Don't prevent default on mute button
+    if (e.target === muteBtn) return;
+    e.preventDefault();
+    handleTap(e);
+  }, { passive: false });
+
+  document.addEventListener('mousedown', (e) => {
+    if (e.target === muteBtn) return;
+    handleTap(e);
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.code === 'Space' || e.code === 'ArrowUp') {
+      e.preventDefault();
+      handleTap(e);
+    }
+  });
+
+  // Character select
+  document.querySelectorAll('.char-card').forEach(card => {
+    card.addEventListener('click', (e) => {
+      e.stopPropagation();
+      selectChar(card.dataset.char);
+    });
+    card.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      selectChar(card.dataset.char);
+    });
+  });
+
+  // End screen buttons
+  $('btnPlayAgain').addEventListener('click', (e) => {
+    e.stopPropagation();
+    resetGame();
+  });
+  $('btnShare').addEventListener('click', (e) => {
+    e.stopPropagation();
+    shareScore();
+  });
+
+  // Mute button
+  muteBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleMute();
+  });
+  muteBtn.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleMute();
+  });
+}
+
+function handleTap(e) {
+  switch (G.state) {
+    case 'title':
+      titleScreen.classList.add('hidden');
+      selectScreen.classList.remove('hidden');
+      G.state = 'select';
+      break;
+    case 'mission':
+      missionBrief.classList.add('hidden');
+      muteBtn.classList.add('show');
+      startCountdown();
+      break;
+    case 'playing':
+      jump();
+      break;
+  }
+}
+
+function shareScore() {
+  const ch = CHARS[G.char];
+  const text = `I scored ${G.score} as ${ch.name} in Kyle & Jill's St. Moritz Wedding Adventure! \u26F7\u{1F3C2}\u{1F415} #KJSamani`;
+  if (navigator.share) {
+    navigator.share({ title: "K&J Wedding Adventure", text }).catch(() => {});
+  } else if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() => {
+      $('btnShare').textContent = 'Copied!';
+      setTimeout(() => { $('btnShare').textContent = 'Share Score'; }, 2000);
+    });
+  }
+}
+
+// ==========================================
+// MUSIC SYSTEM (Web Audio API)
+// ==========================================
+function initMusic() {
+  try {
+    const AC = new (window.AudioContext || window.webkitAudioContext)();
+    MUSIC.ctx = AC;
+
+    // Master gain
+    MUSIC.masterGain = AC.createGain();
+    MUSIC.masterGain.gain.value = 0.25;
+
+    // Compressor
+    MUSIC.compressor = AC.createDynamicsCompressor();
+    MUSIC.compressor.threshold.value = -20;
+    MUSIC.compressor.knee.value = 10;
+    MUSIC.compressor.ratio.value = 4;
+    MUSIC.compressor.connect(MUSIC.masterGain);
+    MUSIC.masterGain.connect(AC.destination);
+
+    // Create noise buffer for hi-hats and claps
+    const bufferSize = AC.sampleRate * 0.1;
+    MUSIC.noiseBuffer = AC.createBuffer(1, bufferSize, AC.sampleRate);
+    const data = MUSIC.noiseBuffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = Math.random() * 2 - 1;
+    }
+
+    // Pad synth (sustained)
+    MUSIC.padGain = AC.createGain();
+    MUSIC.padGain.gain.value = 0;
+    const padFilter = AC.createBiquadFilter();
+    padFilter.type = 'lowpass';
+    padFilter.frequency.value = 2200;
+    padFilter.Q.value = 0.7;
+    MUSIC.padFilter = padFilter;
+    MUSIC.padGain.connect(padFilter);
+    padFilter.connect(MUSIC.compressor);
+
+    // Bass drone
+    MUSIC.bassDroneGain = AC.createGain();
+    MUSIC.bassDroneGain.gain.value = 0;
+    MUSIC.bassDroneGain.connect(MUSIC.compressor);
+
+    MUSIC.started = false;
+  } catch(e) {
+    // Web Audio not supported
+  }
+}
+
+function startMusic() {
+  if (!MUSIC.ctx || MUSIC.muted) return;
+
+  const AC = MUSIC.ctx;
+  if (AC.state === 'suspended') AC.resume();
+
+  MUSIC.started = true;
+  MUSIC.state = 'full';
+  MUSIC.currentBeat = 0;
+  MUSIC.nextBeatTime = AC.currentTime + 0.1;
+
+  // Start pad
+  startPadSynth();
+
+  // Start bass drone
+  startBassDrone();
+
+  // Start scheduler
+  if (MUSIC.schedulerTimer) clearInterval(MUSIC.schedulerTimer);
+  MUSIC.schedulerTimer = setInterval(musicScheduler, 25);
+}
+
+function startPadSynth() {
+  const AC = MUSIC.ctx;
+  // Stop existing
+  MUSIC.padOscs.forEach(o => { try { o.stop(); } catch(e) {} });
+  MUSIC.padOscs = [];
+
+  const chord = MUSIC.chords[MUSIC.currentChordIdx];
+  chord.forEach((freq, i) => {
+    const osc = AC.createOscillator();
+    osc.type = 'sawtooth';
+    osc.frequency.value = freq * 0.5; // One octave lower for warmth
+    const oscGain = AC.createGain();
+    oscGain.gain.value = 0.04;
+    osc.connect(oscGain);
+    oscGain.connect(MUSIC.padGain);
+    osc.start();
+    MUSIC.padOscs.push(osc);
+  });
+
+  MUSIC.padGain.gain.setTargetAtTime(1, AC.currentTime, 0.5);
+}
+
+function updatePadChord() {
+  if (!MUSIC.ctx || !MUSIC.started) return;
+  const AC = MUSIC.ctx;
+
+  // Fade out current
+  MUSIC.padGain.gain.setTargetAtTime(0, AC.currentTime, 0.3);
+
+  setTimeout(() => {
+    MUSIC.padOscs.forEach(o => { try { o.stop(); } catch(e) {} });
+    MUSIC.padOscs = [];
+
+    const chord = MUSIC.chords[MUSIC.currentChordIdx];
+    chord.forEach(freq => {
+      const osc = AC.createOscillator();
+      osc.type = 'sawtooth';
+      osc.frequency.value = freq * 0.5;
+      const oscGain = AC.createGain();
+      oscGain.gain.value = 0.04;
+      osc.connect(oscGain);
+      oscGain.connect(MUSIC.padGain);
+      osc.start();
+      MUSIC.padOscs.push(osc);
+    });
+    MUSIC.padGain.gain.setTargetAtTime(1, AC.currentTime, 0.5);
+  }, 400);
+}
+
+function startBassDrone() {
+  const AC = MUSIC.ctx;
+  if (MUSIC.bassDrone) { try { MUSIC.bassDrone.stop(); } catch(e) {} }
+
+  MUSIC.bassDrone = AC.createOscillator();
+  MUSIC.bassDrone.type = 'sine';
+  MUSIC.bassDrone.frequency.value = MUSIC.bassNotes[MUSIC.currentChordIdx];
+  MUSIC.bassDrone.connect(MUSIC.bassDroneGain);
+  MUSIC.bassDrone.start();
+  MUSIC.bassDroneGain.gain.setTargetAtTime(0.15, AC.currentTime, 0.3);
+}
+
+function musicScheduler() {
+  if (!MUSIC.ctx || !MUSIC.started || MUSIC.muted) return;
+  const AC = MUSIC.ctx;
+  const lookAhead = 0.1; // Schedule 100ms ahead
+
+  while (MUSIC.nextBeatTime < AC.currentTime + lookAhead) {
+    scheduleBeat(MUSIC.nextBeatTime, MUSIC.currentBeat);
+    MUSIC.nextBeatTime += MUSIC.beatInterval / 2; // Schedule 8th notes
+    MUSIC.currentBeat++;
+  }
+}
+
+function scheduleBeat(time, beat) {
+  const AC = MUSIC.ctx;
+  const beatInBar = beat % 8; // 8 eighth-notes per bar
+
+  // Four-on-the-floor kick (every beat = EDM style)
+  if (beatInBar === 0 || beatInBar === 2 || beatInBar === 4 || beatInBar === 6) {
+    playKick(time);
+  }
+
+  // Clap on 2 and 4
+  if (beatInBar === 2 || beatInBar === 6) {
+    playClap(time);
+  }
+
+  // Hi-hat on every 8th note (open hat on offbeats)
+  playHiHat(time, beatInBar % 2 === 1);
+
+  // Bass on downbeats and offbeat hits for drive
+  if (beatInBar === 0 || beatInBar === 3) {
+    playBassNote(time);
+  }
+
+  // Shimmer arpeggios - frequent sparkly synth
+  if (beat % 2 === 0) {
+    playShimmer(time);
+  }
+
+  // Extra uplifting synth stab on beat 1
+  if (beatInBar === 0 && beat % 8 === 0) {
+    playSynthStab(time);
+  }
+}
+
+function playKick(time) {
+  const AC = MUSIC.ctx;
+  const osc = AC.createOscillator();
+  const gain = AC.createGain();
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(150, time);
+  osc.frequency.exponentialRampToValueAtTime(40, time + 0.08);
+  gain.gain.setValueAtTime(0.7, time);
+  gain.gain.exponentialRampToValueAtTime(0.001, time + 0.25);
+  osc.connect(gain);
+  gain.connect(MUSIC.compressor);
+  osc.start(time);
+  osc.stop(time + 0.25);
+}
+
+function playHiHat(time, open) {
+  const AC = MUSIC.ctx;
+  const source = AC.createBufferSource();
+  source.buffer = MUSIC.noiseBuffer;
+  const filter = AC.createBiquadFilter();
+  filter.type = 'highpass';
+  filter.frequency.value = open ? 7000 : 9000;
+  const decay = open ? 0.08 : 0.04;
+  const gain = AC.createGain();
+  gain.gain.setValueAtTime(open ? 0.06 : 0.1, time);
+  gain.gain.exponentialRampToValueAtTime(0.001, time + decay);
+  source.connect(filter);
+  filter.connect(gain);
+  gain.connect(MUSIC.compressor);
+  source.start(time);
+  source.stop(time + decay);
+}
+
+function playSynthStab(time) {
+  const AC = MUSIC.ctx;
+  const chord = MUSIC.chords[MUSIC.currentChordIdx];
+  chord.forEach(freq => {
+    const osc = AC.createOscillator();
+    const gain = AC.createGain();
+    osc.type = 'square';
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(0.04, time);
+    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.15);
+    osc.connect(gain);
+    gain.connect(MUSIC.compressor);
+    osc.start(time);
+    osc.stop(time + 0.15);
+  });
+}
+
+function playClap(time) {
+  const AC = MUSIC.ctx;
+  const source = AC.createBufferSource();
+  source.buffer = MUSIC.noiseBuffer;
+  const filter = AC.createBiquadFilter();
+  filter.type = 'bandpass';
+  filter.frequency.value = 2000;
+  filter.Q.value = 2;
+  const gain = AC.createGain();
+  gain.gain.setValueAtTime(0.12, time);
+  gain.gain.exponentialRampToValueAtTime(0.001, time + 0.1);
+  source.connect(filter);
+  filter.connect(gain);
+  gain.connect(MUSIC.compressor);
+  source.start(time);
+  source.stop(time + 0.1);
+}
+
+function playBassNote(time) {
+  const AC = MUSIC.ctx;
+  const freq = MUSIC.bassNotes[MUSIC.currentChordIdx];
+  const osc = AC.createOscillator();
+  const gain = AC.createGain();
+  osc.type = 'sine';
+  osc.frequency.value = freq;
+  gain.gain.setValueAtTime(0.2, time);
+  gain.gain.exponentialRampToValueAtTime(0.001, time + 0.4);
+  osc.connect(gain);
+  gain.connect(MUSIC.compressor);
+  osc.start(time);
+  osc.stop(time + 0.4);
+}
+
+function playShimmer(time) {
+  const AC = MUSIC.ctx;
+  const chord = MUSIC.chords[MUSIC.currentChordIdx];
+  // Sparkly arpeggio - pick a note and play it high
+  const freq = chord[Math.floor(Math.random() * chord.length)] * (Math.random() > 0.5 ? 2 : 4);
+  const osc = AC.createOscillator();
+  const gain = AC.createGain();
+  osc.type = 'sine';
+  osc.frequency.value = freq;
+  gain.gain.setValueAtTime(0.05, time);
+  gain.gain.exponentialRampToValueAtTime(0.001, time + 0.2);
+  osc.connect(gain);
+  gain.connect(MUSIC.compressor);
+  osc.start(time);
+  osc.stop(time + 0.2);
+}
+
+function fadeOutMusic() {
+  if (!MUSIC.ctx || !MUSIC.started) return;
+  const AC = MUSIC.ctx;
+  MUSIC.masterGain.gain.setTargetAtTime(0.05, AC.currentTime, 1.0);
+
+  // Stop scheduler
+  if (MUSIC.schedulerTimer) {
+    setTimeout(() => {
+      clearInterval(MUSIC.schedulerTimer);
+      MUSIC.schedulerTimer = null;
+    }, 3000);
+  }
+}
+
+function stopMusic() {
+  if (!MUSIC.ctx) return;
+  MUSIC.started = false;
+  MUSIC.state = 'off';
+  if (MUSIC.schedulerTimer) {
+    clearInterval(MUSIC.schedulerTimer);
+    MUSIC.schedulerTimer = null;
+  }
+  MUSIC.padOscs.forEach(o => { try { o.stop(); } catch(e) {} });
+  MUSIC.padOscs = [];
+  if (MUSIC.bassDrone) { try { MUSIC.bassDrone.stop(); } catch(e) {} MUSIC.bassDrone = null; }
+  if (MUSIC.masterGain) MUSIC.masterGain.gain.value = 0.25;
+  if (MUSIC.padGain) MUSIC.padGain.gain.value = 0;
+  if (MUSIC.bassDroneGain) MUSIC.bassDroneGain.gain.value = 0;
+}
+
+function toggleMute() {
+  MUSIC.muted = !MUSIC.muted;
+  muteBtn.textContent = MUSIC.muted ? '\u{1F507}' : '\u{1F50A}';
+  if (MUSIC.ctx) {
+    if (MUSIC.muted) {
+      MUSIC.masterGain.gain.setTargetAtTime(0, MUSIC.ctx.currentTime, 0.1);
+    } else {
+      MUSIC.masterGain.gain.setTargetAtTime(0.25, MUSIC.ctx.currentTime, 0.1);
+      if (!MUSIC.started && G.state === 'playing') {
+        startMusic();
+      }
+    }
+  }
+}
+
+// ==========================================
+// MAIN LOOP
+// ==========================================
+function loop(ts) {
+  if (!G.running) return;
+  G.lastTime = ts;
+
+  update();
+  render();
+
+  requestAnimationFrame(loop);
+}
+
+function render() {
+  const ctx = G.ctx;
+  ctx.clearRect(0, 0, G.W, G.H);
+
+  if (G.state === 'playing' || G.state === 'finished') {
+    drawSky();
+    drawClouds();
+    drawMtns();
+    drawSnow();
+    drawTerrain();
+    drawTrees();
+    drawVenueZones();
+    drawCollectibles();
+    drawChar();
+    drawConfetti();
+    drawParticles();
+    drawEffects();
+    drawHUD();
+  } else if (G.state === 'title' || G.state === 'select') {
+    const grad = ctx.createLinearGradient(0, 0, 0, G.H);
+    grad.addColorStop(0, '#0d0303');
+    grad.addColorStop(1, '#1a0808');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, G.W, G.H);
+    drawSnow();
+    updateSnow();
+  }
+}
+
+// ==========================================
+// START
+// ==========================================
+window.addEventListener('load', init);
+
+})();
+</script>
+</body>
+</html>
