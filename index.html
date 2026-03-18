@@ -339,8 +339,10 @@ canvas {
 <div id="titleScreen" class="screen">
   <svg class="monogram" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
     <defs>
-      <polygon id="sr" points="0,-52 -5,-76 0,-96 5,-76" fill="#C89A10"/>
-      <path id="wr" d="M-3,-52 C-10,-68 -3,-84 0,-96 C3,-84 10,-68 3,-52 Z" fill="#DAA520"/>
+      <!-- Thin pointed straight ray - long dagger -->
+      <polygon id="sr" points="0,-34 -3,-58 0,-94 3,-58" fill="#C89A10"/>
+      <!-- Wavy flame ray - S-curve, wider body -->
+      <path id="wr" d="M-1.5,-34 C-8,-48 5,-62 -2,-78 L0,-94 L2,-78 C-5,-62 8,-48 1.5,-34 Z" fill="#DAA520"/>
     </defs>
     <g transform="translate(100,100)">
       <!-- 16 straight rays -->
@@ -361,11 +363,11 @@ canvas {
       <use href="#wr" transform="rotate(236.25)"/><use href="#wr" transform="rotate(258.75)"/>
       <use href="#wr" transform="rotate(281.25)"/><use href="#wr" transform="rotate(303.75)"/>
       <use href="#wr" transform="rotate(326.25)"/><use href="#wr" transform="rotate(348.75)"/>
-      <!-- Central sun disc -->
-      <circle cx="0" cy="0" r="48" fill="#E8B816"/>
-      <circle cx="0" cy="0" r="44" fill="#F0CA30"/>
+      <!-- Central sun disc (smaller relative to rays) -->
+      <circle cx="0" cy="0" r="32" fill="#E8B816"/>
+      <circle cx="0" cy="0" r="28" fill="#F0CA30"/>
       <!-- KJ Lockup -->
-      <text x="0" y="14" text-anchor="middle" fill="#9B7511" font-family="'IBM Plex Serif', serif" font-size="44" font-weight="400" letter-spacing="-4">KJ</text>
+      <text x="0" y="10" text-anchor="middle" fill="#9B7511" font-family="'IBM Plex Serif', serif" font-size="32" font-weight="400" letter-spacing="-3">KJ</text>
     </g>
   </svg>
   <h1>JILL &amp; KYLE</h1>
@@ -373,12 +375,12 @@ canvas {
   <p class="date">MARCH 18 – 22, 2026</p>
   <p class="tap">Tap to Begin</p>
   <svg class="lockup-bottom" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-    <defs><polygon id="sr2" points="0,-52 -5,-76 0,-96 5,-76" fill="#C89A10"/><path id="wr2" d="M-3,-52 C-10,-68 -3,-84 0,-96 C3,-84 10,-68 3,-52 Z" fill="#DAA520"/></defs>
+    <defs><polygon id="sr2" points="0,-34 -3,-58 0,-94 3,-58" fill="#C89A10"/><path id="wr2" d="M-1.5,-34 C-8,-48 5,-62 -2,-78 L0,-94 L2,-78 C-5,-62 8,-48 1.5,-34 Z" fill="#DAA520"/></defs>
     <g transform="translate(100,100)">
       <use href="#sr2" transform="rotate(0)"/><use href="#sr2" transform="rotate(45)"/><use href="#sr2" transform="rotate(90)"/><use href="#sr2" transform="rotate(135)"/><use href="#sr2" transform="rotate(180)"/><use href="#sr2" transform="rotate(225)"/><use href="#sr2" transform="rotate(270)"/><use href="#sr2" transform="rotate(315)"/>
       <use href="#wr2" transform="rotate(22.5)"/><use href="#wr2" transform="rotate(67.5)"/><use href="#wr2" transform="rotate(112.5)"/><use href="#wr2" transform="rotate(157.5)"/><use href="#wr2" transform="rotate(202.5)"/><use href="#wr2" transform="rotate(247.5)"/><use href="#wr2" transform="rotate(292.5)"/><use href="#wr2" transform="rotate(337.5)"/>
-      <circle cx="0" cy="0" r="48" fill="#E8B816"/><circle cx="0" cy="0" r="44" fill="#F0CA30"/>
-      <text x="0" y="14" text-anchor="middle" fill="#9B7511" font-family="'IBM Plex Serif', serif" font-size="44" font-weight="400" letter-spacing="-4">KJ</text>
+      <circle cx="0" cy="0" r="32" fill="#E8B816"/><circle cx="0" cy="0" r="28" fill="#F0CA30"/>
+      <text x="0" y="10" text-anchor="middle" fill="#9B7511" font-family="'IBM Plex Serif', serif" font-size="32" font-weight="400" letter-spacing="-3">KJ</text>
     </g>
   </svg>
 </div>
@@ -539,7 +541,13 @@ canvas {
 <!-- MISSION BRIEFING -->
 <div id="missionBrief" class="screen hidden" style="background:rgba(26,5,5,0.95);padding:24px;z-index:16;">
   <h2 style="color:#D4A843;font-size:1.2rem;font-weight:300;letter-spacing:0.1em;margin-bottom:16px;">YOUR MISSION</h2>
-  <p style="color:#FFF8F0;font-size:0.95rem;max-width:340px;line-height:1.6;margin-bottom:20px;" id="missionText"></p>
+  <p style="color:#FFF8F0;font-size:0.95rem;max-width:340px;line-height:1.6;margin-bottom:16px;" id="missionText"></p>
+  <input type="text" id="playerName" maxlength="20" placeholder="Enter your name" style="
+    width:220px;padding:10px 16px;margin-bottom:16px;
+    background:rgba(212,168,67,0.08);border:1px solid rgba(212,168,67,0.3);
+    border-radius:8px;color:#FFF8F0;font-family:'IBM Plex Serif',serif;
+    font-size:0.95rem;text-align:center;outline:none;
+  " autocomplete="off" />
   <div style="text-align:left;max-width:300px;margin:0 auto 20px;">
     <p style="color:#D4A843;font-size:0.8rem;margin-bottom:10px;letter-spacing:0.1em;">COLLECT THESE:</p>
     <div style="display:flex;flex-direction:column;gap:6px;">
@@ -550,7 +558,7 @@ canvas {
         <span style="color:#FF6B81;font-size:1.1rem;">&#x1F377;</span> <b>Ros&eacute;</b> &mdash; 5 pts + shield power-up
       </div>
       <div style="color:#FFF8F0;font-size:0.8rem;display:flex;align-items:center;gap:8px;">
-        <span style="color:#FF4500;font-size:1.1rem;">&#x1F336;</span> <b>Peppercino</b> &mdash; 5 pts + fire speed boost
+        <span style="color:#E8B816;font-size:1.1rem;">&#x2600;</span> <b>St. Moritz Sun</b> &mdash; 5 pts + speed boost
       </div>
       <div style="color:#FFF8F0;font-size:0.8rem;display:flex;align-items:center;gap:8px;">
         <span style="color:#39FF14;font-size:1.1rem;">&#x1F964;</span> <b>Mtn Dew</b> &mdash; 5 pts + 3 super jumps
@@ -561,7 +569,7 @@ canvas {
     </div>
     <p style="color:rgba(255,248,240,0.5);font-size:0.75rem;margin-top:12px;">Tap to jump &middot; Tap in air for tricks &middot; Chain tricks for combos</p>
   </div>
-  <p style="color:rgba(255,248,240,0.5);font-size:0.85rem;animation:tapPulse 2s ease-in-out infinite;">Tap to start</p>
+  <button class="btn" id="btnStartMission" style="margin-top:10px;">LET'S GO!</button>
 </div>
 
 <!-- TUTORIAL HINT -->
@@ -576,15 +584,16 @@ canvas {
   <div class="final-score" id="finalScore"></div>
   <div class="stats-grid" id="statsGrid"></div>
   <div class="quip" id="endQuip"></div>
+  <div id="leaderboard" style="max-width:320px;margin:12px auto 16px;text-align:left;"></div>
   <button class="btn" id="btnPlayAgain">Play Again</button>
   <button class="btn" id="btnShare">Share Score</button>
   <svg class="lockup-bottom" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-    <defs><polygon id="sr2" points="0,-52 -5,-76 0,-96 5,-76" fill="#C89A10"/><path id="wr2" d="M-3,-52 C-10,-68 -3,-84 0,-96 C3,-84 10,-68 3,-52 Z" fill="#DAA520"/></defs>
+    <defs><polygon id="sr2" points="0,-34 -3,-58 0,-94 3,-58" fill="#C89A10"/><path id="wr2" d="M-1.5,-34 C-8,-48 5,-62 -2,-78 L0,-94 L2,-78 C-5,-62 8,-48 1.5,-34 Z" fill="#DAA520"/></defs>
     <g transform="translate(100,100)">
       <use href="#sr2" transform="rotate(0)"/><use href="#sr2" transform="rotate(45)"/><use href="#sr2" transform="rotate(90)"/><use href="#sr2" transform="rotate(135)"/><use href="#sr2" transform="rotate(180)"/><use href="#sr2" transform="rotate(225)"/><use href="#sr2" transform="rotate(270)"/><use href="#sr2" transform="rotate(315)"/>
       <use href="#wr2" transform="rotate(22.5)"/><use href="#wr2" transform="rotate(67.5)"/><use href="#wr2" transform="rotate(112.5)"/><use href="#wr2" transform="rotate(157.5)"/><use href="#wr2" transform="rotate(202.5)"/><use href="#wr2" transform="rotate(247.5)"/><use href="#wr2" transform="rotate(292.5)"/><use href="#wr2" transform="rotate(337.5)"/>
-      <circle cx="0" cy="0" r="48" fill="#E8B816"/><circle cx="0" cy="0" r="44" fill="#F0CA30"/>
-      <text x="0" y="14" text-anchor="middle" fill="#9B7511" font-family="'IBM Plex Serif', serif" font-size="44" font-weight="400" letter-spacing="-4">KJ</text>
+      <circle cx="0" cy="0" r="32" fill="#E8B816"/><circle cx="0" cy="0" r="28" fill="#F0CA30"/>
+      <text x="0" y="10" text-anchor="middle" fill="#9B7511" font-family="'IBM Plex Serif', serif" font-size="32" font-weight="400" letter-spacing="-3">KJ</text>
     </g>
   </svg>
 </div>
@@ -652,7 +661,7 @@ const EVENTS = [
 const COLLECT_TYPES = [
   { id:'sol', name:'Solana', color:'#9945FF', pts:10, freq:0.30, r:18 },
   { id:'rose', name:'Ros\u00e9', color:'#FF6B81', pts:5, freq:0.20, r:20 },
-  { id:'pepper', name:'Peppercino', color:'#FF4500', pts:5, freq:0.15, r:20 },
+  { id:'sun', name:'St. Moritz Sun', color:'#E8B816', pts:5, freq:0.15, r:20 },
   { id:'dew', name:'Mtn Dew', color:'#39FF14', pts:5, freq:0.15, r:28 },
   { id:'ring', name:'Ring', color:'#FFD700', pts:25, freq:0.05, r:24 },
 ];
@@ -680,7 +689,7 @@ const G = {
 
   scrollX: 0, speed: PHYS.baseSpeed,
   score: 0, distance: 0,
-  collected: { sol:0, rose:0, pepper:0, dew:0, ring:0 },
+  collected: { sol:0, rose:0, sun:0, dew:0, ring:0 },
   bestJump: 0, totalFlips: 0,
   currentJumpStart: 0,
 
@@ -729,6 +738,7 @@ const G = {
   spectators: [],
   lastSpecX: 0,
 
+  playerName: '',
   tutorialShown: false, tutorialTimer: 0,
   lastTime: 0,
   running: false,
@@ -744,8 +754,8 @@ const MUSIC = {
   compressor: null,
   muted: false,
   started: false,
-  bpm: 120,
-  beatInterval: 0.5,
+  bpm: 128,
+  beatInterval: 0.46875, // 60/128
   currentBeat: 0,
   nextBeatTime: 0,
   schedulerTimer: null,
@@ -1547,22 +1557,36 @@ function drawCollectibles() {
     ctx.lineWidth = 2;
 
     if (c.type === 'sol') {
-      // Rotating coin with Solana logo
+      // Solana coin - dark with gradient S logo
       const rot = Date.now() * 0.003;
       const scaleX = Math.cos(rot);
       ctx.scale(Math.abs(scaleX) * 0.8 + 0.2, 1);
-      // Purple-to-teal gradient circle
-      ctx.fillStyle = '#9945FF';
+      // Dark coin outer ring
+      ctx.fillStyle = '#2D2D3A';
       ctx.beginPath(); ctx.arc(0, 0, 18, 0, Math.PI * 2); ctx.fill();
-      ctx.beginPath(); ctx.arc(0, 0, 18, 0, Math.PI * 2); ctx.stroke();
-      // Solana "S" logo - three horizontal bars with arrow ends
-      ctx.strokeStyle = '#14F195'; ctx.lineWidth = 2.5; ctx.lineCap = 'butt';
-      // Top bar (arrow pointing right)
-      ctx.beginPath(); ctx.moveTo(-8, -7); ctx.lineTo(6, -7); ctx.lineTo(8, -5); ctx.stroke();
-      // Middle bar (arrow pointing left)
-      ctx.beginPath(); ctx.moveTo(8, 1); ctx.lineTo(-6, 1); ctx.lineTo(-8, 3); ctx.stroke();
-      // Bottom bar (arrow pointing right)
-      ctx.beginPath(); ctx.moveTo(-8, 7); ctx.lineTo(6, 7); ctx.lineTo(8, 9); ctx.stroke();
+      // Inner dark
+      ctx.fillStyle = '#1A1A2E';
+      ctx.beginPath(); ctx.arc(0, 0, 14, 0, Math.PI * 2); ctx.fill();
+      // Rim highlight
+      ctx.strokeStyle = '#4A4A5A'; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.arc(0, 0, 16, 0, Math.PI * 2); ctx.stroke();
+      // Solana S logo - gradient teal to purple
+      const sGrad = ctx.createLinearGradient(0, -9, 0, 9);
+      sGrad.addColorStop(0, '#14F195');
+      sGrad.addColorStop(1, '#9945FF');
+      ctx.fillStyle = sGrad;
+      // Top bar (arrow right)
+      ctx.beginPath();
+      ctx.moveTo(-7, -8); ctx.lineTo(6, -8); ctx.lineTo(8, -5); ctx.lineTo(-5, -5);
+      ctx.closePath(); ctx.fill();
+      // Middle bar (arrow left)
+      ctx.beginPath();
+      ctx.moveTo(7, -1); ctx.lineTo(-6, -1); ctx.lineTo(-8, 2); ctx.lineTo(5, 2);
+      ctx.closePath(); ctx.fill();
+      // Bottom bar (arrow right)
+      ctx.beginPath();
+      ctx.moveTo(-7, 5); ctx.lineTo(6, 5); ctx.lineTo(8, 8); ctx.lineTo(-5, 8);
+      ctx.closePath(); ctx.fill();
     } else if (c.type === 'rose') {
       // Wine glass
       ctx.fillStyle = '#FF6B81';
@@ -1577,16 +1601,43 @@ function drawCollectibles() {
       ctx.moveTo(0, 2); ctx.lineTo(0, 12);
       ctx.moveTo(-6, 12); ctx.lineTo(6, 12);
       ctx.stroke();
-    } else if (c.type === 'pepper') {
-      ctx.fillStyle = '#FF4500';
-      ctx.beginPath();
-      ctx.ellipse(0, 0, 8, 14, 0.2, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.beginPath();
-      ctx.ellipse(0, 0, 8, 14, 0.2, 0, Math.PI * 2);
-      ctx.stroke();
-      ctx.fillStyle = '#228B22';
-      ctx.fillRect(-3, -17, 6, 6);
+    } else if (c.type === 'sun') {
+      // St. Moritz Sun collectible
+      // Outer glow
+      ctx.fillStyle = '#F0CA30';
+      ctx.beginPath(); ctx.arc(0, 0, 14, 0, Math.PI * 2); ctx.fill();
+      // Inner disc
+      ctx.fillStyle = '#E8B816';
+      ctx.beginPath(); ctx.arc(0, 0, 10, 0, Math.PI * 2); ctx.fill();
+      // Sun rays (alternating straight and wavy)
+      ctx.fillStyle = '#C89A10';
+      for (let i = 0; i < 12; i++) {
+        const a = (i / 12) * Math.PI * 2;
+        ctx.save();
+        ctx.rotate(a);
+        if (i % 2 === 0) {
+          // Straight ray
+          ctx.beginPath();
+          ctx.moveTo(-1.5, -10); ctx.lineTo(0, -18); ctx.lineTo(1.5, -10);
+          ctx.closePath(); ctx.fill();
+        } else {
+          // Wavy ray
+          ctx.beginPath();
+          ctx.moveTo(-1, -10);
+          ctx.quadraticCurveTo(-3, -14, 0, -17);
+          ctx.quadraticCurveTo(3, -14, 1, -10);
+          ctx.closePath(); ctx.fill();
+        }
+        ctx.restore();
+      }
+      // Center bright
+      ctx.fillStyle = '#F5D84A';
+      ctx.beginPath(); ctx.arc(0, 0, 7, 0, Math.PI * 2); ctx.fill();
+      // KJ text
+      ctx.fillStyle = '#9B7511';
+      ctx.font = 'bold 7px "IBM Plex Serif", serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('KJ', 0, 1);
     } else if (c.type === 'dew') {
       ctx.fillStyle = '#006400';
       ctx.beginPath();
@@ -2158,7 +2209,7 @@ function drawHUD() {
   const items = [
     { id:'sol', icon:'\u25CE', c:'#9945FF' },
     { id:'rose', icon:'\u{1F377}', c:'#FF6B81' },
-    { id:'pepper', icon:'\u{1F336}', c:'#FF4500' },
+    { id:'sun', icon:'\u2600', c:'#E8B816' },
     { id:'dew', icon:'\u{1F964}', c:'#39FF14' },
     { id:'ring', icon:'\u{1F48D}', c:'#FFD700' },
   ];
@@ -2596,9 +2647,9 @@ function checkCollisions() {
         G.moonTimer = 150;
         G.powerUps.magnet = 300; // 5 seconds
         spawnParticle(sx, c.y - 30, 'COIN MAGNET!', '#9945FF', 16);
-      } else if (c.type === 'pepper') {
+      } else if (c.type === 'sun') {
         G.powerUps.fireTrail = 180; // 3 seconds
-        spawnParticle(sx, c.y - 30, '\u{1F525} FIRE MODE!', '#FF4500', 16);
+        spawnParticle(sx, c.y - 30, '\u2600 SUNSHINE!', '#E8B816', 16);
       } else if (c.type === 'ring') {
         G.powerUps.scoreMult = 300; // 5 seconds
         for (let i = 0; i < 25; i++) {
@@ -2743,9 +2794,13 @@ function startCountdown() {
 function showEnd() {
   const ch = CHARS[G.char];
   const totalItems = Object.values(G.collected).reduce((a, b) => a + b, 0);
+  const displayName = G.playerName || ch.name;
 
-  $('endTitle').textContent = `${ch.name}'s Adventure`;
+  $('endTitle').textContent = `${displayName} made it to the aisle!`;
   $('finalScore').textContent = G.score;
+
+  // Save high score
+  saveHighScore(displayName, G.score, ch.name);
 
   const grid = $('statsGrid');
   grid.innerHTML = '';
@@ -2754,7 +2809,7 @@ function showEnd() {
     { val: G.totalFlips, label: 'Backflips' },
     { val: `\u25CE ${G.collected.sol}`, label: 'SOL Earned' },
     { val: `\u{1F377} ${G.collected.rose}`, label: 'Ros\u00e9 Consumed' },
-    { val: `\u{1F336} ${G.collected.pepper}`, label: 'Peppercinos' },
+    { val: `\u2600 ${G.collected.sun}`, label: 'Suns Collected' },
     { val: `\u{1F48D} ${G.collected.ring}`, label: 'Rings Found' },
   ];
   stats.forEach(s => {
@@ -2766,13 +2821,15 @@ function showEnd() {
 
   let quip = '';
   if (G.char === 'jill') {
-    quip = `Jill rates your form ${Math.min(10, Math.round(G.score / 200))}/10. Your apr\u00e8s ski ros\u00e9 consumption was... impressive. The slopes of Corviglia have never looked so elegant.`;
+    quip = `Jill rates ${displayName}'s form ${Math.min(10, Math.round(G.score / 200))}/10. Your apr\u00e8s ski ros\u00e9 consumption was... impressive. The slopes of Corviglia have never looked so elegant.`;
   } else if (G.char === 'kyle') {
     quip = `Kyle's portfolio analysis: ${G.collected.sol} SOL collected. ${G.collected.sol >= 30 ? 'Diamond hands! \u{1F48E}\u{1F64C}' : G.collected.sol >= 15 ? 'WAGMI! \u{1F4C8}' : 'Paper hands... NGMI \u{1F4C9}'} He'd trade it all for Jill though.`;
   } else {
-    quip = `Banksy completed ${G.totalFlips} zoomies! Every peppercino = 1 tail wag. ${G.collected.pepper >= 5 ? 'Tail is a BLUR right now! \u{1F415}\u{1F4A8}' : 'Good boy energy! \u{1F415}'} Cutest pup in all the Alps!`;
+    quip = `Banksy completed ${G.totalFlips} zoomies! ${G.collected.sun >= 5 ? 'Soaking up ALL the sunshine! \u{1F415}\u{1F4A8}' : 'Good boy energy! \u{1F415}'} Cutest pup in all the Alps!`;
   }
   $('endQuip').textContent = quip;
+
+  showLeaderboard();
 
   // Fade music
   fadeOutMusic();
@@ -2823,6 +2880,8 @@ function resetGame() {
   G._landingBurst = 0;
   G.frameCount = 0;
 
+  G.playerName = '';
+  $('playerName').value = '';
   hideToast();
   endScreen.classList.add('hidden');
   selectScreen.classList.add('hidden');
@@ -2890,6 +2949,30 @@ function setupInput() {
     });
   });
 
+  // Mission start button
+  $('btnStartMission').addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (G.state !== 'mission') return;
+    G.playerName = $('playerName').value.trim() || '';
+    missionBrief.classList.add('hidden');
+    muteBtn.classList.add('show');
+    startCountdown();
+  });
+  $('btnStartMission').addEventListener('touchend', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (G.state !== 'mission') return;
+    G.playerName = $('playerName').value.trim() || '';
+    missionBrief.classList.add('hidden');
+    muteBtn.classList.add('show');
+    startCountdown();
+  });
+
+  // Prevent name input taps from bubbling
+  $('playerName').addEventListener('click', (e) => e.stopPropagation());
+  $('playerName').addEventListener('touchstart', (e) => e.stopPropagation());
+  $('playerName').addEventListener('touchend', (e) => e.stopPropagation());
+
   // End screen buttons
   $('btnPlayAgain').addEventListener('click', (e) => {
     e.stopPropagation();
@@ -2918,11 +3001,6 @@ function handleTap(e) {
       titleScreen.classList.add('hidden');
       selectScreen.classList.remove('hidden');
       G.state = 'select';
-      break;
-    case 'mission':
-      missionBrief.classList.add('hidden');
-      muteBtn.classList.add('show');
-      startCountdown();
       break;
     case 'playing':
       jump();
@@ -3025,9 +3103,9 @@ function startPadSynth() {
   chord.forEach((freq, i) => {
     const osc = AC.createOscillator();
     osc.type = 'sawtooth';
-    osc.frequency.value = freq * 0.5; // One octave lower for warmth
+    osc.frequency.value = freq; // Bright, at written pitch
     const oscGain = AC.createGain();
-    oscGain.gain.value = 0.04;
+    oscGain.gain.value = 0.025;
     osc.connect(oscGain);
     oscGain.connect(MUSIC.padGain);
     osc.start();
@@ -3052,9 +3130,9 @@ function updatePadChord() {
     chord.forEach(freq => {
       const osc = AC.createOscillator();
       osc.type = 'sawtooth';
-      osc.frequency.value = freq * 0.5;
+      osc.frequency.value = freq;
       const oscGain = AC.createGain();
-      oscGain.gain.value = 0.04;
+      oscGain.gain.value = 0.025;
       osc.connect(oscGain);
       oscGain.connect(MUSIC.padGain);
       osc.start();
@@ -3123,17 +3201,30 @@ function scheduleBeat(time, beat) {
 
 function playKick(time) {
   const AC = MUSIC.ctx;
+  // Punchy kick with click transient
   const osc = AC.createOscillator();
   const gain = AC.createGain();
   osc.type = 'sine';
-  osc.frequency.setValueAtTime(150, time);
-  osc.frequency.exponentialRampToValueAtTime(40, time + 0.08);
-  gain.gain.setValueAtTime(0.7, time);
-  gain.gain.exponentialRampToValueAtTime(0.001, time + 0.25);
+  osc.frequency.setValueAtTime(180, time);
+  osc.frequency.exponentialRampToValueAtTime(35, time + 0.06);
+  gain.gain.setValueAtTime(0.85, time);
+  gain.gain.exponentialRampToValueAtTime(0.001, time + 0.2);
   osc.connect(gain);
   gain.connect(MUSIC.compressor);
   osc.start(time);
-  osc.stop(time + 0.25);
+  osc.stop(time + 0.2);
+  // Click layer for punch
+  const click = AC.createOscillator();
+  const clickGain = AC.createGain();
+  click.type = 'triangle';
+  click.frequency.setValueAtTime(1200, time);
+  click.frequency.exponentialRampToValueAtTime(200, time + 0.02);
+  clickGain.gain.setValueAtTime(0.15, time);
+  clickGain.gain.exponentialRampToValueAtTime(0.001, time + 0.03);
+  click.connect(clickGain);
+  clickGain.connect(MUSIC.compressor);
+  click.start(time);
+  click.stop(time + 0.03);
 }
 
 function playHiHat(time, open) {
@@ -3264,6 +3355,41 @@ function toggleMute() {
       }
     }
   }
+}
+
+// ==========================================
+// HIGH SCORES (localStorage)
+// ==========================================
+function saveHighScore(name, score, charName) {
+  try {
+    const scores = JSON.parse(localStorage.getItem('kjsamani_scores') || '[]');
+    scores.push({ name: name || 'Guest', score, char: charName, date: Date.now() });
+    scores.sort((a, b) => b.score - a.score);
+    if (scores.length > 20) scores.length = 20;
+    localStorage.setItem('kjsamani_scores', JSON.stringify(scores));
+  } catch(e) {}
+}
+
+function showLeaderboard() {
+  try {
+    const scores = JSON.parse(localStorage.getItem('kjsamani_scores') || '[]');
+    const lb = $('leaderboard');
+    if (scores.length === 0) { lb.innerHTML = ''; return; }
+    let html = '<p style="color:#D4A843;font-size:0.8rem;letter-spacing:0.1em;margin-bottom:8px;text-align:center;">HIGH SCORES</p>';
+    html += '<div style="display:flex;flex-direction:column;gap:4px;">';
+    const top = scores.slice(0, 10);
+    top.forEach((s, i) => {
+      const isMe = s.name === (G.playerName || CHARS[G.char].name) && s.score === G.score;
+      const bg = isMe ? 'rgba(212,168,67,0.15)' : 'rgba(212,168,67,0.05)';
+      const border = isMe ? '1px solid rgba(212,168,67,0.3)' : '1px solid rgba(212,168,67,0.08)';
+      html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:${bg};border:${border};border-radius:6px;">`;
+      html += `<span style="color:rgba(255,248,240,0.6);font-size:0.75rem;">${i+1}. <b style="color:#FFF8F0">${s.name}</b> <span style="color:rgba(212,168,67,0.5);font-size:0.65rem;">(${s.char})</span></span>`;
+      html += `<span style="color:#D4A843;font-weight:600;font-size:0.85rem;">${s.score}</span>`;
+      html += '</div>';
+    });
+    html += '</div>';
+    lb.innerHTML = html;
+  } catch(e) {}
 }
 
 // ==========================================
