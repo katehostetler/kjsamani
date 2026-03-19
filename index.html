@@ -757,33 +757,10 @@ const G = {
 // MUSIC STATE
 // ==========================================
 const MUSIC = {
-  ctx: null,
-  masterGain: null,
-  compressor: null,
+  audio: null,
   muted: false,
   started: false,
-  bpm: 136,
-  beatInterval: 60/136, // ~0.4412
-  currentBeat: 0,
-  nextBeatTime: 0,
-  schedulerTimer: null,
   state: 'off',
-  noiseBuffer: null,
-  padGain: null,
-  padOscs: [],
-  bassDrone: null,
-  bassDroneGain: null,
-  reverbDelay: null, reverbFeedback: null, reverbMix: null, arpStep: 0,
-  // Chord progressions per segment (classic EDM I-V-vi-IV)
-  chords: [
-    [261.63, 329.63, 392],     // C major (C4,E4,G4)
-    [196, 246.94, 293.66],     // G major (G3,B3,D4)
-    [220, 261.63, 329.63],     // Am (A3,C4,E4)
-    [174.61, 220, 261.63],     // F major (F3,A3,C4)
-    [261.63, 329.63, 392],     // C major again for segment 5
-  ],
-  bassNotes: [65.41, 98, 110, 87.31, 65.41],  // C2,G2,A2,F2,C2
-  currentChordIdx: 0,
 };
 
 // ==========================================
@@ -3113,11 +3090,7 @@ function checkCheckpoints() {
   if (G.distance >= next && G.currentEvent < 5) {
     G.currentEvent++;
     showToast(G.currentEvent - 1);
-    // Update music chord
-    if (MUSIC.started) {
-      MUSIC.currentChordIdx = Math.min(G.currentEvent, 4);
-      updatePadChord();
-    }
+    // No-op: MP3 handles music
   }
 
   // Wedding kiss pause — trigger when player reaches center of the Paradiso venue
@@ -3134,10 +3107,7 @@ function checkCheckpoints() {
           if (G.currentEvent < 4) {
             G.currentEvent = 4;
             showToast(3); // THE WEDDING event
-            if (MUSIC.started) {
-              MUSIC.currentChordIdx = 3;
-              updatePadChord();
-            }
+            // No-op: MP3 handles music
           }
           for (let i = 0; i < 80; i++) {
             G.confetti.push(mkConfetti(G.W / 2 + (Math.random() - 0.5) * G.W * 0.8, G.H * 0.3));
@@ -3379,7 +3349,7 @@ function selectChar(charId) {
   selectScreen.classList.add('hidden');
 
   // Init music on first interaction
-  if (!MUSIC.ctx) {
+  if (!MUSIC.audio) {
     initMusic();
   }
 
@@ -3499,424 +3469,62 @@ function shareScore() {
 }
 
 // ==========================================
-// MUSIC SYSTEM (Web Audio API)
+// MUSIC SYSTEM (MP3 Playback)
 // ==========================================
 function initMusic() {
-  try {
-    const AC = new (window.AudioContext || window.webkitAudioContext)();
-    MUSIC.ctx = AC;
-
-    // Master gain
-    MUSIC.masterGain = AC.createGain();
-    MUSIC.masterGain.gain.value = 0.25;
-
-    // Compressor
-    MUSIC.compressor = AC.createDynamicsCompressor();
-    MUSIC.compressor.threshold.value = -20;
-    MUSIC.compressor.knee.value = 10;
-    MUSIC.compressor.ratio.value = 3;
-    MUSIC.compressor.connect(MUSIC.masterGain);
-    MUSIC.masterGain.connect(AC.destination);
-
-    // Create noise buffer for hi-hats and claps
-    const bufferSize = AC.sampleRate * 0.1;
-    MUSIC.noiseBuffer = AC.createBuffer(1, bufferSize, AC.sampleRate);
-    const data = MUSIC.noiseBuffer.getChannelData(0);
-    for (let i = 0; i < bufferSize; i++) {
-      data[i] = Math.random() * 2 - 1;
-    }
-
-    // Pad synth (sustained)
-    MUSIC.padGain = AC.createGain();
-    MUSIC.padGain.gain.value = 0;
-    const padFilter = AC.createBiquadFilter();
-    padFilter.type = 'lowpass';
-    padFilter.frequency.value = 2200;
-    padFilter.Q.value = 0.7;
-    MUSIC.padFilter = padFilter;
-    MUSIC.padGain.connect(padFilter);
-    padFilter.connect(MUSIC.compressor);
-
-    // Bass drone
-    MUSIC.bassDroneGain = AC.createGain();
-    MUSIC.bassDroneGain.gain.value = 0;
-    MUSIC.bassDroneGain.connect(MUSIC.compressor);
-
-    // Simple delay reverb
-    MUSIC.reverbDelay = AC.createDelay(0.5);
-    MUSIC.reverbDelay.delayTime.value = 0.05;
-    MUSIC.reverbFeedback = AC.createGain();
-    MUSIC.reverbFeedback.gain.value = 0.3;
-    MUSIC.reverbMix = AC.createGain();
-    MUSIC.reverbMix.gain.value = 0.25;
-    MUSIC.reverbDelay.connect(MUSIC.reverbFeedback);
-    MUSIC.reverbFeedback.connect(MUSIC.reverbDelay);
-    MUSIC.reverbDelay.connect(MUSIC.reverbMix);
-    MUSIC.reverbMix.connect(MUSIC.masterGain);
-
-    MUSIC.started = false;
-  } catch(e) {
-    // Web Audio not supported
-  }
+  MUSIC.audio = new Audio('we-found-love.mp3');
+  MUSIC.audio.loop = true;
+  MUSIC.audio.volume = 0.7;
+  MUSIC.audio.preload = 'auto';
+  MUSIC.started = false;
 }
 
 function startMusic() {
-  if (!MUSIC.ctx || MUSIC.muted) return;
-
-  const AC = MUSIC.ctx;
-  if (AC.state === 'suspended') AC.resume();
-  MUSIC.masterGain.gain.cancelScheduledValues(AC.currentTime);
-  MUSIC.masterGain.gain.setValueAtTime(0.25, AC.currentTime);
-
+  if (!MUSIC.audio || MUSIC.muted) return;
+  MUSIC.audio.currentTime = 0;
+  MUSIC.audio.volume = 0.7;
+  MUSIC.audio.play().catch(() => {});
   MUSIC.started = true;
   MUSIC.state = 'full';
-  MUSIC.currentBeat = 0;
-  MUSIC.nextBeatTime = AC.currentTime + 0.1;
-
-  // Start pad
-  startPadSynth();
-
-  // Start bass drone
-  startBassDrone();
-
-  // Start scheduler
-  if (MUSIC.schedulerTimer) clearInterval(MUSIC.schedulerTimer);
-  MUSIC.schedulerTimer = setInterval(musicScheduler, 25);
-}
-
-function startPadSynth() {
-  const AC = MUSIC.ctx;
-  MUSIC.padOscs.forEach(o => { try { o.stop(); } catch(e) {} });
-  MUSIC.padOscs = [];
-
-  const chord = MUSIC.chords[MUSIC.currentChordIdx];
-  chord.forEach((freq) => {
-    // Detuned pair for richness
-    for (let detune of [-3, 3]) {
-      const osc = AC.createOscillator();
-      osc.type = 'triangle';
-      osc.frequency.value = freq;
-      osc.detune.value = detune;
-      const oscGain = AC.createGain();
-      oscGain.gain.setValueAtTime(0, AC.currentTime);
-      // Slow attack ADSR
-      oscGain.gain.linearRampToValueAtTime(0.018, AC.currentTime + 0.3);
-      osc.connect(oscGain);
-      oscGain.connect(MUSIC.padGain);
-      osc.start();
-      MUSIC.padOscs.push(osc);
-    }
-  });
-
-  MUSIC.padGain.gain.setTargetAtTime(0.8, AC.currentTime, 0.4);
 }
 
 function updatePadChord() {
-  if (!MUSIC.ctx || !MUSIC.started) return;
-  const AC = MUSIC.ctx;
-
-  // Fade out current
-  MUSIC.padGain.gain.setTargetAtTime(0, AC.currentTime, 0.3);
-
-  setTimeout(() => {
-    MUSIC.padOscs.forEach(o => { try { o.stop(); } catch(e) {} });
-    MUSIC.padOscs = [];
-
-    const chord = MUSIC.chords[MUSIC.currentChordIdx];
-    chord.forEach(freq => {
-      for (let detune of [-3, 3]) {
-        const osc = AC.createOscillator();
-        osc.type = 'triangle';
-        osc.frequency.value = freq;
-        osc.detune.value = detune;
-        const oscGain = AC.createGain();
-        oscGain.gain.setValueAtTime(0, AC.currentTime);
-        oscGain.gain.linearRampToValueAtTime(0.018, AC.currentTime + 0.3);
-        osc.connect(oscGain);
-        oscGain.connect(MUSIC.padGain);
-        osc.start();
-        MUSIC.padOscs.push(osc);
-      }
-    });
-    MUSIC.padGain.gain.setTargetAtTime(0.8, AC.currentTime, 0.4);
-  }, 400);
-}
-
-function startBassDrone() {
-  const AC = MUSIC.ctx;
-  if (MUSIC.bassDrone) { try { MUSIC.bassDrone.stop(); } catch(e) {} }
-
-  MUSIC.bassDrone = AC.createOscillator();
-  MUSIC.bassDrone.type = 'sine';
-  MUSIC.bassDrone.frequency.value = MUSIC.bassNotes[MUSIC.currentChordIdx];
-  MUSIC.bassDrone.connect(MUSIC.bassDroneGain);
-  MUSIC.bassDrone.start();
-  MUSIC.bassDroneGain.gain.setTargetAtTime(0.15, AC.currentTime, 0.3);
-}
-
-function musicScheduler() {
-  if (!MUSIC.ctx || !MUSIC.started || MUSIC.muted) return;
-  const AC = MUSIC.ctx;
-  const lookAhead = 0.1; // Schedule 100ms ahead
-
-  while (MUSIC.nextBeatTime < AC.currentTime + lookAhead) {
-    scheduleBeat(MUSIC.nextBeatTime, MUSIC.currentBeat);
-    MUSIC.nextBeatTime += MUSIC.beatInterval / 2; // Schedule 8th notes
-    MUSIC.currentBeat++;
-  }
-}
-
-function scheduleBeat(time, beat) {
-  const AC = MUSIC.ctx;
-  const beatInBar = beat % 8; // 8 eighth-notes per bar
-
-  // Four-on-the-floor kick (every beat = EDM style)
-  if (beatInBar === 0 || beatInBar === 2 || beatInBar === 4 || beatInBar === 6) {
-    playKick(time);
-  }
-
-  // Clap on 2 and 4
-  if (beatInBar === 2 || beatInBar === 6) {
-    playClap(time);
-  }
-
-  // Hi-hat on every 8th note (open hat on offbeats)
-  playHiHat(time, beatInBar % 2 === 1);
-
-  // Bass on downbeats and offbeat hits for drive
-  if (beatInBar === 0 || beatInBar === 3) {
-    playBassNote(time);
-  }
-
-  // "We Found Love" style driving riff - plays on every 8th note
-  const barInCycle = Math.floor(beat / 8) % 4;
-  if (barInCycle >= 1) {
-    playLeadNote(time);
-  }
-
-  // Shimmer arpeggios - sparkly synth accents
-  if (beat % 4 === 0) {
-    playShimmer(time);
-  }
-
-  // Uplifting synth stab on beat 1 of each bar
-  if (beatInBar === 0 && beat % 8 === 0) {
-    playSynthStab(time);
-  }
-}
-
-function playKick(time) {
-  const AC = MUSIC.ctx;
-  // Punchy kick with click transient
-  const osc = AC.createOscillator();
-  const gain = AC.createGain();
-  osc.type = 'sine';
-  osc.frequency.setValueAtTime(180, time);
-  osc.frequency.exponentialRampToValueAtTime(35, time + 0.06);
-  gain.gain.setValueAtTime(0.85, time);
-  gain.gain.exponentialRampToValueAtTime(0.001, time + 0.15);
-  osc.connect(gain);
-  gain.connect(MUSIC.compressor);
-  osc.start(time);
-  osc.stop(time + 0.15);
-  // Click layer for punch
-  const click = AC.createOscillator();
-  const clickGain = AC.createGain();
-  click.type = 'triangle';
-  click.frequency.setValueAtTime(1200, time);
-  click.frequency.exponentialRampToValueAtTime(200, time + 0.02);
-  clickGain.gain.setValueAtTime(0.15, time);
-  clickGain.gain.exponentialRampToValueAtTime(0.001, time + 0.03);
-  click.connect(clickGain);
-  clickGain.connect(MUSIC.compressor);
-  click.start(time);
-  click.stop(time + 0.03);
-}
-
-function playHiHat(time, open) {
-  const AC = MUSIC.ctx;
-  const source = AC.createBufferSource();
-  source.buffer = MUSIC.noiseBuffer;
-  const filter = AC.createBiquadFilter();
-  filter.type = 'highpass';
-  filter.frequency.value = open ? 7000 : 9000;
-  const decay = open ? 0.08 : 0.04;
-  const gain = AC.createGain();
-  gain.gain.setValueAtTime(open ? 0.05 : 0.08, time);
-  gain.gain.exponentialRampToValueAtTime(0.001, time + decay);
-  source.connect(filter);
-  filter.connect(gain);
-  gain.connect(MUSIC.compressor);
-  source.start(time);
-  source.stop(time + decay);
-}
-
-function playSynthStab(time) {
-  const AC = MUSIC.ctx;
-  const chord = MUSIC.chords[MUSIC.currentChordIdx];
-  chord.forEach(freq => {
-    const osc = AC.createOscillator();
-    const gain = AC.createGain();
-    osc.type = 'sawtooth';
-    osc.frequency.value = freq;
-    gain.gain.setValueAtTime(0.06, time);
-    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.15);
-    osc.connect(gain);
-    gain.connect(MUSIC.compressor);
-    osc.start(time);
-    osc.stop(time + 0.15);
-  });
-}
-
-function playClap(time) {
-  const AC = MUSIC.ctx;
-  const source = AC.createBufferSource();
-  source.buffer = MUSIC.noiseBuffer;
-  const filter = AC.createBiquadFilter();
-  filter.type = 'bandpass';
-  filter.frequency.value = 2000;
-  filter.Q.value = 2;
-  const gain = AC.createGain();
-  gain.gain.setValueAtTime(0.12, time);
-  gain.gain.exponentialRampToValueAtTime(0.001, time + 0.1);
-  source.connect(filter);
-  filter.connect(gain);
-  gain.connect(MUSIC.compressor);
-  source.start(time);
-  source.stop(time + 0.1);
-}
-
-function playBassNote(time) {
-  const AC = MUSIC.ctx;
-  const freq = MUSIC.bassNotes[MUSIC.currentChordIdx];
-  const osc = AC.createOscillator();
-  const gain = AC.createGain();
-  osc.type = 'sine';
-  osc.frequency.value = freq;
-  gain.gain.setValueAtTime(0.25, time);
-  gain.gain.exponentialRampToValueAtTime(0.001, time + 0.12);
-  osc.connect(gain);
-  gain.connect(MUSIC.compressor);
-  osc.start(time);
-  osc.stop(time + 0.12);
-}
-
-function playShimmer(time) {
-  const AC = MUSIC.ctx;
-  const chord = MUSIC.chords[MUSIC.currentChordIdx];
-  // Sparkly arpeggio - pick a note and play it high
-  const freq = chord[Math.floor(Math.random() * chord.length)] * (Math.random() > 0.5 ? 2 : 4);
-  const osc = AC.createOscillator();
-  const gain = AC.createGain();
-  osc.type = 'sine';
-  osc.frequency.value = freq;
-  gain.gain.setValueAtTime(0.05, time);
-  gain.gain.exponentialRampToValueAtTime(0.001, time + 0.2);
-  osc.connect(gain);
-  gain.connect(MUSIC.compressor);
-  osc.start(time);
-  osc.stop(time + 0.2);
-}
-
-function playLeadNote(time) {
-  const AC = MUSIC.ctx;
-  const chord = MUSIC.chords[MUSIC.currentChordIdx];
-  // "We Found Love" style descending riff pattern
-  // Pattern: root high, 5th, 3rd, root low, then bounce to 3rd, 5th
-  const patterns = [
-    [2, 1, 0, -1, 0, 1, 2, 1],  // descending then ascending
-  ];
-  const pattern = patterns[0];
-  const step = MUSIC.arpStep % pattern.length;
-  MUSIC.arpStep++;
-
-  const degree = pattern[step];
-  let freq;
-  if (degree >= 0) {
-    freq = chord[Math.min(degree, chord.length - 1)] * 2;
-  } else {
-    freq = chord[0]; // root at base octave
-  }
-
-  const osc = AC.createOscillator();
-  const gain = AC.createGain();
-  osc.type = 'square'; // Square wave for that Calvin Harris buzzy synth
-  osc.frequency.value = freq;
-
-  // Punchy envelope like the original
-  gain.gain.setValueAtTime(0.06, time);
-  gain.gain.setValueAtTime(0.06, time + 0.04);
-  gain.gain.exponentialRampToValueAtTime(0.001, time + 0.12);
-
-  osc.connect(gain);
-  gain.connect(MUSIC.compressor);
-
-  // Also send to reverb for space
-  if (MUSIC.reverbDelay) {
-    const reverbSend = AC.createGain();
-    reverbSend.gain.value = 0.2;
-    osc.connect(reverbSend);
-    reverbSend.connect(MUSIC.reverbDelay);
-  }
-
-  osc.start(time);
-  osc.stop(time + 0.12);
+  // No-op — MP3 handles everything
 }
 
 function fadeOutMusic() {
-  if (!MUSIC.ctx || !MUSIC.started) return;
-  const AC = MUSIC.ctx;
-  MUSIC.masterGain.gain.cancelScheduledValues(AC.currentTime);
-  MUSIC.masterGain.gain.setTargetAtTime(0, AC.currentTime, 0.8);
-
-  // Stop scheduler immediately
-  if (MUSIC.schedulerTimer) {
-    clearInterval(MUSIC.schedulerTimer);
-    MUSIC.schedulerTimer = null;
-  }
+  if (!MUSIC.audio || !MUSIC.started) return;
+  // Smooth fade over 2 seconds
+  let vol = MUSIC.audio.volume;
+  const fade = setInterval(() => {
+    vol -= 0.02;
+    if (vol <= 0) {
+      MUSIC.audio.volume = 0;
+      MUSIC.audio.pause();
+      clearInterval(fade);
+    } else {
+      MUSIC.audio.volume = vol;
+    }
+  }, 40);
 }
 
 function stopMusic() {
-  if (!MUSIC.ctx) return;
-  const AC = MUSIC.ctx;
-  const now = AC.currentTime;
+  if (!MUSIC.audio) return;
+  MUSIC.audio.pause();
+  MUSIC.audio.currentTime = 0;
+  MUSIC.audio.volume = 0.7;
   MUSIC.started = false;
   MUSIC.state = 'off';
-  if (MUSIC.schedulerTimer) {
-    clearInterval(MUSIC.schedulerTimer);
-    MUSIC.schedulerTimer = null;
-  }
-  // Cancel all scheduled values and set to 0 immediately
-  if (MUSIC.masterGain) {
-    MUSIC.masterGain.gain.cancelScheduledValues(now);
-    MUSIC.masterGain.gain.setValueAtTime(0, now);
-  }
-  if (MUSIC.padGain) {
-    MUSIC.padGain.gain.cancelScheduledValues(now);
-    MUSIC.padGain.gain.setValueAtTime(0, now);
-  }
-  if (MUSIC.bassDroneGain) {
-    MUSIC.bassDroneGain.gain.cancelScheduledValues(now);
-    MUSIC.bassDroneGain.gain.setValueAtTime(0, now);
-  }
-  // Disconnect and stop pad oscillators
-  MUSIC.padOscs.forEach(o => { try { o.disconnect(); o.stop(); } catch(e) {} });
-  MUSIC.padOscs = [];
-  // Stop bass drone
-  if (MUSIC.bassDrone) { try { MUSIC.bassDrone.disconnect(); MUSIC.bassDrone.stop(); } catch(e) {} MUSIC.bassDrone = null; }
-  // Suspend audio context to ensure silence
-  if (AC.state === 'running') AC.suspend();
 }
 
 function toggleMute() {
   MUSIC.muted = !MUSIC.muted;
   muteBtn.textContent = MUSIC.muted ? '\u{1F507}' : '\u{1F50A}';
-  if (MUSIC.ctx) {
+  if (MUSIC.audio) {
     if (MUSIC.muted) {
-      MUSIC.masterGain.gain.setTargetAtTime(0, MUSIC.ctx.currentTime, 0.1);
+      MUSIC.audio.volume = 0;
     } else {
-      MUSIC.masterGain.gain.setTargetAtTime(0.25, MUSIC.ctx.currentTime, 0.1);
-      if (MUSIC.ctx.state === 'suspended') MUSIC.ctx.resume();
+      MUSIC.audio.volume = 0.7;
       if (!MUSIC.started && G.state === 'playing') {
         startMusic();
       }
