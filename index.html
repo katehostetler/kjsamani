@@ -754,8 +754,8 @@ const MUSIC = {
   compressor: null,
   muted: false,
   started: false,
-  bpm: 128,
-  beatInterval: 0.46875, // 60/128
+  bpm: 136,
+  beatInterval: 60/136, // ~0.4412
   currentBeat: 0,
   nextBeatTime: 0,
   schedulerTimer: null,
@@ -1547,72 +1547,206 @@ function drawVenue(ctx, venue, sx) {
     ctx.fillText("EL PARADISO MARMOT BAR", sx + w * 0.5, groundY - bh - 30);
 
   } else if (type === 'paradiso') {
-    // Wedding ceremony
+    // ===== THE WEDDING — Giant spectacular ceremony =====
     const centerX = sx + w * 0.5;
+    const archRadius = 110;
+    const archCenterY = groundY - 15;
+    const flowerCols = ['#FF6B81', '#FFB6C1', '#FFF', '#FF69B4', '#E8C96A', '#F7C6D0', '#FFD700'];
+    const petT = Date.now() * 0.001;
 
-    // Ceremony arch
-    ctx.strokeStyle = 'rgba(212,168,67,0.6)';
+    // --- Red carpet aisle leading to arch ---
+    const aisleLen = 280;
+    const aisleGrad = ctx.createLinearGradient(centerX - aisleLen, groundY, centerX, groundY);
+    aisleGrad.addColorStop(0, 'rgba(139,0,0,0.15)');
+    aisleGrad.addColorStop(0.5, 'rgba(180,20,20,0.45)');
+    aisleGrad.addColorStop(1, 'rgba(200,30,30,0.55)');
+    ctx.fillStyle = aisleGrad;
+    ctx.fillRect(centerX - aisleLen, groundY - 12, aisleLen * 2, 14);
+    // Aisle gold trim
+    ctx.strokeStyle = 'rgba(212,168,67,0.35)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(centerX - aisleLen, groundY - 12);
+    ctx.lineTo(centerX + aisleLen, groundY - 12);
+    ctx.moveTo(centerX - aisleLen, groundY + 2);
+    ctx.lineTo(centerX + aisleLen, groundY + 2);
+    ctx.stroke();
+
+    // --- Rows of chairs (6 rows on each side) ---
+    ctx.fillStyle = 'rgba(80,60,50,0.35)';
+    for (let row = 0; row < 6; row++) {
+      for (let col = 0; col < 7; col++) {
+        const chairX = centerX - 180 + col * 20;
+        const chairY = groundY - 2 + row * 8;
+        ctx.fillRect(chairX, chairY - 8, 9, 8);
+      }
+      for (let col = 0; col < 7; col++) {
+        const chairX = centerX + 50 + col * 20;
+        const chairY = groundY - 2 + row * 8;
+        ctx.fillRect(chairX, chairY - 8, 9, 8);
+      }
+    }
+
+    // --- Giant arch structure ---
+    // Arch outer glow
+    ctx.save();
+    ctx.shadowColor = 'rgba(212,168,67,0.5)';
+    ctx.shadowBlur = 25;
+    ctx.strokeStyle = 'rgba(212,168,67,0.85)';
+    ctx.lineWidth = 8;
+    ctx.beginPath();
+    ctx.arc(centerX, archCenterY, archRadius, Math.PI, 0);
+    ctx.stroke();
+    ctx.restore();
+    // Arch inner stroke
+    ctx.strokeStyle = 'rgba(212,168,67,0.5)';
     ctx.lineWidth = 4;
     ctx.beginPath();
-    ctx.arc(centerX, groundY - 10, 40, Math.PI, 0);
+    ctx.arc(centerX, archCenterY, archRadius - 10, Math.PI, 0);
     ctx.stroke();
-    // Flowers on arch
-    const flowerCols = ['#FF6B81', '#FFB6C1', '#FFF', '#FF69B4', '#E8C96A'];
-    for (let i = 0; i < 12; i++) {
-      const angle = Math.PI + (i / 11) * Math.PI;
-      const fx = centerX + Math.cos(angle) * 42;
-      const fy = groundY - 10 + Math.sin(angle) * 42;
+    // Arch legs (thick gold pillars)
+    ctx.strokeStyle = 'rgba(212,168,67,0.85)';
+    ctx.lineWidth = 10;
+    ctx.beginPath();
+    ctx.moveTo(centerX - archRadius, archCenterY);
+    ctx.lineTo(centerX - archRadius, groundY + 2);
+    ctx.moveTo(centerX + archRadius, archCenterY);
+    ctx.lineTo(centerX + archRadius, groundY + 2);
+    ctx.stroke();
+    // Pillar inner highlight
+    ctx.strokeStyle = 'rgba(255,248,220,0.3)';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(centerX - archRadius + 2, archCenterY);
+    ctx.lineTo(centerX - archRadius + 2, groundY + 2);
+    ctx.moveTo(centerX + archRadius - 2, archCenterY);
+    ctx.lineTo(centerX + archRadius - 2, groundY + 2);
+    ctx.stroke();
+
+    // --- Ornate flowers all around the arch ---
+    for (let i = 0; i < 36; i++) {
+      const angle = Math.PI + (i / 35) * Math.PI;
+      // Outer ring of flowers
+      const fx1 = centerX + Math.cos(angle) * (archRadius + 6);
+      const fy1 = archCenterY + Math.sin(angle) * (archRadius + 6);
       ctx.fillStyle = flowerCols[i % flowerCols.length];
       ctx.beginPath();
-      ctx.arc(fx, fy, 3, 0, Math.PI * 2);
+      ctx.arc(fx1, fy1, 4 + Math.sin(petT * 2 + i) * 1, 0, Math.PI * 2);
+      ctx.fill();
+      // Inner ring of flowers (offset)
+      if (i % 2 === 0) {
+        const fx2 = centerX + Math.cos(angle) * (archRadius - 14);
+        const fy2 = archCenterY + Math.sin(angle) * (archRadius - 14);
+        ctx.fillStyle = flowerCols[(i + 3) % flowerCols.length];
+        ctx.beginPath();
+        ctx.arc(fx2, fy2, 3, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+    // Flowers cascading down the pillars
+    for (let side = -1; side <= 1; side += 2) {
+      for (let j = 0; j < 8; j++) {
+        const fy = archCenterY + j * 12;
+        const fx = centerX + side * archRadius + Math.sin(petT + j) * 4;
+        ctx.fillStyle = flowerCols[(j + (side > 0 ? 3 : 0)) % flowerCols.length];
+        ctx.beginPath();
+        ctx.arc(fx, fy, 3.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // --- Fairy lights twinkling around the arch ---
+    for (let i = 0; i < 24; i++) {
+      const angle = Math.PI + (i / 23) * Math.PI;
+      const lr = archRadius - 4;
+      const lx = centerX + Math.cos(angle) * lr;
+      const ly = archCenterY + Math.sin(angle) * lr;
+      const twinkle = 0.3 + 0.7 * Math.abs(Math.sin(petT * 3 + i * 1.7));
+      ctx.globalAlpha = twinkle;
+      ctx.fillStyle = (i % 3 === 0) ? '#FFFACD' : (i % 3 === 1) ? '#FFD700' : '#FFF';
+      ctx.beginPath();
+      ctx.arc(lx, ly, 2, 0, Math.PI * 2);
       ctx.fill();
     }
-    // Arch legs
-    ctx.strokeStyle = 'rgba(212,168,67,0.6)';
-    ctx.lineWidth = 4;
-    ctx.beginPath();
-    ctx.moveTo(centerX - 40, groundY - 10);
-    ctx.lineTo(centerX - 40, groundY);
-    ctx.moveTo(centerX + 40, groundY - 10);
-    ctx.lineTo(centerX + 40, groundY);
-    ctx.stroke();
-    // Rows of chairs
-    ctx.fillStyle = 'rgba(80,60,50,0.4)';
-    for (let row = 0; row < 3; row++) {
-      for (let col = 0; col < 5; col++) {
-        const chairX = centerX - 80 + col * 18;
-        const chairY = groundY - 2 + row * 5;
-        ctx.fillRect(chairX, chairY - 8, 8, 8);
-      }
-      for (let col = 0; col < 5; col++) {
-        const chairX = centerX + 20 + col * 18;
-        const chairY = groundY - 2 + row * 5;
-        ctx.fillRect(chairX, chairY - 8, 8, 8);
+    // Fairy lights along pillars
+    for (let side = -1; side <= 1; side += 2) {
+      for (let j = 0; j < 6; j++) {
+        const ly = archCenterY + j * 15 + 5;
+        const lx = centerX + side * (archRadius - 1);
+        const twinkle = 0.3 + 0.7 * Math.abs(Math.sin(petT * 2.5 + j * 2.1 + side));
+        ctx.globalAlpha = twinkle;
+        ctx.fillStyle = '#FFFACD';
+        ctx.beginPath();
+        ctx.arc(lx, ly, 1.8, 0, Math.PI * 2);
+        ctx.fill();
       }
     }
-    // Standing guests
-    for (let i = 0; i < 6; i++) {
-      drawSilhouette(ctx, centerX - 100 + i * 35, groundY, 'cheering');
+    ctx.globalAlpha = 1;
+
+    // --- Partner character(s) waiting at the arch ---
+    const partnerScale = 28;
+    if (G.char === 'kyle') {
+      // Jill waits at the arch
+      ctx.save();
+      ctx.translate(centerX + 15, groundY - 2);
+      drawJill(ctx, partnerScale);
+      ctx.restore();
+    } else if (G.char === 'jill') {
+      // Kyle waits at the arch
+      ctx.save();
+      ctx.translate(centerX + 15, groundY - 2);
+      drawKyle(ctx, partnerScale);
+      ctx.restore();
+    } else if (G.char === 'banksy') {
+      // Both Kyle and Jill wait at the arch
+      ctx.save();
+      ctx.translate(centerX - 20, groundY - 2);
+      drawKyle(ctx, partnerScale);
+      ctx.restore();
+      ctx.save();
+      ctx.translate(centerX + 20, groundY - 2);
+      drawJill(ctx, partnerScale);
+      ctx.restore();
     }
-    // Flower petals falling
-    const petT = Date.now() * 0.001;
-    for (let i = 0; i < 15; i++) {
-      const px = centerX - 60 + (i * 37 + petT * 20) % 120;
-      const py = groundY - 80 + ((i * 53 + petT * 30) % 80);
-      ctx.fillStyle = flowerCols[i % flowerCols.length];
+
+    // --- More cheering guests lining the aisle ---
+    for (let i = 0; i < 10; i++) {
+      drawSilhouette(ctx, centerX - 200 + i * 40, groundY, 'cheering');
+    }
+    // Second row of guests behind
+    for (let i = 0; i < 8; i++) {
       ctx.globalAlpha = 0.5;
+      drawSilhouette(ctx, centerX - 160 + i * 42, groundY + 20, 'cheering');
+    }
+    ctx.globalAlpha = 1;
+
+    // --- Flower petals falling (many more, wider area) ---
+    for (let i = 0; i < 40; i++) {
+      const px = centerX - 180 + (i * 47 + petT * 25) % 360;
+      const py = groundY - 150 + ((i * 53 + petT * 35) % 140);
+      ctx.fillStyle = flowerCols[i % flowerCols.length];
+      ctx.globalAlpha = 0.4 + 0.3 * Math.sin(petT + i);
       ctx.save();
       ctx.translate(px, py);
-      ctx.rotate(petT + i);
-      ctx.fillRect(-2, -1, 4, 2);
+      ctx.rotate(petT * 1.5 + i * 0.8);
+      ctx.fillRect(-3, -1.5, 6, 3);
       ctx.restore();
     }
     ctx.globalAlpha = 1;
-    // Venue name label
-    ctx.fillStyle = 'rgba(212,168,67,0.9)';
-    ctx.font = "bold 14px 'IBM Plex Serif', serif";
+
+    // --- "THE WEDDING" label in large text ---
+    ctx.save();
+    ctx.shadowColor = 'rgba(212,168,67,0.6)';
+    ctx.shadowBlur = 15;
+    ctx.fillStyle = 'rgba(212,168,67,1)';
+    ctx.font = "bold 22px 'IBM Plex Serif', serif";
     ctx.textAlign = 'center';
-    ctx.fillText("CEREMONY AT PARADISO", centerX, groundY - 65);
+    ctx.fillText("THE WEDDING", centerX, groundY - archRadius - 30);
+    ctx.restore();
+    ctx.fillStyle = 'rgba(255,248,240,0.5)';
+    ctx.font = "italic 12px 'IBM Plex Serif', serif";
+    ctx.textAlign = 'center';
+    ctx.fillText("Paradiso, St. Moritz", centerX, groundY - archRadius - 12);
 
   } else if (type === 'embassy') {
     // Ballroom / after party
@@ -1764,18 +1898,50 @@ function drawCollectibles() {
       ctx.moveTo(-7, 5); ctx.lineTo(6, 5); ctx.lineTo(8, 8); ctx.lineTo(-5, 8);
       ctx.closePath(); ctx.fill();
     } else if (c.type === 'rose') {
-      // Wine glass
-      ctx.fillStyle = '#FF6B81';
+      // Rosé wine glass
+      // Glass bowl (curved U-shape)
+      ctx.strokeStyle = 'rgba(255,255,255,0.8)';
+      ctx.lineWidth = 1.5;
       ctx.beginPath();
-      ctx.moveTo(0, -14); ctx.lineTo(-9, 2); ctx.lineTo(9, 2);
-      ctx.closePath(); ctx.fill();
+      ctx.moveTo(-8, -14);
+      ctx.lineTo(-8, -6);
+      ctx.quadraticCurveTo(-8, 2, 0, 2);
+      ctx.quadraticCurveTo(8, 2, 8, -6);
+      ctx.lineTo(8, -14);
+      ctx.stroke();
+      // Rosé liquid fill inside the bowl
+      ctx.fillStyle = 'rgba(255,107,129,0.75)';
       ctx.beginPath();
-      ctx.moveTo(0, -14); ctx.lineTo(-9, 2); ctx.lineTo(9, 2);
-      ctx.closePath(); ctx.stroke();
-      ctx.strokeStyle = '#FF6B81'; ctx.lineWidth = 2;
+      ctx.moveTo(-7, -8);
+      ctx.lineTo(-7, -6);
+      ctx.quadraticCurveTo(-7, 1, 0, 1);
+      ctx.quadraticCurveTo(7, 1, 7, -6);
+      ctx.lineTo(7, -8);
+      ctx.closePath();
+      ctx.fill();
+      // Liquid surface shimmer
+      ctx.strokeStyle = 'rgba(255,180,193,0.6)';
+      ctx.lineWidth = 1;
       ctx.beginPath();
-      ctx.moveTo(0, 2); ctx.lineTo(0, 12);
-      ctx.moveTo(-6, 12); ctx.lineTo(6, 12);
+      ctx.moveTo(-6, -8);
+      ctx.quadraticCurveTo(0, -6.5, 6, -8);
+      ctx.stroke();
+      // Stem (thin line)
+      ctx.strokeStyle = 'rgba(255,255,255,0.8)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(0, 2); ctx.lineTo(0, 11);
+      ctx.stroke();
+      // Base (wider foot)
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(-6, 11); ctx.lineTo(6, 11);
+      ctx.stroke();
+      // Rim highlight
+      ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(-8, -14); ctx.lineTo(8, -14);
       ctx.stroke();
     } else if (c.type === 'sun') {
       // St. Moritz Sun collectible
@@ -3411,9 +3577,9 @@ function scheduleBeat(time, beat) {
     playBassNote(time);
   }
 
-  // Lead arpeggio on 16th note feel - play during 2nd and 4th bars of each 4-bar cycle for variation
+  // "We Found Love" style driving riff - plays on every 8th note
   const barInCycle = Math.floor(beat / 8) % 4;
-  if (barInCycle === 1 || barInCycle === 3) {
+  if (barInCycle >= 1) {
     playLeadNote(time);
   }
 
@@ -3480,9 +3646,9 @@ function playSynthStab(time) {
   chord.forEach(freq => {
     const osc = AC.createOscillator();
     const gain = AC.createGain();
-    osc.type = 'square';
+    osc.type = 'sawtooth';
     osc.frequency.value = freq;
-    gain.gain.setValueAtTime(0.04, time);
+    gain.gain.setValueAtTime(0.06, time);
     gain.gain.exponentialRampToValueAtTime(0.001, time + 0.15);
     osc.connect(gain);
     gain.connect(MUSIC.compressor);
@@ -3544,25 +3710,46 @@ function playShimmer(time) {
 function playLeadNote(time) {
   const AC = MUSIC.ctx;
   const chord = MUSIC.chords[MUSIC.currentChordIdx];
-  const noteIdx = MUSIC.arpStep % chord.length;
+  // "We Found Love" style descending riff pattern
+  // Pattern: root high, 5th, 3rd, root low, then bounce to 3rd, 5th
+  const patterns = [
+    [2, 1, 0, -1, 0, 1, 2, 1],  // descending then ascending
+  ];
+  const pattern = patterns[0];
+  const step = MUSIC.arpStep % pattern.length;
   MUSIC.arpStep++;
-  const freq = chord[noteIdx] * 2; // 2x octave for brightness
+
+  const degree = pattern[step];
+  let freq;
+  if (degree >= 0) {
+    freq = chord[Math.min(degree, chord.length - 1)] * 2;
+  } else {
+    freq = chord[0]; // root at base octave
+  }
+
   const osc = AC.createOscillator();
   const gain = AC.createGain();
-  osc.type = 'sine';
+  osc.type = 'square'; // Square wave for that Calvin Harris buzzy synth
   osc.frequency.value = freq;
-  gain.gain.setValueAtTime(0.07, time);
-  gain.gain.exponentialRampToValueAtTime(0.001, time + 0.15);
+
+  // Punchy envelope like the original
+  gain.gain.setValueAtTime(0.06, time);
+  gain.gain.setValueAtTime(0.06, time + 0.04);
+  gain.gain.exponentialRampToValueAtTime(0.001, time + 0.12);
+
   osc.connect(gain);
-  if (MUSIC.reverbMix) {
+  gain.connect(MUSIC.compressor);
+
+  // Also send to reverb for space
+  if (MUSIC.reverbDelay) {
     const reverbSend = AC.createGain();
-    reverbSend.gain.value = 0.3;
+    reverbSend.gain.value = 0.2;
     osc.connect(reverbSend);
     reverbSend.connect(MUSIC.reverbDelay);
   }
-  gain.connect(MUSIC.compressor);
+
   osc.start(time);
-  osc.stop(time + 0.15);
+  osc.stop(time + 0.12);
 }
 
 function fadeOutMusic() {
