@@ -52,6 +52,11 @@ canvas {
   0%, 100% { filter: drop-shadow(0 0 15px rgba(212,168,67,0.4)); }
   50% { filter: drop-shadow(0 0 30px rgba(212,168,67,0.7)); }
 }
+@keyframes spinRays {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.sun-rays { animation: spinRays 30s linear infinite; transform-origin: 100px 100px; }
 #titleScreen h1 {
   font-size: 2.4rem;
   font-weight: 300;
@@ -344,29 +349,31 @@ canvas {
       <!-- Wavy flame ray - wide flowing S-curve -->
       <path id="wr" d="M-3,-36 C-7,-42,-12,-48,-11,-56 C-10,-64,2,-70,5,-78 C6,-86,1,-91,0,-94 C-1,-91,5,-86,11,-78 C14,-70,2,-62,1,-56 C0,-48,3,-42,3,-36 Z" fill="#DAA520"/>
     </defs>
+    <!-- Spinning rays -->
+    <g class="sun-rays">
+      <g transform="translate(100,100)">
+        <use href="#sr" transform="rotate(0)"/><use href="#sr" transform="rotate(22.5)"/>
+        <use href="#sr" transform="rotate(45)"/><use href="#sr" transform="rotate(67.5)"/>
+        <use href="#sr" transform="rotate(90)"/><use href="#sr" transform="rotate(112.5)"/>
+        <use href="#sr" transform="rotate(135)"/><use href="#sr" transform="rotate(157.5)"/>
+        <use href="#sr" transform="rotate(180)"/><use href="#sr" transform="rotate(202.5)"/>
+        <use href="#sr" transform="rotate(225)"/><use href="#sr" transform="rotate(247.5)"/>
+        <use href="#sr" transform="rotate(270)"/><use href="#sr" transform="rotate(292.5)"/>
+        <use href="#sr" transform="rotate(315)"/><use href="#sr" transform="rotate(337.5)"/>
+        <use href="#wr" transform="rotate(11.25)"/><use href="#wr" transform="rotate(33.75)"/>
+        <use href="#wr" transform="rotate(56.25)"/><use href="#wr" transform="rotate(78.75)"/>
+        <use href="#wr" transform="rotate(101.25)"/><use href="#wr" transform="rotate(123.75)"/>
+        <use href="#wr" transform="rotate(146.25)"/><use href="#wr" transform="rotate(168.75)"/>
+        <use href="#wr" transform="rotate(191.25)"/><use href="#wr" transform="rotate(213.75)"/>
+        <use href="#wr" transform="rotate(236.25)"/><use href="#wr" transform="rotate(258.75)"/>
+        <use href="#wr" transform="rotate(281.25)"/><use href="#wr" transform="rotate(303.75)"/>
+        <use href="#wr" transform="rotate(326.25)"/><use href="#wr" transform="rotate(348.75)"/>
+      </g>
+    </g>
+    <!-- Stationary disc + KJ -->
     <g transform="translate(100,100)">
-      <!-- 16 straight rays -->
-      <use href="#sr" transform="rotate(0)"/><use href="#sr" transform="rotate(22.5)"/>
-      <use href="#sr" transform="rotate(45)"/><use href="#sr" transform="rotate(67.5)"/>
-      <use href="#sr" transform="rotate(90)"/><use href="#sr" transform="rotate(112.5)"/>
-      <use href="#sr" transform="rotate(135)"/><use href="#sr" transform="rotate(157.5)"/>
-      <use href="#sr" transform="rotate(180)"/><use href="#sr" transform="rotate(202.5)"/>
-      <use href="#sr" transform="rotate(225)"/><use href="#sr" transform="rotate(247.5)"/>
-      <use href="#sr" transform="rotate(270)"/><use href="#sr" transform="rotate(292.5)"/>
-      <use href="#sr" transform="rotate(315)"/><use href="#sr" transform="rotate(337.5)"/>
-      <!-- 16 wavy/flame rays -->
-      <use href="#wr" transform="rotate(11.25)"/><use href="#wr" transform="rotate(33.75)"/>
-      <use href="#wr" transform="rotate(56.25)"/><use href="#wr" transform="rotate(78.75)"/>
-      <use href="#wr" transform="rotate(101.25)"/><use href="#wr" transform="rotate(123.75)"/>
-      <use href="#wr" transform="rotate(146.25)"/><use href="#wr" transform="rotate(168.75)"/>
-      <use href="#wr" transform="rotate(191.25)"/><use href="#wr" transform="rotate(213.75)"/>
-      <use href="#wr" transform="rotate(236.25)"/><use href="#wr" transform="rotate(258.75)"/>
-      <use href="#wr" transform="rotate(281.25)"/><use href="#wr" transform="rotate(303.75)"/>
-      <use href="#wr" transform="rotate(326.25)"/><use href="#wr" transform="rotate(348.75)"/>
-      <!-- Central sun disc (smaller relative to rays) -->
       <circle cx="0" cy="0" r="32" fill="#E8B816"/>
       <circle cx="0" cy="0" r="28" fill="#F0CA30"/>
-      <!-- KJ Lockup -->
       <text x="0" y="10" text-anchor="middle" fill="#9B7511" font-family="'IBM Plex Serif', serif" font-size="32" font-weight="400" letter-spacing="-3">KJ</text>
     </g>
   </svg>
