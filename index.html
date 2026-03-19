@@ -400,98 +400,87 @@ canvas {
   <div class="char-grid">
     <div class="char-card" data-char="jill">
       <svg class="avatar" viewBox="0 0 90 110">
-        <!-- Jill - Glamorous Skier (detailed) -->
+        <!-- Jill - based on ref: long blonde hair, beautiful smile, white ski suit -->
         <defs>
           <linearGradient id="jillHair" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#F5DEB3"/>
-            <stop offset="60%" stop-color="#EBC882"/>
-            <stop offset="100%" stop-color="#D4A84C"/>
-          </linearGradient>
-          <linearGradient id="jillSuit" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#FFFFFF"/>
-            <stop offset="100%" stop-color="#F0EBE3"/>
+            <stop offset="0%" stop-color="#F0D890"/>
+            <stop offset="50%" stop-color="#E0C470"/>
+            <stop offset="100%" stop-color="#C8A850"/>
           </linearGradient>
         </defs>
-        <!-- Hair behind (volume with layers) -->
-        <path d="M28 12 Q18 20 16 36 Q17 40 20 42" fill="url(#jillHair)" opacity="0.9"/>
-        <path d="M62 12 Q72 20 74 36 Q73 40 70 42" fill="url(#jillHair)" opacity="0.9"/>
-        <path d="M30 14 Q20 22 19 34" stroke="#EBC882" stroke-width="2" fill="none" opacity="0.5"/>
-        <path d="M60 14 Q70 22 71 34" stroke="#EBC882" stroke-width="2" fill="none" opacity="0.5"/>
+        <!-- Long flowing hair behind body -->
+        <path d="M26 14 Q16 25 14 50 Q15 58 18 62" fill="url(#jillHair)" opacity="0.85"/>
+        <path d="M64 14 Q74 25 76 50 Q75 58 72 62" fill="url(#jillHair)" opacity="0.85"/>
+        <path d="M28 16 Q19 28 17 48" stroke="#D4B060" stroke-width="1.5" fill="none" opacity="0.4"/>
+        <path d="M62 16 Q71 28 73 48" stroke="#D4B060" stroke-width="1.5" fill="none" opacity="0.4"/>
+        <path d="M24 18 Q18 30 16 46" stroke="#E8CC78" stroke-width="1" fill="none" opacity="0.3"/>
+        <path d="M66 18 Q72 30 74 46" stroke="#E8CC78" stroke-width="1" fill="none" opacity="0.3"/>
         <!-- Neck -->
-        <rect x="41" y="28" width="8" height="6" rx="3" fill="#FDBCB4"/>
+        <rect x="41" y="28" width="8" height="7" rx="3" fill="#F5C4B0"/>
+        <!-- Necklace -->
+        <path d="M38 32 Q45 35 52 32" stroke="#D4A843" stroke-width="0.8" fill="none"/>
+        <circle cx="45" cy="34.5" r="1.2" fill="#D4A843"/>
         <!-- Head -->
-        <ellipse cx="45" cy="18" rx="14" ry="15" fill="#FDBCB4"/>
-        <!-- Hair on top (fuller) -->
-        <path d="M31 16 Q33 2 45 3 Q57 2 59 16 Q57 6 45 5 Q33 6 31 16 Z" fill="#F5DEB3"/>
-        <path d="M33 14 Q35 4 45 5 Q55 4 57 14" fill="#EBC882" opacity="0.4"/>
-        <!-- Hair flowing strands (multiple layers) -->
-        <path d="M31 13 Q22 24 20 38" stroke="#F5DEB3" stroke-width="4" fill="none" stroke-linecap="round"/>
-        <path d="M32 14 Q24 25 22 36" stroke="#EBC882" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-        <path d="M33 15 Q26 26 24 34" stroke="#D4A84C" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.6"/>
-        <path d="M59 13 Q68 24 70 38" stroke="#F5DEB3" stroke-width="4" fill="none" stroke-linecap="round"/>
-        <path d="M58 14 Q66 25 68 36" stroke="#EBC882" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-        <path d="M57 15 Q64 26 66 34" stroke="#D4A84C" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.6"/>
-        <!-- Sunglasses on head -->
-        <rect x="34" y="9" width="22" height="5" rx="2.5" fill="rgba(30,30,30,0.75)"/>
-        <circle cx="40" cy="11.5" r="3.5" fill="rgba(40,20,10,0.5)" stroke="rgba(30,30,30,0.8)" stroke-width="0.8"/>
-        <circle cx="50" cy="11.5" r="3.5" fill="rgba(40,20,10,0.5)" stroke="rgba(30,30,30,0.8)" stroke-width="0.8"/>
-        <!-- Eyebrows -->
-        <path d="M37 14 Q39 12.5 42 13.5" stroke="#C4985C" stroke-width="0.8" fill="none"/>
-        <path d="M48 13.5 Q51 12.5 53 14" stroke="#C4985C" stroke-width="0.8" fill="none"/>
-        <!-- Eyes (detailed with lashes) -->
-        <ellipse cx="40" cy="17" rx="2.2" ry="2.5" fill="white"/>
-        <circle cx="40" cy="17" r="1.6" fill="#5B8C5A"/>
-        <circle cx="40" cy="17" r="0.8" fill="#2A2A2A"/>
-        <circle cx="40.5" cy="16.3" r="0.5" fill="white"/>
-        <ellipse cx="50" cy="17" rx="2.2" ry="2.5" fill="white"/>
-        <circle cx="50" cy="17" r="1.6" fill="#5B8C5A"/>
-        <circle cx="50" cy="17" r="0.8" fill="#2A2A2A"/>
-        <circle cx="50.5" cy="16.3" r="0.5" fill="white"/>
+        <ellipse cx="45" cy="18" rx="13" ry="14" fill="#F5C4B0"/>
+        <!-- Hair on top (parted, voluminous) -->
+        <path d="M32 15 Q34 2 45 3 Q56 2 58 15 Q56 5 45 4 Q34 5 32 15 Z" fill="#E8C870"/>
+        <path d="M34 12 Q36 4 45 4.5 Q54 4 56 12" fill="#D4B060" opacity="0.3"/>
+        <!-- Hair flowing past shoulders -->
+        <path d="M30 12 Q20 28 18 52 Q17 56 19 58" stroke="#E8C870" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+        <path d="M32 13 Q23 28 21 48" stroke="#D4B060" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.7"/>
+        <path d="M60 12 Q70 28 72 52 Q73 56 71 58" stroke="#E8C870" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+        <path d="M58 13 Q67 28 69 48" stroke="#D4B060" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.7"/>
+        <!-- Eyebrows (groomed) -->
+        <path d="M37 14 Q40 12.5 42 13" stroke="#B89050" stroke-width="0.8" fill="none"/>
+        <path d="M48 13 Q50 12.5 53 14" stroke="#B89050" stroke-width="0.8" fill="none"/>
+        <!-- Eyes (bright, with lashes) -->
+        <ellipse cx="40" cy="17" rx="2.5" ry="2.8" fill="white"/>
+        <circle cx="40.2" cy="17.2" r="1.8" fill="#6B9E6B"/>
+        <circle cx="40.2" cy="17.2" r="0.9" fill="#2A2A2A"/>
+        <circle cx="40.7" cy="16.4" r="0.5" fill="white"/>
+        <ellipse cx="50" cy="17" rx="2.5" ry="2.8" fill="white"/>
+        <circle cx="49.8" cy="17.2" r="1.8" fill="#6B9E6B"/>
+        <circle cx="49.8" cy="17.2" r="0.9" fill="#2A2A2A"/>
+        <circle cx="50.3" cy="16.4" r="0.5" fill="white"/>
         <!-- Eyelashes -->
-        <path d="M37.5 15.5 L36.5 14.5 M38.5 15 L37.8 13.8 M39.5 14.8 L39 13.5" stroke="#3A2518" stroke-width="0.5"/>
-        <path d="M52.5 15.5 L53.5 14.5 M51.5 15 L52.2 13.8 M50.5 14.8 L51 13.5" stroke="#3A2518" stroke-width="0.5"/>
+        <path d="M37.2 15.2 L36.2 14 M38.2 14.8 L37.5 13.4 M39.2 14.5 L38.8 13.2" stroke="#5A3820" stroke-width="0.5"/>
+        <path d="M52.8 15.2 L53.8 14 M51.8 14.8 L52.5 13.4 M50.8 14.5 L51.2 13.2" stroke="#5A3820" stroke-width="0.5"/>
         <!-- Nose -->
-        <path d="M45 17 Q44 20 44.5 21 Q45 21.5 45.5 21 Q46 20 45 17" fill="none" stroke="#E0A090" stroke-width="0.6"/>
-        <!-- Lips -->
-        <path d="M42 23.5 Q45 25.5 48 23.5" stroke="#D06060" stroke-width="1" fill="none"/>
-        <path d="M42.5 23.5 Q45 22 47.5 23.5" stroke="#E07070" stroke-width="0.6" fill="rgba(220,90,90,0.2)"/>
+        <path d="M45 18 Q43.5 21 44.5 22 Q45 22.3 45.5 22 Q46.5 21 45 18" fill="none" stroke="#E0A898" stroke-width="0.5"/>
+        <!-- Smile (warm, natural) -->
+        <path d="M41 24 Q45 27 49 24" stroke="#CC5555" stroke-width="0.9" fill="none"/>
+        <path d="M42 24.2 Q45 23 48 24.2" fill="rgba(210,80,80,0.15)" stroke="#D87070" stroke-width="0.5"/>
         <!-- Cheeks -->
-        <circle cx="37" cy="21" r="3" fill="rgba(255,140,140,0.2)"/>
-        <circle cx="53" cy="21" r="3" fill="rgba(255,140,140,0.2)"/>
-        <!-- White ski suit body (fitted with detail) -->
-        <path d="M35 33 Q32 42 33 65 L57 65 Q58 42 55 33 Z" fill="url(#jillSuit)" stroke="#E0D8CC" stroke-width="0.5"/>
-        <!-- Fur collar (fluffy) -->
-        <path d="M35 33 Q38 37 45 36 Q52 37 55 33" stroke="#F0E6D4" stroke-width="5" fill="none" stroke-linecap="round"/>
-        <path d="M36 34 Q40 37 45 36.5 Q50 37 54 34" stroke="#E8DCC8" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.5"/>
-        <!-- Zipper line -->
-        <line x1="45" y1="36" x2="45" y2="64" stroke="#C0B8AC" stroke-width="0.5" stroke-dasharray="2,2"/>
-        <!-- Gold belt with buckle -->
-        <line x1="34" y1="50" x2="56" y2="50" stroke="#C9A84C" stroke-width="1.8"/>
-        <rect x="43" y="48.5" width="4" height="3" rx="0.5" fill="#C9A84C" stroke="#A88A3C" stroke-width="0.3"/>
-        <!-- Chest detail -->
-        <path d="M40 38 L44 48" stroke="#E0D8CC" stroke-width="0.4" opacity="0.5"/>
-        <path d="M50 38 L46 48" stroke="#E0D8CC" stroke-width="0.4" opacity="0.5"/>
+        <circle cx="36" cy="22" r="3" fill="rgba(255,130,130,0.15)"/>
+        <circle cx="54" cy="22" r="3" fill="rgba(255,130,130,0.15)"/>
+        <!-- White ski suit body -->
+        <path d="M35 34 Q32 44 33 66 L57 66 Q58 44 55 34 Z" fill="#FAFAFA" stroke="#E8E0D8" stroke-width="0.5"/>
+        <!-- Fur collar -->
+        <path d="M35 34 Q40 38 45 37 Q50 38 55 34" stroke="#F0E6D4" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <!-- Gold belt -->
+        <line x1="34" y1="52" x2="56" y2="52" stroke="#C9A84C" stroke-width="1.5"/>
+        <!-- Arms (white sleeves, holding poles) -->
+        <path d="M35 38 L24 48 L20 56" stroke="#FAFAFA" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <path d="M55 38 L66 48 L70 56" stroke="#FAFAFA" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <!-- Gloves -->
+        <circle cx="20" cy="57" r="2.5" fill="#F0E6D4"/>
+        <circle cx="70" cy="57" r="2.5" fill="#F0E6D4"/>
         <!-- Legs -->
-        <path d="M38 65 Q37 72 36 84" stroke="#FAFAFA" stroke-width="4" fill="none" stroke-linecap="round"/>
-        <path d="M52 65 Q53 72 54 84" stroke="#FAFAFA" stroke-width="4" fill="none" stroke-linecap="round"/>
-        <!-- Fur cuffs on boots -->
-        <ellipse cx="36" cy="84" rx="5" ry="2.5" fill="#F0E6D4"/>
-        <ellipse cx="54" cy="84" rx="5" ry="2.5" fill="#F0E6D4"/>
+        <path d="M38 66 Q37 74 36 85" stroke="#FAFAFA" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <path d="M52 66 Q53 74 54 85" stroke="#FAFAFA" stroke-width="4" fill="none" stroke-linecap="round"/>
         <!-- Boots -->
-        <ellipse cx="36" cy="87" rx="4" ry="3" fill="#FAFAFA" stroke="#E0D8CC" stroke-width="0.5"/>
-        <ellipse cx="54" cy="87" rx="4" ry="3" fill="#FAFAFA" stroke="#E0D8CC" stroke-width="0.5"/>
-        <!-- Skis with hearts and bindings -->
-        <line x1="18" y1="92" x2="55" y2="92" stroke="#FAFAFA" stroke-width="3.5" stroke-linecap="round"/>
-        <line x1="35" y1="92" x2="72" y2="92" stroke="#FAFAFA" stroke-width="3.5" stroke-linecap="round"/>
-        <rect x="33" y="89" width="6" height="3" rx="0.5" fill="#CCC" opacity="0.5"/>
-        <rect x="51" y="89" width="6" height="3" rx="0.5" fill="#CCC" opacity="0.5"/>
-        <text x="30" y="97" font-size="7" fill="#CC0000">&#9829;</text>
-        <text x="52" y="97" font-size="7" fill="#CC0000">&#9829;</text>
+        <ellipse cx="36" cy="87" rx="4.5" ry="3" fill="#FAFAFA" stroke="#DDD" stroke-width="0.5"/>
+        <ellipse cx="54" cy="87" rx="4.5" ry="3" fill="#FAFAFA" stroke="#DDD" stroke-width="0.5"/>
+        <!-- Skis -->
+        <line x1="18" y1="92" x2="55" y2="92" stroke="#FAFAFA" stroke-width="3" stroke-linecap="round"/>
+        <line x1="35" y1="92" x2="72" y2="92" stroke="#FAFAFA" stroke-width="3" stroke-linecap="round"/>
+        <text x="30" y="97" font-size="6" fill="#CC0000">&#9829;</text>
+        <text x="52" y="97" font-size="6" fill="#CC0000">&#9829;</text>
         <!-- Poles -->
-        <line x1="26" y1="44" x2="12" y2="90" stroke="#C9A84C" stroke-width="1.5"/>
-        <line x1="64" y1="44" x2="78" y2="90" stroke="#C9A84C" stroke-width="1.5"/>
-        <circle cx="12" cy="90" r="3" fill="none" stroke="#C9A84C" stroke-width="1"/>
-        <circle cx="78" cy="90" r="3" fill="none" stroke="#C9A84C" stroke-width="1"/>
+        <line x1="20" y1="57" x2="12" y2="90" stroke="#C9A84C" stroke-width="1.3"/>
+        <line x1="70" y1="57" x2="78" y2="90" stroke="#C9A84C" stroke-width="1.3"/>
+        <circle cx="12" cy="90" r="2.5" fill="none" stroke="#C9A84C" stroke-width="0.8"/>
+        <circle cx="78" cy="90" r="2.5" fill="none" stroke="#C9A84C" stroke-width="0.8"/>
       </svg>
       <div class="name">Jill</div>
       <div class="subtitle">The Glamorous Skier</div>
@@ -499,78 +488,67 @@ canvas {
     </div>
     <div class="char-card" data-char="kyle">
       <svg class="avatar" viewBox="0 0 90 110">
-        <!-- Kyle - Tuxedo Shredder (detailed) -->
-        <defs>
-          <linearGradient id="kyleTux" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#2A2A2A"/>
-            <stop offset="100%" stop-color="#1A1A1A"/>
-          </linearGradient>
-        </defs>
+        <!-- Kyle - based on ref: dark hair, stubble, big smile, black tux, bow tie -->
         <!-- Neck -->
-        <rect x="41" y="28" width="8" height="6" rx="3" fill="#FDBCB4"/>
-        <!-- Head -->
-        <ellipse cx="45" cy="18" rx="13" ry="14.5" fill="#FDBCB4"/>
-        <!-- Jawline shadow -->
-        <path d="M34 22 Q38 28 45 29 Q52 28 56 22" fill="rgba(200,150,130,0.15)"/>
-        <!-- Dark hair / slicked -->
-        <path d="M32 15 Q34 3 45 2 Q56 3 58 15 Q56 6 45 5 Q34 6 32 15 Z" fill="#3A2518"/>
-        <!-- Hair texture lines -->
-        <path d="M36 6 Q40 4 45 4" stroke="#2A1A10" stroke-width="0.5" fill="none" opacity="0.4"/>
-        <path d="M54 6 Q50 4 45 4" stroke="#2A1A10" stroke-width="0.5" fill="none" opacity="0.4"/>
-        <!-- Black beanie -->
-        <path d="M33 13 Q37 4 45 3 Q53 4 57 13" fill="#1A1A1A"/>
-        <path d="M34 13 Q38 5 45 4 Q52 5 56 13" fill="#2A2A2A"/>
-        <ellipse cx="45" cy="3.5" rx="3" ry="2.5" fill="#1A1A1A"/>
-        <!-- Eyebrows (strong) -->
-        <path d="M37 13.5 Q40 12 43 13" stroke="#3A2518" stroke-width="1" fill="none"/>
-        <path d="M47 13 Q50 12 53 13.5" stroke="#3A2518" stroke-width="1" fill="none"/>
-        <!-- Eyes (detailed) -->
-        <ellipse cx="40" cy="16.5" rx="2" ry="2.3" fill="white"/>
-        <circle cx="40" cy="16.5" r="1.5" fill="#5C4033"/>
-        <circle cx="40" cy="16.5" r="0.7" fill="#2A2A2A"/>
-        <circle cx="40.4" cy="15.8" r="0.4" fill="white"/>
-        <ellipse cx="50" cy="16.5" rx="2" ry="2.3" fill="white"/>
-        <circle cx="50" cy="16.5" r="1.5" fill="#5C4033"/>
-        <circle cx="50" cy="16.5" r="0.7" fill="#2A2A2A"/>
-        <circle cx="50.4" cy="15.8" r="0.4" fill="white"/>
-        <!-- Nose -->
-        <path d="M45 16 Q43.5 20 44 21.5 Q45 22 46 21.5 Q46.5 20 45 16" fill="none" stroke="#D4A090" stroke-width="0.7"/>
-        <!-- Stubble -->
-        <rect x="38" y="22" width="14" height="6" rx="4" fill="rgba(58,37,24,0.08)"/>
-        <!-- Grin -->
-        <path d="M41 24 Q45 27 49 24" stroke="#C49080" stroke-width="0.9" fill="none"/>
-        <path d="M42 24 Q45 25.5 48 24" stroke="#D4A090" stroke-width="0.5" fill="rgba(220,160,140,0.15)"/>
-        <!-- Tuxedo body -->
-        <path d="M34 33 Q32 45 33 65 L57 65 Q58 45 56 33 Z" fill="url(#kyleTux)"/>
-        <!-- White shirt front V -->
-        <path d="M40 33 L44 60 L46 60 L50 33 Z" fill="#FAFAFA"/>
-        <!-- Lapels (detailed) -->
-        <path d="M34 33 L41 44" stroke="#3A3A3A" stroke-width="2"/>
-        <path d="M56 33 L49 44" stroke="#3A3A3A" stroke-width="2"/>
-        <path d="M34 33 L40 43" stroke="#FAFAFA" stroke-width="0.5" opacity="0.3"/>
-        <path d="M56 33 L50 43" stroke="#FAFAFA" stroke-width="0.5" opacity="0.3"/>
-        <!-- Bow tie -->
-        <path d="M40 34 L45 37 L50 34 L45 31 Z" fill="#CC0000"/>
-        <circle cx="45" cy="34" r="1.2" fill="#AA0000"/>
+        <rect x="40" y="28" width="10" height="7" rx="3" fill="#F0B8A0"/>
+        <!-- Head (broader, masculine jaw) -->
+        <ellipse cx="45" cy="17" rx="14" ry="14.5" fill="#F0B8A0"/>
+        <path d="M33 22 Q39 30 45 31 Q51 30 57 22" fill="rgba(180,130,110,0.12)"/>
+        <!-- Dark brown hair (textured, swept) -->
+        <path d="M31 14 Q33 2 45 1 Q57 2 59 14 Q57 5 45 4 Q33 5 31 14 Z" fill="#3A2518"/>
+        <path d="M33 12 Q36 3 45 3 Q54 3 57 12" fill="#4A3020" opacity="0.5"/>
+        <path d="M35 8 Q40 4 45 4 Q50 4 55 8" stroke="#2A1810" stroke-width="0.6" fill="none" opacity="0.3"/>
+        <!-- Stubble/beard shadow -->
+        <path d="M36 22 Q40 26 45 27 Q50 26 54 22 Q52 28 45 29 Q38 28 36 22" fill="rgba(50,30,18,0.12)"/>
+        <ellipse cx="45" cy="25" rx="8" ry="4" fill="rgba(50,30,18,0.06)"/>
+        <!-- Eyebrows (thick, expressive) -->
+        <path d="M36 12.5 Q39 11 43 12" stroke="#3A2518" stroke-width="1.2" fill="none"/>
+        <path d="M47 12 Q51 11 54 12.5" stroke="#3A2518" stroke-width="1.2" fill="none"/>
+        <!-- Eyes (warm brown) -->
+        <ellipse cx="40" cy="16" rx="2.2" ry="2.5" fill="white"/>
+        <circle cx="40" cy="16.2" r="1.6" fill="#5C4030"/>
+        <circle cx="40" cy="16.2" r="0.8" fill="#2A1A10"/>
+        <circle cx="40.5" cy="15.5" r="0.4" fill="white"/>
+        <ellipse cx="50" cy="16" rx="2.2" ry="2.5" fill="white"/>
+        <circle cx="50" cy="16.2" r="1.6" fill="#5C4030"/>
+        <circle cx="50" cy="16.2" r="0.8" fill="#2A1A10"/>
+        <circle cx="50.5" cy="15.5" r="0.4" fill="white"/>
+        <!-- Nose (slightly wider, masculine) -->
+        <path d="M45 16 Q43 20 43.5 21.5 Q45 22.5 46.5 21.5 Q47 20 45 16" fill="none" stroke="#D4A090" stroke-width="0.7"/>
+        <!-- Big warm smile (showing teeth) -->
+        <path d="M39 23.5 Q45 28 51 23.5" stroke="#B07060" stroke-width="0.9" fill="none"/>
+        <path d="M40 24 Q45 27 50 24" fill="rgba(220,160,140,0.25)" stroke="none"/>
+        <path d="M41 24.5 Q45 24 49 24.5" stroke="white" stroke-width="1" fill="white" opacity="0.7"/>
+        <!-- Tuxedo body (broader shoulders) -->
+        <path d="M30 34 Q29 46 30 66 L60 66 Q61 46 60 34 Z" fill="#1A1A1A"/>
+        <!-- White shirt front -->
+        <path d="M39 34 L44 62 L46 62 L51 34 Z" fill="#FAFAFA"/>
+        <!-- Lapels -->
+        <path d="M30 34 L40 46" stroke="#2A2A2A" stroke-width="2.5"/>
+        <path d="M60 34 L50 46" stroke="#2A2A2A" stroke-width="2.5"/>
+        <!-- Black bow tie -->
+        <path d="M39 35 L45 38 L51 35 L45 32 Z" fill="#1A1A1A"/>
+        <circle cx="45" cy="35" r="1.5" fill="#222"/>
         <!-- Pocket square -->
-        <path d="M36 41 L37 38 L39 41.5" fill="#FAFAFA" stroke="none"/>
-        <!-- Buttons -->
-        <circle cx="45" cy="48" r="0.8" fill="#3A3A3A" stroke="#555" stroke-width="0.3"/>
-        <circle cx="45" cy="53" r="0.8" fill="#3A3A3A" stroke="#555" stroke-width="0.3"/>
-        <circle cx="45" cy="58" r="0.8" fill="#3A3A3A" stroke="#555" stroke-width="0.3"/>
+        <path d="M33 42 L34.5 39 L36.5 42.5" fill="#FAFAFA"/>
+        <!-- Arms (tux sleeves) -->
+        <path d="M30 38 L20 50 L18 58" stroke="#1A1A1A" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M60 38 L70 50 L72 58" stroke="#1A1A1A" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <!-- White cuffs -->
+        <rect x="15" y="56" width="6" height="3" rx="1" fill="#FAFAFA"/>
+        <rect x="69" y="56" width="6" height="3" rx="1" fill="#FAFAFA"/>
+        <!-- Hands -->
+        <circle cx="18" cy="61" r="3" fill="#F0B8A0"/>
+        <circle cx="72" cy="61" r="3" fill="#F0B8A0"/>
         <!-- Legs -->
-        <path d="M38 65 Q36 74 34 84" stroke="#1A1A1A" stroke-width="5" fill="none" stroke-linecap="round"/>
-        <path d="M52 65 Q54 74 56 84" stroke="#1A1A1A" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M36 66 Q34 76 32 86" stroke="#1A1A1A" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M54 66 Q56 76 58 86" stroke="#1A1A1A" stroke-width="5" fill="none" stroke-linecap="round"/>
         <!-- Shoes -->
-        <ellipse cx="34" cy="86" rx="5" ry="3" fill="#1A1A1A" stroke="#333" stroke-width="0.5"/>
-        <ellipse cx="56" cy="86" rx="5" ry="3" fill="#1A1A1A" stroke="#333" stroke-width="0.5"/>
-        <!-- Snowboard (detailed with graphic) -->
-        <ellipse cx="45" cy="92" rx="26" ry="5.5" fill="#1A1A1A"/>
-        <ellipse cx="45" cy="92" rx="24" ry="4" fill="#222"/>
-        <line x1="21" y1="92" x2="69" y2="92" stroke="#CC0000" stroke-width="2"/>
-        <text x="35" y="95" font-size="5" fill="#CC0000" font-weight="bold">SHRED</text>
-        <!-- Board edge highlights -->
-        <path d="M21 90 Q45 88 69 90" stroke="#444" stroke-width="0.5" fill="none"/>
+        <ellipse cx="32" cy="88" rx="5" ry="3" fill="#1A1A1A"/>
+        <ellipse cx="58" cy="88" rx="5" ry="3" fill="#1A1A1A"/>
+        <!-- Snowboard -->
+        <ellipse cx="45" cy="94" rx="26" ry="5" fill="#1A1A1A"/>
+        <line x1="21" y1="94" x2="69" y2="94" stroke="#CC0000" stroke-width="2"/>
       </svg>
       <div class="name">Kyle</div>
       <div class="subtitle">The Crypto Shredder</div>
@@ -578,93 +556,77 @@ canvas {
     </div>
     <div class="char-card" data-char="banksy">
       <svg class="avatar" viewBox="0 0 90 110">
-        <!-- Banksy - Wedding Pup (detailed golden retriever) -->
+        <!-- Banksy - based on ref: white dog, hot pink turtleneck, pink ski goggles -->
         <defs>
-          <radialGradient id="banksyFur" cx="50%" cy="40%" r="60%">
-            <stop offset="0%" stop-color="#F5ECD8"/>
-            <stop offset="100%" stop-color="#E8D8B8"/>
-          </radialGradient>
+          <linearGradient id="goggleShine" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#FF6B00"/>
+            <stop offset="30%" stop-color="#FFD700"/>
+            <stop offset="60%" stop-color="#FF4488"/>
+            <stop offset="100%" stop-color="#FF6B00"/>
+          </linearGradient>
         </defs>
-        <!-- Tail (behind body, fluffy) -->
-        <path d="M14 52 Q4 36 8 20 Q10 16 12 18" stroke="#E8D8B8" stroke-width="5" fill="none" stroke-linecap="round"/>
-        <path d="M14 52 Q6 38 9 22" stroke="#F5ECD8" stroke-width="3" fill="none" stroke-linecap="round"/>
-        <path d="M10 22 Q8 18 11 17" stroke="#F5ECD8" stroke-width="2" fill="none" stroke-linecap="round"/>
-        <!-- Body (fluffy golden retriever) -->
-        <ellipse cx="42" cy="55" rx="28" ry="16" fill="url(#banksyFur)"/>
-        <!-- Fur texture on body -->
-        <path d="M18 50 Q20 48 22 50" stroke="#DDD0B0" stroke-width="0.5" fill="none"/>
-        <path d="M25 48 Q27 46 29 48" stroke="#DDD0B0" stroke-width="0.5" fill="none"/>
-        <path d="M55 48 Q57 46 59 48" stroke="#DDD0B0" stroke-width="0.5" fill="none"/>
-        <path d="M60 53 Q62 51 64 53" stroke="#DDD0B0" stroke-width="0.5" fill="none"/>
-        <!-- Red bow tie (instead of vest) -->
-        <path d="M52 44 L58 40 L58 48 Z" fill="#CC0000"/>
-        <path d="M58 44 L64 40 L64 48 Z" fill="#CC0000"/>
-        <circle cx="58" cy="44" r="2.5" fill="#AA0000"/>
-        <!-- Chest tuft -->
-        <path d="M50 50 Q55 46 60 50 Q55 48 50 50" fill="#FFF8F0" opacity="0.6"/>
-        <!-- Head (larger, more detailed) -->
-        <ellipse cx="62" cy="35" rx="14" ry="13" fill="#F5ECD8"/>
-        <!-- Snout -->
-        <ellipse cx="72" cy="40" rx="8" ry="6" fill="#F0E4CC"/>
-        <!-- Ear (floppy, detailed) -->
-        <path d="M72 24 Q80 18 82 26 Q82 34 76 36" fill="#E0D0A8"/>
-        <path d="M73 25 Q79 20 80 27 Q80 33 75 35" fill="#EEDCBC" opacity="0.6"/>
-        <!-- Forehead fur -->
-        <path d="M55 28 Q58 25 62 26" stroke="#E8D8B8" stroke-width="0.8" fill="none"/>
-        <path d="M60 27 Q63 24 66 26" stroke="#E8D8B8" stroke-width="0.8" fill="none"/>
-        <!-- Eyes (big, soulful) -->
-        <ellipse cx="58" cy="34" rx="3.5" ry="4" fill="white"/>
-        <circle cx="58" cy="34.5" r="2.8" fill="#4A3018"/>
-        <circle cx="58" cy="34.5" r="1.5" fill="#2A1A08"/>
-        <circle cx="59" cy="33.5" r="1" fill="rgba(255,255,255,0.7)"/>
-        <circle cx="57" cy="35.5" r="0.5" fill="rgba(255,255,255,0.3)"/>
-        <ellipse cx="67" cy="34" rx="3" ry="3.5" fill="white"/>
-        <circle cx="67" cy="34.5" r="2.5" fill="#4A3018"/>
-        <circle cx="67" cy="34.5" r="1.3" fill="#2A1A08"/>
-        <circle cx="67.8" cy="33.5" r="0.8" fill="rgba(255,255,255,0.7)"/>
-        <!-- Eyebrows -->
-        <path d="M55 30 Q57 29 60 30" stroke="#C4A878" stroke-width="0.6" fill="none"/>
-        <path d="M64 30 Q66 29 69 30" stroke="#C4A878" stroke-width="0.6" fill="none"/>
-        <!-- Pink nose (detailed) -->
-        <ellipse cx="75" cy="39" rx="4" ry="3" fill="#FFB6C1"/>
-        <path d="M73 38 Q75 36 77 38" stroke="#FF9AAF" stroke-width="0.5" fill="none"/>
-        <ellipse cx="74" cy="38.5" rx="1" ry="0.8" fill="#E8A0B0"/>
-        <ellipse cx="76" cy="38.5" rx="1" ry="0.8" fill="#E8A0B0"/>
-        <!-- Mouth / tongue out -->
-        <path d="M72 42 Q75 44 78 42" stroke="#D4928C" stroke-width="0.8" fill="none"/>
-        <path d="M74 42 Q75 46 76 42" fill="#FF8888" stroke="none"/>
-        <!-- Whiskers -->
-        <line x1="70" y1="40" x2="64" y2="38" stroke="#DDD0B8" stroke-width="0.4"/>
-        <line x1="70" y1="41" x2="64" y2="41" stroke="#DDD0B8" stroke-width="0.4"/>
-        <line x1="79" y1="40" x2="85" y2="38" stroke="#DDD0B8" stroke-width="0.4"/>
-        <line x1="79" y1="41" x2="85" y2="41" stroke="#DDD0B8" stroke-width="0.4"/>
-        <!-- Veil (flowing, delicate) -->
-        <path d="M56 26 Q48 16 36 22 Q28 14 18 22" stroke="white" stroke-width="2" fill="rgba(255,255,255,0.3)" stroke-linecap="round"/>
-        <path d="M54 28 Q44 18 30 24" stroke="rgba(255,255,255,0.35)" stroke-width="1.2" fill="none"/>
-        <path d="M52 30 Q42 22 28 26" stroke="rgba(255,255,255,0.2)" stroke-width="0.8" fill="none"/>
-        <!-- Bow on veil -->
-        <path d="M56 25 L59 22 L56 24 L59 26 Z" fill="rgba(255,255,255,0.7)"/>
-        <!-- Legs (furry) -->
-        <path d="M28 68 L26 82" stroke="#F5ECD8" stroke-width="5" stroke-linecap="round"/>
-        <path d="M36 68 L35 82" stroke="#F5ECD8" stroke-width="5" stroke-linecap="round"/>
-        <path d="M48 68 L49 82" stroke="#F5ECD8" stroke-width="5" stroke-linecap="round"/>
-        <path d="M56 68 L58 82" stroke="#F5ECD8" stroke-width="5" stroke-linecap="round"/>
-        <!-- Fur tufts on legs -->
-        <path d="M25 72 Q26 70 27 72" stroke="#E8D8B8" stroke-width="0.5" fill="none"/>
-        <path d="M34 72 Q35 70 36 72" stroke="#E8D8B8" stroke-width="0.5" fill="none"/>
-        <!-- Paws (detailed) -->
-        <ellipse cx="26" cy="84" rx="3.5" ry="2.5" fill="#F5ECD8"/>
-        <ellipse cx="35" cy="84" rx="3.5" ry="2.5" fill="#F5ECD8"/>
-        <ellipse cx="49" cy="84" rx="3.5" ry="2.5" fill="#F5ECD8"/>
-        <ellipse cx="58" cy="84" rx="3.5" ry="2.5" fill="#F5ECD8"/>
-        <!-- Paw pads -->
-        <circle cx="25" cy="84.5" r="0.8" fill="#E0C8A8"/>
-        <circle cx="27" cy="84.5" r="0.8" fill="#E0C8A8"/>
-        <circle cx="34" cy="84.5" r="0.8" fill="#E0C8A8"/>
-        <circle cx="36" cy="84.5" r="0.8" fill="#E0C8A8"/>
+        <!-- Tail (wagging behind) -->
+        <path d="M16 52 Q6 36 10 22 Q12 18 14 20" stroke="#F0E8D8" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M16 52 Q8 38 11 24" stroke="#FAF4E8" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <!-- Body (white/cream compact dog) -->
+        <ellipse cx="42" cy="58" rx="26" ry="15" fill="#FAF4E8"/>
+        <!-- Hot pink turtleneck sweater -->
+        <path d="M22 48 Q42 40 62 48 Q64 58 62 66 Q42 70 22 66 Q20 58 22 48 Z" fill="#FF1493"/>
+        <!-- Sweater ribbing texture -->
+        <path d="M26 50 L26 64" stroke="#E0107E" stroke-width="0.5" opacity="0.3"/>
+        <path d="M30 49 L30 65" stroke="#E0107E" stroke-width="0.5" opacity="0.3"/>
+        <path d="M34 48 L34 66" stroke="#E0107E" stroke-width="0.5" opacity="0.3"/>
+        <path d="M38 47 L38 66" stroke="#E0107E" stroke-width="0.5" opacity="0.3"/>
+        <path d="M42 47 L42 66" stroke="#E0107E" stroke-width="0.5" opacity="0.3"/>
+        <path d="M46 47 L46 66" stroke="#E0107E" stroke-width="0.5" opacity="0.3"/>
+        <path d="M50 48 L50 66" stroke="#E0107E" stroke-width="0.5" opacity="0.3"/>
+        <path d="M54 49 L54 65" stroke="#E0107E" stroke-width="0.5" opacity="0.3"/>
+        <path d="M58 50 L58 64" stroke="#E0107E" stroke-width="0.5" opacity="0.3"/>
+        <!-- Turtleneck collar -->
+        <path d="M34 42 Q42 38 50 42 Q50 46 42 44 Q34 46 34 42 Z" fill="#FF1493" stroke="#E0107E" stroke-width="0.5"/>
+        <!-- Pink fur/fluff poking out of sweater -->
+        <path d="M24 48 Q22 46 20 48" stroke="#FFC0CB" stroke-width="1.5" fill="none"/>
+        <path d="M60 48 Q62 46 64 48" stroke="#FFC0CB" stroke-width="1.5" fill="none"/>
+        <!-- Head (white, facing forward-right) -->
+        <ellipse cx="42" cy="30" rx="16" ry="14" fill="#FAF4E8"/>
+        <!-- Ears (floppy, one on each side) -->
+        <path d="M26 22 Q20 14 18 22 Q18 30 24 32" fill="#F0E4D0"/>
+        <path d="M27 23 Q22 16 20 22 Q20 28 25 30" fill="#F5ECD8" opacity="0.5"/>
+        <path d="M58 22 Q64 14 66 22 Q66 30 60 32" fill="#F0E4D0"/>
+        <path d="M57 23 Q62 16 64 22 Q64 28 59 30" fill="#F5ECD8" opacity="0.5"/>
+        <!-- Pink ski goggles (big, mirrored) -->
+        <path d="M25 22 Q42 18 59 22 Q60 28 59 30 Q42 34 25 30 Q24 28 25 22 Z" fill="#FF69B4" stroke="#FF1493" stroke-width="1.5"/>
+        <!-- Goggle lens (mirrored orange/gold/pink) -->
+        <ellipse cx="34" cy="26" rx="8" ry="5.5" fill="url(#goggleShine)" opacity="0.85"/>
+        <ellipse cx="50" cy="26" rx="8" ry="5.5" fill="url(#goggleShine)" opacity="0.85"/>
+        <!-- Goggle bridge -->
+        <path d="M42 26 Q42 24 42 26" stroke="#FF1493" stroke-width="2"/>
+        <!-- Goggle shine highlights -->
+        <ellipse cx="31" cy="24.5" rx="3" ry="2" fill="rgba(255,255,255,0.3)"/>
+        <ellipse cx="47" cy="24.5" rx="3" ry="2" fill="rgba(255,255,255,0.3)"/>
+        <!-- Goggle strap -->
+        <path d="M25 25 Q20 25 18 24" stroke="#FF69B4" stroke-width="1.5" fill="none"/>
+        <path d="M59 25 Q64 25 66 24" stroke="#FF69B4" stroke-width="1.5" fill="none"/>
+        <!-- Snout (below goggles) -->
+        <ellipse cx="42" cy="36" rx="7" ry="5" fill="#F0E4D0"/>
+        <!-- Nose -->
+        <ellipse cx="42" cy="34" rx="3.5" ry="2.5" fill="#333"/>
+        <ellipse cx="41" cy="33.5" rx="1" ry="0.7" fill="rgba(255,255,255,0.2)"/>
+        <!-- Mouth -->
+        <path d="M39 37 Q42 39 45 37" stroke="#888" stroke-width="0.6" fill="none"/>
+        <!-- Front paws/arms sticking out -->
+        <path d="M28 66 L24 80" stroke="#FAF4E8" stroke-width="5" stroke-linecap="round"/>
+        <path d="M56 66 L60 80" stroke="#FAF4E8" stroke-width="5" stroke-linecap="round"/>
+        <!-- Back legs -->
+        <path d="M34 68 L32 82" stroke="#FAF4E8" stroke-width="5" stroke-linecap="round"/>
+        <path d="M50 68 L52 82" stroke="#FAF4E8" stroke-width="5" stroke-linecap="round"/>
+        <!-- Paws -->
+        <ellipse cx="24" cy="82" rx="3.5" ry="2.5" fill="#FAF4E8"/>
+        <ellipse cx="32" cy="84" rx="3.5" ry="2.5" fill="#FAF4E8"/>
+        <ellipse cx="52" cy="84" rx="3.5" ry="2.5" fill="#FAF4E8"/>
+        <ellipse cx="60" cy="82" rx="3.5" ry="2.5" fill="#FAF4E8"/>
         <!-- Red snowboard -->
         <ellipse cx="42" cy="90" rx="28" ry="5" fill="#CC0000"/>
-        <ellipse cx="42" cy="90" rx="26" ry="3.5" fill="#DD1111"/>
         <line x1="16" y1="90" x2="68" y2="90" stroke="#990000" stroke-width="1"/>
         <text x="33" y="93" font-size="5" fill="#FFCCCC" font-weight="bold">WOOF</text>
       </svg>
@@ -770,8 +732,8 @@ const PHYS = {
   gravity: 0.52,
   jumpForce: -11.5,
   superJumpForce: -17,
-  baseSpeed: 3.5,
-  maxSpeed: 7,
+  baseSpeed: 5,
+  maxSpeed: 9,
 };
 
 const CHARS = {
@@ -2565,6 +2527,21 @@ function drawKyle(ctx, s) {
   ctx.arc(s * 0.05, -s * 0.95, 1.3, 0, Math.PI * 2);
   ctx.fill();
 
+  // Arms - tuxedo sleeves
+  ctx.strokeStyle = '#1A1A1A'; ctx.lineWidth = 3; ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(-s * 0.2, -s * 0.78); ctx.lineTo(-s * 0.32, -s * 0.55);
+  ctx.lineTo(-s * 0.28, -s * 0.42);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(s * 0.2, -s * 0.78); ctx.lineTo(s * 0.32, -s * 0.55);
+  ctx.lineTo(s * 0.28, -s * 0.42);
+  ctx.stroke();
+  // Hands
+  ctx.fillStyle = '#FDBCB4';
+  ctx.beginPath(); ctx.arc(-s * 0.28, -s * 0.41, s * 0.04, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(s * 0.28, -s * 0.41, s * 0.04, 0, Math.PI * 2); ctx.fill();
+
   // Legs - dark pants
   ctx.strokeStyle = '#1A1A1A'; ctx.lineWidth = 3;
   ctx.beginPath();
@@ -2666,6 +2643,21 @@ function drawJill(ctx, s) {
   ctx.arc(-s * 0.04, -s * 0.95, 1.2, 0, Math.PI * 2);
   ctx.arc(s * 0.04, -s * 0.95, 1.2, 0, Math.PI * 2);
   ctx.fill();
+
+  // Arms - white ski suit sleeves holding poles
+  ctx.strokeStyle = '#FAFAFA'; ctx.lineWidth = 2.5; ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(-s * 0.18, -s * 0.78); ctx.lineTo(-s * 0.28, -s * 0.6);
+  ctx.lineTo(-s * 0.2, -s * 0.5);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(s * 0.18, -s * 0.78); ctx.lineTo(s * 0.26, -s * 0.6);
+  ctx.lineTo(s * 0.18, -s * 0.5);
+  ctx.stroke();
+  // Hands
+  ctx.fillStyle = '#FDBCB4';
+  ctx.beginPath(); ctx.arc(-s * 0.2, -s * 0.49, s * 0.035, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(s * 0.18, -s * 0.49, s * 0.035, 0, Math.PI * 2); ctx.fill();
 
   // Legs
   ctx.strokeStyle = '#FAFAFA'; ctx.lineWidth = 2.5;
