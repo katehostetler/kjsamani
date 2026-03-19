@@ -747,7 +747,7 @@ const G = {
 
   playerName: '',
   tutorialShown: false, tutorialTimer: 0,
-  weddingPause: false, weddingTimer: 0,
+  weddingPause: false, weddingTimer: 0, weddingDone: false,
   lastTime: 0,
   running: false,
   frameCount: 0,
@@ -3118,15 +3118,33 @@ function checkCheckpoints() {
       MUSIC.currentChordIdx = Math.min(G.currentEvent, 4);
       updatePadChord();
     }
-    // Wedding kiss pause on event 3 (THE WEDDING)
-    if (G.currentEvent === 4) {
-      G.weddingPause = true;
-      G.weddingTimer = 240; // 4 seconds at 60fps
-      // Big confetti burst
-      for (let i = 0; i < 80; i++) {
-        G.confetti.push(mkConfetti(G.W / 2 + (Math.random() - 0.5) * G.W * 0.8, G.H * 0.3));
+  }
+
+  // Wedding kiss pause — trigger when player reaches center of the Paradiso venue
+  if (!G.weddingPause && !G.weddingDone) {
+    const playerWorldX = G.scrollX + G.px;
+    G.venues.forEach(v => {
+      if (v.type === 'paradiso') {
+        const venueCenterX = v.startX + v.width * 0.5;
+        if (playerWorldX >= venueCenterX - 30 && playerWorldX <= venueCenterX + 30) {
+          G.weddingPause = true;
+          G.weddingDone = true;
+          G.weddingTimer = 240;
+          // Show the wedding toast card at the same time
+          if (G.currentEvent < 4) {
+            G.currentEvent = 4;
+            showToast(3); // THE WEDDING event
+            if (MUSIC.started) {
+              MUSIC.currentChordIdx = 3;
+              updatePadChord();
+            }
+          }
+          for (let i = 0; i < 80; i++) {
+            G.confetti.push(mkConfetti(G.W / 2 + (Math.random() - 0.5) * G.W * 0.8, G.H * 0.3));
+          }
+        }
       }
-    }
+    });
   }
 }
 
@@ -3326,6 +3344,7 @@ function resetGame() {
   G.tutorialTimer = 0;
   G.weddingPause = false;
   G.weddingTimer = 0;
+  G.weddingDone = false;
   G.airTime = 0;
   G.trickState = null;
   G.comboCount = 0;
