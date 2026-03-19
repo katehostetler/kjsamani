@@ -1,5 +1,7 @@
 # Kyle & Jill's St. Moritz Wedding Adventure
 
+## [PLAY NOW](https://katehostetler.github.io/kjsamani/)
+
 **The world's first (and only) wedding-themed snowboarding game.**
 
 Because nothing says "I do" like shredding down the Swiss Alps at 60mph while collecting rosé and dodging trees.
