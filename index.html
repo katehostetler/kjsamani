@@ -1230,57 +1230,200 @@ function drawVenue(ctx, venue, sx) {
   ctx.save();
 
   if (type === 'palace') {
-    // Badrutt's Palace - grand building with gold windows
-    const bx = sx + w * 0.3;
-    const bw = w * 0.4;
-    const bh = 170;
+    // Badrutt's Palace - grand hotel with turrets, green roofs, warm windows
+    const centerX = sx + w * 0.5;
+    const bw = w * 0.5;
+    const bx = centerX - bw / 2;
+    const bh = 160;
     const by = groundY - bh;
 
-    // Warm glow behind building
-    const glow = ctx.createRadialGradient(bx + bw/2, groundY - bh/2, 10, bx + bw/2, groundY - bh/2, bw * 0.8);
-    glow.addColorStop(0, 'rgba(255,180,60,0.12)');
-    glow.addColorStop(1, 'rgba(255,180,60,0)');
-    ctx.fillStyle = glow;
-    ctx.fillRect(bx - bw * 0.3, by - 30, bw * 1.6, bh + 60);
-
-    // Building silhouette
-    ctx.fillStyle = 'rgba(80,60,45,0.95)';
-    ctx.fillRect(bx, by, bw, bh);
-    // Peaked roof
+    // Snowy mountains behind the building
+    ctx.fillStyle = 'rgba(180,200,220,0.4)';
     ctx.beginPath();
-    ctx.moveTo(bx - 10, by);
-    ctx.lineTo(bx + bw / 2, by - 30);
-    ctx.lineTo(bx + bw + 10, by);
+    ctx.moveTo(bx - 80, by + 20);
+    ctx.lineTo(bx - 20, by - 80);
+    ctx.lineTo(bx + 40, by - 30);
+    ctx.lineTo(bx + bw * 0.5, by - 90);
+    ctx.lineTo(bx + bw * 0.8, by - 40);
+    ctx.lineTo(bx + bw + 30, by - 70);
+    ctx.lineTo(bx + bw + 80, by + 20);
     ctx.closePath();
     ctx.fill();
-    // Gold-lit windows
-    for (let row = 0; row < 3; row++) {
-      for (let col = 0; col < 4; col++) {
-        const wx = bx + 12 + col * (bw - 24) / 3;
-        const wy = by + 15 + row * 30;
-        ctx.fillStyle = `rgba(255,220,100,${0.5 + Math.sin(Date.now() * 0.003 + col + row) * 0.2})`;
-        ctx.fillRect(wx, wy, 10, 14);
+    // Snow caps on mountains
+    ctx.fillStyle = 'rgba(240,245,255,0.5)';
+    ctx.beginPath();
+    ctx.moveTo(bx - 20, by - 80);
+    ctx.lineTo(bx - 10, by - 60);
+    ctx.lineTo(bx - 30, by - 60);
+    ctx.closePath();
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(bx + bw * 0.5, by - 90);
+    ctx.lineTo(bx + bw * 0.5 + 15, by - 65);
+    ctx.lineTo(bx + bw * 0.5 - 15, by - 65);
+    ctx.closePath();
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(bx + bw + 30, by - 70);
+    ctx.lineTo(bx + bw + 40, by - 50);
+    ctx.lineTo(bx + bw + 20, by - 50);
+    ctx.closePath();
+    ctx.fill();
+
+    // Warm glow behind building
+    const glow = ctx.createRadialGradient(centerX, groundY - bh * 0.4, 10, centerX, groundY - bh * 0.4, bw * 0.9);
+    glow.addColorStop(0, 'rgba(255,200,80,0.12)');
+    glow.addColorStop(1, 'rgba(255,180,60,0)');
+    ctx.fillStyle = glow;
+    ctx.fillRect(bx - 40, by - 40, bw + 80, bh + 80);
+
+    // Main building body (warm stone color)
+    ctx.fillStyle = 'rgba(160,140,110,0.95)';
+    ctx.fillRect(bx, by, bw, bh);
+
+    // Left turret tower
+    const tw = 28;
+    const towerLx = bx - 5;
+    const towerH = bh + 40;
+    ctx.fillStyle = 'rgba(140,125,100,0.95)';
+    ctx.fillRect(towerLx, groundY - towerH, tw, towerH);
+    // Left turret pointed roof (green)
+    ctx.fillStyle = 'rgba(40,80,60,0.95)';
+    ctx.beginPath();
+    ctx.moveTo(towerLx - 3, groundY - towerH);
+    ctx.lineTo(towerLx + tw / 2, groundY - towerH - 35);
+    ctx.lineTo(towerLx + tw + 3, groundY - towerH);
+    ctx.closePath();
+    ctx.fill();
+
+    // Right turret tower
+    const towerRx = bx + bw - tw + 5;
+    ctx.fillStyle = 'rgba(140,125,100,0.95)';
+    ctx.fillRect(towerRx, groundY - towerH, tw, towerH);
+    // Right turret pointed roof (green)
+    ctx.fillStyle = 'rgba(40,80,60,0.95)';
+    ctx.beginPath();
+    ctx.moveTo(towerRx - 3, groundY - towerH);
+    ctx.lineTo(towerRx + tw / 2, groundY - towerH - 35);
+    ctx.lineTo(towerRx + tw + 3, groundY - towerH);
+    ctx.closePath();
+    ctx.fill();
+
+    // Main roof (green with slight slope)
+    ctx.fillStyle = 'rgba(45,85,65,0.95)';
+    ctx.beginPath();
+    ctx.moveTo(bx - 8, by);
+    ctx.lineTo(centerX, by - 20);
+    ctx.lineTo(bx + bw + 8, by);
+    ctx.closePath();
+    ctx.fill();
+
+    // Red dormers on roof
+    for (let i = 0; i < 4; i++) {
+      const dx = bx + 20 + i * (bw - 40) / 3;
+      const dy = by - 6;
+      ctx.fillStyle = 'rgba(140,30,30,0.9)';
+      ctx.beginPath();
+      ctx.moveTo(dx, dy);
+      ctx.lineTo(dx + 6, dy - 12);
+      ctx.lineTo(dx + 12, dy);
+      ctx.closePath();
+      ctx.fill();
+      // Dormer window
+      ctx.fillStyle = `rgba(255,220,100,${0.5 + Math.sin(Date.now() * 0.004 + i) * 0.3})`;
+      ctx.fillRect(dx + 3, dy - 6, 6, 6);
+    }
+
+    // Snow on rooftops
+    ctx.fillStyle = 'rgba(240,245,255,0.7)';
+    ctx.beginPath();
+    ctx.moveTo(bx - 8, by);
+    ctx.quadraticCurveTo(centerX, by - 22, bx + bw + 8, by);
+    ctx.lineTo(bx + bw + 8, by + 3);
+    ctx.quadraticCurveTo(centerX, by - 18, bx - 8, by + 3);
+    ctx.closePath();
+    ctx.fill();
+    // Snow on turret roofs
+    ctx.fillStyle = 'rgba(240,245,255,0.6)';
+    ctx.beginPath();
+    ctx.moveTo(towerLx - 1, groundY - towerH + 2);
+    ctx.lineTo(towerLx + tw / 2, groundY - towerH - 30);
+    ctx.lineTo(towerLx + tw + 1, groundY - towerH + 2);
+    ctx.closePath();
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(towerRx - 1, groundY - towerH + 2);
+    ctx.lineTo(towerRx + tw / 2, groundY - towerH - 30);
+    ctx.lineTo(towerRx + tw + 1, groundY - towerH + 2);
+    ctx.closePath();
+    ctx.fill();
+
+    // Rows of warm glowing windows (4 rows, 6 cols)
+    for (let row = 0; row < 4; row++) {
+      for (let col = 0; col < 6; col++) {
+        const wx = bx + 14 + col * (bw - 28) / 5;
+        const wy = by + 12 + row * 35;
+        const twinkle = 0.4 + Math.sin(Date.now() * 0.003 + col * 1.7 + row * 2.3) * 0.3;
+        ctx.fillStyle = `rgba(255,210,80,${twinkle})`;
+        ctx.fillRect(wx, wy, 12, 16);
+        // Window frame
+        ctx.strokeStyle = 'rgba(120,100,70,0.5)';
+        ctx.lineWidth = 0.5;
+        ctx.strokeRect(wx, wy, 12, 16);
+        // Window divider
+        ctx.beginPath();
+        ctx.moveTo(wx + 6, wy);
+        ctx.lineTo(wx + 6, wy + 16);
+        ctx.stroke();
       }
     }
-    // Red carpet
-    ctx.fillStyle = 'rgba(180,20,30,0.5)';
-    ctx.fillRect(sx + w * 0.2, groundY - 2, w * 0.6, 4);
-    // String lights
-    ctx.strokeStyle = 'rgba(255,220,100,0.3)';
+    // Tower windows (smaller, also twinkling)
+    for (let row = 0; row < 5; row++) {
+      for (let t = 0; t < 2; t++) {
+        const tx = t === 0 ? towerLx + 6 : towerRx + 6;
+        const wy = groundY - towerH + 10 + row * 35;
+        const twinkle = 0.4 + Math.sin(Date.now() * 0.004 + row * 1.5 + t * 3) * 0.3;
+        ctx.fillStyle = `rgba(255,210,80,${twinkle})`;
+        ctx.fillRect(tx, wy, 16, 14);
+        ctx.strokeStyle = 'rgba(120,100,70,0.5)';
+        ctx.lineWidth = 0.5;
+        ctx.strokeRect(tx, wy, 16, 14);
+      }
+    }
+
+    // Snow bank at base
+    ctx.fillStyle = 'rgba(240,245,255,0.5)';
+    ctx.beginPath();
+    ctx.moveTo(bx - 30, groundY);
+    ctx.quadraticCurveTo(centerX, groundY - 12, bx + bw + 30, groundY);
+    ctx.lineTo(bx + bw + 30, groundY + 5);
+    ctx.lineTo(bx - 30, groundY + 5);
+    ctx.closePath();
+    ctx.fill();
+
+    // String lights (twinkling)
+    ctx.strokeStyle = 'rgba(255,220,100,0.25)';
     ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.moveTo(sx + w * 0.1, groundY - 60);
-    ctx.quadraticCurveTo(sx + w * 0.5, groundY - 45, sx + w * 0.9, groundY - 60);
+    ctx.moveTo(sx + w * 0.08, groundY - 55);
+    ctx.quadraticCurveTo(centerX, groundY - 40, sx + w * 0.92, groundY - 55);
     ctx.stroke();
-    for (let i = 0; i < 8; i++) {
-      const lx = sx + w * 0.1 + i * w * 0.1;
-      const t2 = i / 7;
-      const ly = groundY - 60 + Math.sin(t2 * Math.PI) * 15;
-      ctx.fillStyle = `rgba(255,220,100,${0.5 + Math.sin(Date.now() * 0.005 + i) * 0.3})`;
+    for (let i = 0; i < 12; i++) {
+      const lx = sx + w * 0.08 + i * (w * 0.84) / 11;
+      const t2 = i / 11;
+      const ly = groundY - 55 + Math.sin(t2 * Math.PI) * 15;
+      const twinkle = 0.3 + Math.sin(Date.now() * 0.008 + i * 0.9) * 0.5;
+      ctx.fillStyle = `rgba(255,230,120,${Math.max(0.1, twinkle)})`;
       ctx.beginPath();
-      ctx.arc(lx, ly, 2.5, 0, Math.PI * 2);
+      ctx.arc(lx, ly, 2, 0, Math.PI * 2);
+      ctx.fill();
+      // Glow around each light
+      ctx.fillStyle = `rgba(255,220,100,${Math.max(0.02, twinkle * 0.15)})`;
+      ctx.beginPath();
+      ctx.arc(lx, ly, 6, 0, Math.PI * 2);
       ctx.fill();
     }
+
     // Silhouette people with champagne
     for (let i = 0; i < 5; i++) {
       drawSilhouette(ctx, sx + w * 0.15 + i * w * 0.14, groundY, 'champagne');
@@ -1289,7 +1432,7 @@ function drawVenue(ctx, venue, sx) {
     ctx.fillStyle = 'rgba(212,168,67,0.9)';
     ctx.font = "bold 14px 'IBM Plex Serif', serif";
     ctx.textAlign = 'center';
-    ctx.fillText("BADRUTT'S PALACE", sx + w * 0.5, groundY - bh - 40);
+    ctx.fillText("BADRUTT'S PALACE", centerX, groundY - towerH - 42);
 
   } else if (type === 'kronenhof') {
     // Elegant restaurant
