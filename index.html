@@ -747,6 +747,7 @@ const G = {
 
   playerName: '',
   tutorialShown: false, tutorialTimer: 0,
+  weddingPause: false, weddingTimer: 0,
   lastTime: 0,
   running: false,
   frameCount: 0,
@@ -2522,6 +2523,60 @@ function drawConfetti() {
   ctx.globalAlpha = 1;
 }
 
+function drawWeddingKiss() {
+  const ctx = G.ctx;
+  const cx = G.W / 2;
+  const cy = G.H * 0.45;
+  const s = 45; // character scale
+
+  // Dim overlay
+  const fadeIn = Math.min(1, (240 - G.weddingTimer) / 30); // fade in over 0.5s
+  ctx.fillStyle = `rgba(0,0,0,${fadeIn * 0.4})`;
+  ctx.fillRect(0, 0, G.W, G.H);
+
+  // Draw Kyle and Jill facing each other, close together (kissing)
+  ctx.save();
+  // Kyle on left, leaning right
+  ctx.save();
+  ctx.translate(cx - 18, cy);
+  ctx.scale(1, 1);
+  drawKyle(ctx, s);
+  ctx.restore();
+
+  // Jill on right, leaning left
+  ctx.save();
+  ctx.translate(cx + 18, cy);
+  ctx.scale(-1, 1); // mirror so they face each other
+  drawJill(ctx, s);
+  ctx.restore();
+
+  // Heart above them
+  const heartBeat = 1 + Math.sin(Date.now() * 0.005) * 0.15;
+  ctx.save();
+  ctx.translate(cx, cy - s * 1.3);
+  ctx.scale(heartBeat, heartBeat);
+  ctx.fillStyle = '#FF6B81';
+  ctx.beginPath();
+  ctx.moveTo(0, 4);
+  ctx.bezierCurveTo(-8, -4, -16, -2, -16, 4);
+  ctx.bezierCurveTo(-16, 12, 0, 20, 0, 24);
+  ctx.bezierCurveTo(0, 20, 16, 12, 16, 4);
+  ctx.bezierCurveTo(16, -2, 8, -4, 0, 4);
+  ctx.fill();
+  ctx.restore();
+
+  // Text
+  ctx.fillStyle = `rgba(212,168,67,${fadeIn})`;
+  ctx.font = "bold 28px 'IBM Plex Serif', serif";
+  ctx.textAlign = 'center';
+  ctx.fillText('Kyle & Jill Forever', cx, cy + s * 0.5);
+  ctx.font = "italic 16px 'IBM Plex Serif', serif";
+  ctx.fillStyle = `rgba(255,248,240,${fadeIn * 0.7})`;
+  ctx.fillText('We found love!', cx, cy + s * 0.5 + 28);
+
+  ctx.restore();
+}
+
 function drawHUD() {
   const ctx = G.ctx;
   const pad = 12;
@@ -2665,6 +2720,25 @@ function drawEffects() {
 function update() {
   if (G.state !== 'playing') return;
   G.frameCount++;
+
+  // Wedding kiss pause
+  if (G.weddingPause) {
+    G.weddingTimer--;
+    // Keep snow and confetti moving during pause
+    updateSnow();
+    G.confetti.forEach(c => { c.x += c.vx; c.y += c.vy; c.vy += 0.1; c.rot += c.vr; c.life--; });
+    G.confetti = G.confetti.filter(c => c.life > 0);
+    G.particles.forEach(p => { p.y += p.vy; p.life--; });
+    G.particles = G.particles.filter(p => p.life > 0);
+    // Spawn confetti during kiss
+    if (G.weddingTimer > 60 && G.frameCount % 4 === 0) {
+      for (let i = 0; i < 3; i++) G.confetti.push(mkConfetti(G.W / 2 + (Math.random() - 0.5) * G.W * 0.5, G.H * 0.2));
+    }
+    if (G.weddingTimer <= 0) {
+      G.weddingPause = false;
+    }
+    return;
+  }
 
   const speedMulti = G.powerUps.fireTrail > 0 ? 1.6 : (G.speedBoost ? 1.4 : 1);
   const spd = G.speed * speedMulti;
@@ -3044,6 +3118,15 @@ function checkCheckpoints() {
       MUSIC.currentChordIdx = Math.min(G.currentEvent, 4);
       updatePadChord();
     }
+    // Wedding kiss pause on event 3 (THE WEDDING)
+    if (G.currentEvent === 4) {
+      G.weddingPause = true;
+      G.weddingTimer = 240; // 4 seconds at 60fps
+      // Big confetti burst
+      for (let i = 0; i < 80; i++) {
+        G.confetti.push(mkConfetti(G.W / 2 + (Math.random() - 0.5) * G.W * 0.8, G.H * 0.3));
+      }
+    }
   }
 }
 
@@ -3241,6 +3324,8 @@ function resetGame() {
   G.flipCount = 0;
   G.tutorialShown = false;
   G.tutorialTimer = 0;
+  G.weddingPause = false;
+  G.weddingTimer = 0;
   G.airTime = 0;
   G.trickState = null;
   G.comboCount = 0;
@@ -3886,6 +3971,7 @@ function render() {
     drawParticles();
     drawEffects();
     drawHUD();
+    if (G.weddingPause) drawWeddingKiss();
   } else if (G.state === 'title' || G.state === 'select') {
     const grad = ctx.createLinearGradient(0, 0, 0, G.H);
     grad.addColorStop(0, '#0d0303');
