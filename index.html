@@ -2776,35 +2776,33 @@ function drawConfetti() {
 function drawWeddingKiss() {
   const ctx = G.ctx;
   const cx = G.W / 2;
-  const cy = G.H * 0.45;
-  const s = 45; // character scale
+  const cy = G.H * 0.35; // higher up to fit on mobile
+  const s = Math.min(40, G.H * 0.06); // responsive scale
 
   // Dim overlay
-  const fadeIn = Math.min(1, (240 - G.weddingTimer) / 30); // fade in over 0.5s
-  ctx.fillStyle = `rgba(0,0,0,${fadeIn * 0.4})`;
+  const fadeIn = Math.min(1, (240 - G.weddingTimer) / 30);
+  ctx.fillStyle = `rgba(0,0,0,${fadeIn * 0.45})`;
   ctx.fillRect(0, 0, G.W, G.H);
 
-  // Draw Kyle and Jill facing each other, close together (kissing)
+  // Draw Kyle and Jill facing each other (kissing)
   ctx.save();
-  // Kyle on left, leaning right
   ctx.save();
-  ctx.translate(cx - 18, cy);
-  ctx.scale(1, 1);
+  ctx.translate(cx - 16, cy);
   drawKyle(ctx, s);
   ctx.restore();
 
-  // Jill on right, leaning left
   ctx.save();
-  ctx.translate(cx + 18, cy);
-  ctx.scale(-1, 1); // mirror so they face each other
+  ctx.translate(cx + 16, cy);
+  ctx.scale(-1, 1);
   drawJill(ctx, s);
   ctx.restore();
 
   // Heart above them
   const heartBeat = 1 + Math.sin(Date.now() * 0.005) * 0.15;
+  const hs = Math.min(1, G.H / 600); // scale heart for small screens
   ctx.save();
-  ctx.translate(cx, cy - s * 1.3);
-  ctx.scale(heartBeat, heartBeat);
+  ctx.translate(cx, cy - s * 1.2);
+  ctx.scale(heartBeat * hs, heartBeat * hs);
   ctx.fillStyle = '#FF6B81';
   ctx.beginPath();
   ctx.moveTo(0, 4);
@@ -2815,14 +2813,15 @@ function drawWeddingKiss() {
   ctx.fill();
   ctx.restore();
 
-  // Text
+  // Text — positioned below characters
+  const textY = cy + s * 0.4;
   ctx.fillStyle = `rgba(212,168,67,${fadeIn})`;
-  ctx.font = "bold 28px 'IBM Plex Serif', serif";
+  ctx.font = `bold ${Math.min(24, G.W * 0.05)}px 'IBM Plex Serif', serif`;
   ctx.textAlign = 'center';
-  ctx.fillText('Kyle & Jill Forever', cx, cy + s * 0.5);
-  ctx.font = "italic 16px 'IBM Plex Serif', serif";
+  ctx.fillText('Kyle & Jill Forever', cx, textY);
+  ctx.font = `italic ${Math.min(14, G.W * 0.035)}px 'IBM Plex Serif', serif`;
   ctx.fillStyle = `rgba(255,248,240,${fadeIn * 0.7})`;
-  ctx.fillText('We found love!', cx, cy + s * 0.5 + 28);
+  ctx.fillText('We found love!', cx, textY + 22);
 
   ctx.restore();
 }
@@ -3498,7 +3497,7 @@ function showPartyToast() {
   $('toastVenue').textContent = 'The slopes are now a club';
   toastOverlay.classList.add('visible');
   G.toastActive = true;
-  G.toastTimer = 180; // 3 seconds
+  G.toastTimer = 90; // 1.5 seconds — quick flash so game doesn't feel frozen
   for (let i = 0; i < 60; i++) {
     G.confetti.push(mkConfetti(G.W / 2 + (Math.random() - 0.5) * G.W * 0.8, G.H * 0.3));
   }
