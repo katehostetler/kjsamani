@@ -4,6 +4,10 @@
 
 Because nothing says "I do" like shredding down the Swiss Alps at 60mph while collecting rosé and dodging trees.
 
+## Play Now
+
+**[Play on your phone or any browser](https://katehostetler.github.io/kjsamani/)** — no download required. Just open the link and start shredding.
+
 ---
 
 ## The Plot
