@@ -984,6 +984,30 @@ function terrainH(wx) {
     h += Math.sin(wx * 0.018 + 5.7) * 18;
   }
 
+  // Dramatic steep mountain drops — sharp elevation changes that feel alpine
+  // Use a hash-like function so they appear at semi-random but fixed positions
+  const steepPeriod = 1800;
+  const steepPos = ((wx % steepPeriod) + steepPeriod) % steepPeriod / steepPeriod;
+  // Determine if this position falls in a steep zone (pseudo-random per period)
+  const steepSeed = Math.floor(wx / steepPeriod);
+  const steepChance = Math.sin(steepSeed * 127.1 + seg * 311.7) * 0.5 + 0.5;
+  if (steepChance > 0.45) { // ~55% of periods have a steep section
+    // Sharp cliff drop (steep downhill then flat then steep uphill)
+    const steepAmp = 50 + (seg === 2 ? 50 : seg === 4 ? 40 : seg === 1 ? 30 : 15);
+    if (steepPos > 0.15 && steepPos < 0.35) {
+      // Steep drop-off
+      const t = (steepPos - 0.15) / 0.20;
+      h += steepAmp * (1 - t * t); // quadratic drop
+    } else if (steepPos >= 0.35 && steepPos < 0.50) {
+      // Valley floor
+      h -= steepAmp * 0.15;
+    } else if (steepPos >= 0.50 && steepPos < 0.70) {
+      // Steep climb back up
+      const t = 1 - (steepPos - 0.50) / 0.20;
+      h += steepAmp * (1 - t * t);
+    }
+  }
+
   // Jump ramps - bigger in steep segments
   const rampH = seg === 2 ? 60 : seg === 4 ? 52 : 42;
   const rampMod = seg === 2 ? 600 : 700;
@@ -991,7 +1015,7 @@ function terrainH(wx) {
   if (p > 0.42 && p < 0.58) {
     h -= Math.sin((p - 0.42) / 0.16 * Math.PI) * rampH;
   }
-  return Math.max(G.H * 0.3, Math.min(G.H * 0.82, h));
+  return Math.max(G.H * 0.2, Math.min(G.H * 0.85, h));
 }
 
 function terrainSlope(wx) {
