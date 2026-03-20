@@ -1048,14 +1048,9 @@ function drawSky() {
     ctx.globalAlpha = 1;
   }
 
-  // Aurora borealis for night segments (only if not in party mode)
-  if (!G.partyMode && (idx === 4 || (idx === 0 && localProg < 0.5))) {
+  // Aurora borealis for night segments
+  if (idx === 4 || (idx === 0 && localProg < 0.5)) {
     drawAurora(ctx);
-  }
-
-  // Party mode: strobes and laser beams in the sky
-  if (G.partyMode) {
-    drawPartyEffects(ctx);
   }
 
   // Sun/Moon
@@ -3063,22 +3058,9 @@ function update() {
     }
     if (G.weddingTimer <= 0) {
       G.weddingPause = false;
-      G.partyMode = true;
-      G.partyStartTime = Date.now();
-      // Spawn companions
-      G.companions = [];
-      const allChars = ['kyle', 'jill', 'banksy'];
-      allChars.forEach((cid, i) => {
-        if (cid === G.char) return;
-        G.companions.push({
-          char: cid,
-          offsetX: -120 - i * 80,
-          offsetY: 0,
-          wobble: Math.random() * Math.PI * 2,
-        });
-      });
-      // No toast — just resume gameplay with companions
       hideToast();
+      G.state = 'finished';
+      showEnd();
     }
     return;
   }
@@ -3096,13 +3078,6 @@ function update() {
 
   // Power-up timers
   updatePowerUps();
-
-  // Update companion positions (slowly catch up but stay behind)
-  if (G.partyMode) {
-    G.companions.forEach(comp => {
-      if (comp.offsetX < -60) comp.offsetX += 0.15;
-    });
-  }
 
   // Collect streak timer
   if (G.collectStreakTimer > 0) {
@@ -3263,11 +3238,8 @@ function update() {
   }
 
   // Game end — by distance, party timeout, or absolute max time
-  if (G.partyMode) {
-    G.partyFrames = (G.partyFrames || 0) + 1;
-  }
-  // Also track total game frames as absolute fallback
-  if (G.distance >= G.segLen * 5 || (G.partyMode && G.partyFrames > 1200) || G.frameCount > 18000) {
+  // Game end — by distance or absolute max time (fallback if wedding doesn't trigger)
+  if (G.distance >= G.segLen * 5 || G.frameCount > 18000) {
     G.state = 'finished';
     hideToast();
     showEnd();
@@ -4022,9 +3994,7 @@ function render() {
     drawTerrain();
     drawTrees();
     drawVenueZones();
-    drawPartyTerrain(ctx);
     drawCollectibles();
-    drawCompanions();
     drawChar();
     drawConfetti();
     drawParticles();
