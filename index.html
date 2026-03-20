@@ -3260,12 +3260,12 @@ function update() {
     }
   }
 
-  // Game end — either by distance or 20 seconds after wedding (1200 frames)
+  // Game end — by distance, party timeout, or absolute max time
   if (G.partyMode) {
-    if (!G.partyFrames) G.partyFrames = 0;
-    G.partyFrames++;
+    G.partyFrames = (G.partyFrames || 0) + 1;
   }
-  if (G.distance >= G.segLen * 5 || G.partyFrames > 1200) {
+  // Also track total game frames as absolute fallback
+  if (G.distance >= G.segLen * 5 || (G.partyMode && G.partyFrames > 1200) || G.frameCount > 18000) {
     G.state = 'finished';
     hideToast();
     showEnd();
@@ -3499,7 +3499,7 @@ function checkCheckpoints() {
     G.venues.forEach(v => {
       if (v.type === 'paradiso') {
         const venueCenterX = v.startX + v.width * 0.5;
-        if (playerWorldX >= venueCenterX - 30 && playerWorldX <= venueCenterX + 30) {
+        if (playerWorldX >= venueCenterX - 200 && playerWorldX <= venueCenterX + 200) {
           G.weddingPause = true;
           G.weddingDone = true;
           G.weddingTimer = 240;
