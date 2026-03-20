@@ -3075,7 +3075,8 @@ function update() {
           wobble: Math.random() * Math.PI * 2,
         });
       });
-      showPartyToast();
+      // No toast — just resume gameplay with companions
+      hideToast();
     }
     return;
   }
@@ -3259,9 +3260,12 @@ function update() {
     }
   }
 
-  // Game end — either by distance or 20 seconds after wedding
-  const partyTimeout = G.partyMode && G.partyStartTime && (Date.now() - G.partyStartTime > 20000);
-  if (G.distance >= G.segLen * 5 || partyTimeout) {
+  // Game end — either by distance or 20 seconds after wedding (1200 frames)
+  if (G.partyMode) {
+    if (!G.partyFrames) G.partyFrames = 0;
+    G.partyFrames++;
+  }
+  if (G.distance >= G.segLen * 5 || G.partyFrames > 1200) {
     G.state = 'finished';
     hideToast();
     showEnd();
@@ -3725,6 +3729,7 @@ function resetGame() {
   G.weddingTimer = 0;
   G.weddingDone = false;
   G.partyMode = false;
+  G.partyFrames = 0;
   G.companions = [];
   G.airTime = 0;
   G.trickState = null;
