@@ -3259,8 +3259,9 @@ function update() {
     }
   }
 
-  // Game end
-  if (G.distance >= G.segLen * 5) {
+  // Game end — either by distance or 20 seconds after wedding
+  const partyTimeout = G.partyMode && G.partyStartTime && (Date.now() - G.partyStartTime > 20000);
+  if (G.distance >= G.segLen * 5 || partyTimeout) {
     G.state = 'finished';
     hideToast();
     showEnd();
