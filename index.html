@@ -408,13 +408,18 @@ canvas {
             <stop offset="100%" stop-color="#C8A850"/>
           </linearGradient>
         </defs>
-        <!-- Long flowing hair behind body -->
-        <path d="M26 14 Q16 25 14 50 Q15 58 18 62" fill="url(#jillHair)" opacity="0.85"/>
-        <path d="M64 14 Q74 25 76 50 Q75 58 72 62" fill="url(#jillHair)" opacity="0.85"/>
-        <path d="M28 16 Q19 28 17 48" stroke="#D4B060" stroke-width="1.5" fill="none" opacity="0.4"/>
-        <path d="M62 16 Q71 28 73 48" stroke="#D4B060" stroke-width="1.5" fill="none" opacity="0.4"/>
-        <path d="M24 18 Q18 30 16 46" stroke="#E8CC78" stroke-width="1" fill="none" opacity="0.3"/>
-        <path d="M66 18 Q72 30 74 46" stroke="#E8CC78" stroke-width="1" fill="none" opacity="0.3"/>
+        <!-- Full glamorous hair behind body (covers background completely) -->
+        <!-- Wide hair mass behind everything -->
+        <path d="M22 10 Q10 20 8 40 Q7 52 10 60 Q14 65 20 66 L28 66 L28 34 Z" fill="url(#jillHair)"/>
+        <path d="M68 10 Q80 20 82 40 Q83 52 80 60 Q76 65 70 66 L62 66 L62 34 Z" fill="url(#jillHair)"/>
+        <!-- Glamorous curls at the ends -->
+        <path d="M10 56 Q6 60 8 64 Q12 68 16 64 Q18 60 14 58" fill="#D4B060" opacity="0.7"/>
+        <path d="M80 56 Q84 60 82 64 Q78 68 74 64 Q72 60 76 58" fill="#D4B060" opacity="0.7"/>
+        <path d="M14 60 Q10 65 14 68 Q18 70 20 66" fill="#C8A850" opacity="0.5"/>
+        <path d="M76 60 Q80 65 76 68 Q72 70 70 66" fill="#C8A850" opacity="0.5"/>
+        <!-- Hair strand highlights -->
+        <path d="M24 16 Q14 28 12 48" stroke="#E8CC78" stroke-width="1.5" fill="none" opacity="0.3"/>
+        <path d="M66 16 Q76 28 78 48" stroke="#E8CC78" stroke-width="1.5" fill="none" opacity="0.3"/>
         <!-- Neck -->
         <rect x="41" y="28" width="8" height="7" rx="3" fill="#F5C4B0"/>
         <!-- Necklace -->
@@ -422,14 +427,14 @@ canvas {
         <circle cx="45" cy="34.5" r="1.2" fill="#D4A843"/>
         <!-- Head -->
         <ellipse cx="45" cy="18" rx="13" ry="14" fill="#F5C4B0"/>
-        <!-- Hair on top (parted, voluminous) -->
-        <path d="M32 15 Q34 2 45 3 Q56 2 58 15 Q56 5 45 4 Q34 5 32 15 Z" fill="#E8C870"/>
-        <path d="M34 12 Q36 4 45 4.5 Q54 4 56 12" fill="#D4B060" opacity="0.3"/>
-        <!-- Hair flowing past shoulders -->
-        <path d="M30 12 Q20 28 18 52 Q17 56 19 58" stroke="#E8C870" stroke-width="4.5" fill="none" stroke-linecap="round"/>
-        <path d="M32 13 Q23 28 21 48" stroke="#D4B060" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.7"/>
-        <path d="M60 12 Q70 28 72 52 Q73 56 71 58" stroke="#E8C870" stroke-width="4.5" fill="none" stroke-linecap="round"/>
-        <path d="M58 13 Q67 28 69 48" stroke="#D4B060" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.7"/>
+        <!-- Hair on top (voluminous, full coverage) -->
+        <path d="M28 16 Q30 0 45 1 Q60 0 62 16 Q58 4 45 3 Q32 4 28 16 Z" fill="#E8C870"/>
+        <path d="M30 14 Q34 2 45 2.5 Q56 2 60 14" fill="#D4B060" opacity="0.3"/>
+        <!-- Front hair strands with curled ends -->
+        <path d="M30 12 Q18 28 14 48 Q12 54 14 58 Q16 62 20 60" stroke="#E8C870" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M32 14 Q22 30 18 48 Q17 52 19 54" stroke="#D4B060" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.6"/>
+        <path d="M60 12 Q72 28 76 48 Q78 54 76 58 Q74 62 70 60" stroke="#E8C870" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M58 14 Q68 30 72 48 Q73 52 71 54" stroke="#D4B060" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.6"/>
         <!-- Eyebrows (groomed) -->
         <path d="M37 14 Q40 12.5 42 13" stroke="#B89050" stroke-width="0.8" fill="none"/>
         <path d="M48 13 Q50 12.5 53 14" stroke="#B89050" stroke-width="0.8" fill="none"/>
@@ -495,10 +500,14 @@ canvas {
         <!-- Head (broader, masculine jaw) -->
         <ellipse cx="45" cy="17" rx="14" ry="14.5" fill="#F0B8A0"/>
         <path d="M33 22 Q39 30 45 31 Q51 30 57 22" fill="rgba(180,130,110,0.12)"/>
-        <!-- Dark hair (nearly black, textured) -->
-        <path d="M31 14 Q33 2 45 1 Q57 2 59 14 Q57 5 45 4 Q33 5 31 14 Z" fill="#1A1008"/>
-        <path d="M33 12 Q36 3 45 3 Q54 3 57 12" fill="#2A1810" opacity="0.5"/>
-        <path d="M35 8 Q40 4 45 4 Q50 4 55 8" stroke="#0E0804" stroke-width="0.6" fill="none" opacity="0.3"/>
+        <!-- Dark hair (nearly black, full coverage, tapered sides) -->
+        <path d="M31 18 Q31 6 45 1 Q59 6 59 18 Q58 10 45 4 Q32 10 31 18 Z" fill="#1A1008"/>
+        <!-- Side hair coverage (no bald sides) -->
+        <path d="M31 14 Q30 18 31 22" fill="#1A1008" stroke="none"/>
+        <path d="M59 14 Q60 18 59 22" fill="#1A1008" stroke="none"/>
+        <!-- Hair texture on top -->
+        <path d="M33 12 Q36 3 45 3 Q54 3 57 12" fill="#2A1810" opacity="0.4"/>
+        <path d="M34 9 Q40 4 45 3.5 Q50 4 56 9" stroke="#0E0804" stroke-width="0.8" fill="none" opacity="0.3"/>
         <!-- Stubble/beard shadow -->
         <path d="M36 22 Q40 26 45 27 Q50 26 54 22 Q52 28 45 29 Q38 28 36 22" fill="rgba(50,30,18,0.12)"/>
         <ellipse cx="45" cy="25" rx="8" ry="4" fill="rgba(50,30,18,0.06)"/>
@@ -3287,6 +3296,17 @@ function genCollectibles() {
     const y = th2 - 45 - Math.random() * 80;
     G.collectibles.push({ x: G.lastCollectX, y, type: type.id, got: false });
   }
+  // Spawn high-altitude bonus items (need big jumps to reach)
+  const highAhead = G.scrollX + G.W + 400;
+  if (!G._lastHighCollectX) G._lastHighCollectX = 0;
+  while (G._lastHighCollectX < highAhead) {
+    G._lastHighCollectX += 400 + Math.random() * 600;
+    const th2 = terrainH(G._lastHighCollectX);
+    const y = th2 - 180 - Math.random() * 120; // very high up
+    // High items are always high-value: rings or suns
+    const highType = Math.random() > 0.4 ? 'ring' : 'sun';
+    G.collectibles.push({ x: G._lastHighCollectX, y, type: highType, got: false });
+  }
   G.collectibles = G.collectibles.filter(c => c.x > G.scrollX - 100);
 }
 
@@ -3592,6 +3612,7 @@ function resetGame() {
   G.currentEvent = 0;
   G.collectibles = [];
   G.lastCollectX = 0;
+  G._lastHighCollectX = 0;
   G.trees = [];
   G.lastTreeX = 0;
   G.particles = [];
