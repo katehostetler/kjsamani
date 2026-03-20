@@ -847,7 +847,7 @@ const G = {
   airTime: 0,
   trickState: null,
   trickTimer: 0,
-  comboCount: 0,
+  comboCount: 0, collectStreak: 0, collectStreakTimer: 0, glowTimer: 0,
   comboMultiplier: 1,
   trickJumpId: 0,
 
@@ -2319,6 +2319,26 @@ function drawChar() {
     ctx.rotate(G.rotation);
   }
 
+  // Collect streak glow (3+ in a row)
+  if (G.glowTimer > 0) {
+    ctx.save();
+    const pulse = Math.sin(Date.now() * 0.008) * 0.3 + 0.7;
+    const glowAlpha = Math.min(1, G.glowTimer / 30) * pulse;
+    ctx.shadowColor = '#FFD700';
+    ctx.shadowBlur = 30 + Math.sin(Date.now() * 0.006) * 15;
+    ctx.fillStyle = `rgba(255,215,0,${glowAlpha * 0.15})`;
+    ctx.beginPath();
+    ctx.arc(0, -s * 0.5, s * 1.0, 0, Math.PI * 2);
+    ctx.fill();
+    // Outer ring
+    ctx.strokeStyle = `rgba(255,215,0,${glowAlpha * 0.4})`;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(0, -s * 0.5, s * 0.9 + Math.sin(Date.now() * 0.005) * 5, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+  }
+
   // Power-up auras
   if (G.powerUps.invincible > 0) {
     ctx.save();
@@ -3024,6 +3044,13 @@ function update() {
   // Power-up timers
   updatePowerUps();
 
+  // Collect streak timer
+  if (G.collectStreakTimer > 0) {
+    G.collectStreakTimer--;
+    if (G.collectStreakTimer <= 0) G.collectStreak = 0;
+  }
+  if (G.glowTimer > 0) G.glowTimer--;
+
   // Player physics
   const th = terrainH(G.scrollX + G.px);
   const charS = CHARS[G.char].size;
@@ -3357,6 +3384,13 @@ function checkCollisions() {
       const type = COLLECT_TYPES.find(t => t.id === c.type);
       const mult = G.powerUps.scoreMult > 0 ? 2 : 1;
       G.score += type.pts * mult;
+      // Collect streak tracking
+      G.collectStreak++;
+      G.collectStreakTimer = 90; // 1.5s window to keep streak alive
+      if (G.collectStreak >= 3) {
+        G.glowTimer = 180; // glow for 3 seconds
+        if (G.collectStreak === 3) spawnParticle(G.px, G.py - 60, 'ON FIRE!', '#FFD700', 20);
+      }
       G.collected[c.type]++;
 
       const sx = c.x - G.scrollX;
@@ -3637,6 +3671,9 @@ function resetGame() {
   G.trickState = null;
   G.comboCount = 0;
   G.comboMultiplier = 1;
+  G.collectStreak = 0;
+  G.collectStreakTimer = 0;
+  G.glowTimer = 0;
   G.powerUps = { magnet:0, invincible:0, fireTrail:0, superJumps:0, scoreMult:0 };
   G.venues = [];
   G.venuesSpawned = [false,false,false,false,false];
