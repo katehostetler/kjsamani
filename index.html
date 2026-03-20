@@ -866,6 +866,7 @@ const G = {
   playerName: '',
   tutorialShown: false, tutorialTimer: 0,
   weddingPause: false, weddingTimer: 0, weddingDone: false, partyMode: false,
+  companions: [],
   lastTime: 0,
   running: false,
   frameCount: 0,
@@ -2300,6 +2301,36 @@ function drawCollectibles() {
 }
 
 // ==========================================
+// COMPANION DRAWING
+// ==========================================
+function drawCompanions() {
+  if (!G.partyMode || G.companions.length === 0) return;
+  const ctx = G.ctx;
+
+  G.companions.forEach(comp => {
+    const cx = G.px + comp.offsetX;
+    const worldX = G.scrollX + cx;
+    const ty = terrainH(worldX);
+    const s = CHARS[comp.char].size * 0.7;
+    const wobble = Math.sin(Date.now() * 0.003 + comp.wobble) * 3;
+
+    ctx.save();
+    ctx.translate(cx, ty + wobble);
+    ctx.globalAlpha = 0.85;
+
+    // Terrain slope rotation
+    const slope = terrainSlope(worldX);
+    ctx.rotate(Math.atan(slope) * 0.6);
+
+    if (comp.char === 'kyle') drawKyle(ctx, s);
+    else if (comp.char === 'jill') drawJill(ctx, s);
+    else if (comp.char === 'banksy') drawBanksy(ctx, s);
+
+    ctx.restore();
+  });
+}
+
+// ==========================================
 // CHARACTER DRAWING (redesigned)
 // ==========================================
 function drawChar() {
@@ -3025,6 +3056,18 @@ function update() {
       G.weddingPause = false;
       G.partyMode = true;
       G.partyStartTime = Date.now();
+      // Spawn companions
+      G.companions = [];
+      const allChars = ['kyle', 'jill', 'banksy'];
+      allChars.forEach((cid, i) => {
+        if (cid === G.char) return;
+        G.companions.push({
+          char: cid,
+          offsetX: -120 - i * 80,
+          offsetY: 0,
+          wobble: Math.random() * Math.PI * 2,
+        });
+      });
       showPartyToast();
     }
     return;
@@ -3043,6 +3086,13 @@ function update() {
 
   // Power-up timers
   updatePowerUps();
+
+  // Update companion positions (slowly catch up but stay behind)
+  if (G.partyMode) {
+    G.companions.forEach(comp => {
+      if (comp.offsetX < -60) comp.offsetX += 0.15;
+    });
+  }
 
   // Collect streak timer
   if (G.collectStreakTimer > 0) {
@@ -3667,6 +3717,7 @@ function resetGame() {
   G.weddingTimer = 0;
   G.weddingDone = false;
   G.partyMode = false;
+  G.companions = [];
   G.airTime = 0;
   G.trickState = null;
   G.comboCount = 0;
@@ -3951,6 +4002,7 @@ function render() {
     drawVenueZones();
     drawPartyTerrain(ctx);
     drawCollectibles();
+    drawCompanions();
     drawChar();
     drawConfetti();
     drawParticles();
