@@ -20,9 +20,9 @@ As one does.
 
 ## Choose Your Fighter
 
-- **Jill** — The Glamorous Skier. Elegant on every slope. Will absolutely judge your form.
-- **Kyle** — The Crypto Shredder. To the moon! Still checking his portfolio mid-run.
-- **Banksy** — The Wedding Pup. The one and only. Honestly the best option.
+- **Jill** — The Glamorous Skier. Blonde Elsa braid, white ski suit, black poles. Elegant on every slope.
+- **Kyle** — The Crypto Shredder. Swept-back hair, purple goggles, tuxedo snowsuit. To the moon!
+- **Banksy** — The Wedding Pup. Purple goggles, hot pink turtleneck. The one and only.
 
 ## The Wedding Events
 
@@ -49,7 +49,10 @@ Shred your way through all five real wedding events:
 - A full **procedural EDM soundtrack** inspired by "We Found Love" by Calvin Harris & Rihanna, because of course
 - **Backflip combos** with multipliers, because this is a serious extreme sports game
 - **A coin magnet power-up** that activates after collecting 10 $SOL, which is somehow the most realistic crypto mechanic ever built
-- **A wedding kiss cutscene** where the game pauses, confetti explodes, and Kyle & Jill smooch while a heart beats above them
+- **A wedding kiss cutscene** where the game pauses, confetti explodes, and Kyle & Jill smooch while a heart beats above them. They're also kissing under the arch in the venue background.
+- **A giant white marmot** towering behind the lodge at the Marmot Bar, because why not
+- **Après-ski atmosphere** — chalets, umbrella tables, and ski racks appear during the après segment
+- **"Double tap to double flip!"** — a tutorial reminder pops up at 15 seconds for combo tips
 - **High scores saved locally** so you can compete with your wedding guests over who's the best virtual snowboarder
 - The St. Moritz sun logo **actually spins** on the title screen. You're welcome.
 
