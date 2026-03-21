@@ -4095,7 +4095,7 @@ function showLeaderboard() {
     let html = '';
     if (scores.length > 0) {
       html += '<p style="color:#D4A843;font-size:0.8rem;letter-spacing:0.1em;margin-bottom:12px;text-align:center;">HIGH SCORES</p>';
-      html += '<div style="display:flex;flex-direction:column;gap:8px;max-height:280px;overflow-y:auto;">';
+      html += '<div style="display:flex;flex-direction:column;gap:8px;">';
       const top = scores.slice(0, 10);
       top.forEach((s, i) => {
         const isMe = s.name === (G.playerName || CHARS[G.char].name) && s.score === G.score;
