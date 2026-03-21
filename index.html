@@ -243,9 +243,11 @@ canvas {
   background: radial-gradient(ellipse at 50% 30%, #2a0808 0%, #0d0303 100%);
   text-align: center;
   padding: 24px;
-  overflow-y: auto;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
   justify-content: flex-start;
   padding-top: max(24px, env(safe-area-inset-top, 24px));
+  touch-action: auto;
 }
 #endScreen h1 {
   font-size: 1.6rem;
@@ -405,14 +407,14 @@ canvas {
         <!-- Jill - based on ref: long blonde hair, beautiful smile, white ski suit -->
         <defs>
           <linearGradient id="jillHair" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#F0D890"/>
-            <stop offset="50%" stop-color="#E0C470"/>
-            <stop offset="100%" stop-color="#C8A850"/>
+            <stop offset="0%" stop-color="#F5D88A"/>
+            <stop offset="50%" stop-color="#E8C870"/>
+            <stop offset="100%" stop-color="#D4B458"/>
           </linearGradient>
         </defs>
-        <!-- Hair behind body -->
-        <path d="M26 12 Q18 20 16 32 L16 34 L28 34 Z" fill="url(#jillHair)"/>
-        <path d="M64 12 Q72 20 74 32 L74 34 L62 34 Z" fill="url(#jillHair)"/>
+        <!-- Hair behind body - side volume -->
+        <path d="M30 10 Q24 16 22 26 L22 34 L32 34 Z" fill="url(#jillHair)"/>
+        <path d="M60 10 Q66 16 68 26 L68 34 L58 34 Z" fill="url(#jillHair)"/>
         <!-- Neck -->
         <rect x="41" y="28" width="8" height="7" rx="3" fill="#F5C4B0"/>
         <!-- Necklace -->
@@ -420,24 +422,19 @@ canvas {
         <circle cx="45" cy="34.5" r="1.2" fill="#D4A843"/>
         <!-- Head -->
         <ellipse cx="45" cy="18" rx="13" ry="14" fill="#F5C4B0"/>
-        <!-- Hair on top (voluminous) -->
-        <path d="M32 15 Q34 2 45 3 Q56 2 58 15 Q56 5 45 4 Q34 5 32 15 Z" fill="#E8C870"/>
-        <path d="M34 12 Q36 4 45 4.5 Q54 4 56 12" fill="#D4B060" opacity="0.3"/>
-        <!-- Two braids falling down -->
-        <!-- Left braid -->
-        <path d="M30 14 Q26 22 24 30 Q22 38 20 46 Q18 54 20 60" stroke="#E8C870" stroke-width="5" fill="none" stroke-linecap="round"/>
-        <path d="M30 14 Q28 22 26 30 Q24 38 22 46 Q20 54 22 60" stroke="#D4B060" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.6"/>
-        <!-- Left braid cross pattern -->
-        <path d="M26 24 L22 28 M24 32 L20 36 M22 40 L18 44 M20 48 L17 52" stroke="#C8A850" stroke-width="0.8" opacity="0.5"/>
-        <!-- Left braid tie -->
-        <circle cx="20" cy="61" r="2" fill="#D4A843"/>
-        <!-- Right braid -->
-        <path d="M60 14 Q64 22 66 30 Q68 38 70 46 Q72 54 70 60" stroke="#E8C870" stroke-width="5" fill="none" stroke-linecap="round"/>
-        <path d="M60 14 Q62 22 64 30 Q66 38 68 46 Q70 54 68 60" stroke="#D4B060" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.6"/>
-        <!-- Right braid cross pattern -->
-        <path d="M64 24 L68 28 M66 32 L70 36 M68 40 L72 44 M70 48 L73 52" stroke="#C8A850" stroke-width="0.8" opacity="0.5"/>
-        <!-- Right braid tie -->
-        <circle cx="70" cy="61" r="2" fill="#D4A843"/>
+        <!-- Hair on top (voluminous, blonde) -->
+        <path d="M32 15 Q34 2 45 3 Q56 2 58 15 Q56 5 45 4 Q34 5 32 15 Z" fill="#F5D88A"/>
+        <path d="M34 12 Q36 4 45 4.5 Q54 4 56 12" fill="#E8C870" opacity="0.4"/>
+        <!-- Loose wisps framing face -->
+        <path d="M32 14 Q30 18 31 24" stroke="#F5D88A" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.7"/>
+        <path d="M58 14 Q60 18 59 24" stroke="#F5D88A" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.7"/>
+        <!-- Single thick side braid (Elsa-style, over right shoulder) -->
+        <path d="M58 12 Q62 20 60 30 Q56 42 52 52 Q50 58 52 66" stroke="#F5D88A" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <path d="M57 14 Q60 22 58 32 Q54 44 51 54 Q49 60 51 66" stroke="#E8C870" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.6"/>
+        <!-- Braid cross pattern -->
+        <path d="M59 22 L55 26 M57 30 L53 34 M55 38 L51 42 M53 46 L50 50 M52 54 L50 58" stroke="#D4B458" stroke-width="0.8" opacity="0.5"/>
+        <!-- Braid tie -->
+        <circle cx="52" cy="67" r="2" fill="#D4A843"/>
         <!-- Eyebrows (groomed) -->
         <path d="M37 14 Q40 12.5 42 13" stroke="#B89050" stroke-width="0.8" fill="none"/>
         <path d="M48 13 Q50 12.5 53 14" stroke="#B89050" stroke-width="0.8" fill="none"/>
@@ -485,11 +482,11 @@ canvas {
         <line x1="35" y1="92" x2="72" y2="92" stroke="#FAFAFA" stroke-width="3" stroke-linecap="round"/>
         <text x="30" y="97" font-size="6" fill="#CC0000">&#9829;</text>
         <text x="52" y="97" font-size="6" fill="#CC0000">&#9829;</text>
-        <!-- Poles -->
-        <line x1="20" y1="57" x2="12" y2="90" stroke="#C9A84C" stroke-width="1.3"/>
-        <line x1="70" y1="57" x2="78" y2="90" stroke="#C9A84C" stroke-width="1.3"/>
-        <circle cx="12" cy="90" r="2.5" fill="none" stroke="#C9A84C" stroke-width="0.8"/>
-        <circle cx="78" cy="90" r="2.5" fill="none" stroke="#C9A84C" stroke-width="0.8"/>
+        <!-- Poles (black) -->
+        <line x1="20" y1="57" x2="12" y2="90" stroke="#1A1A1A" stroke-width="1.3"/>
+        <line x1="70" y1="57" x2="78" y2="90" stroke="#1A1A1A" stroke-width="1.3"/>
+        <circle cx="12" cy="90" r="2.5" fill="none" stroke="#1A1A1A" stroke-width="0.8"/>
+        <circle cx="78" cy="90" r="2.5" fill="none" stroke="#1A1A1A" stroke-width="0.8"/>
       </svg>
       <div class="name">Jill</div>
       <div class="subtitle">The Glamorous Skier</div>
@@ -497,35 +494,43 @@ canvas {
     </div>
     <div class="char-card" data-char="kyle">
       <svg class="avatar" viewBox="0 0 90 110">
-        <!-- Kyle - based on ref: dark hair, stubble, big smile, black tux, bow tie -->
+        <!-- Kyle - based on ref: dark hair, stubble, big smile, black tux, bow tie, purple goggles -->
+        <defs>
+          <linearGradient id="kyleGoggleShine" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#7B68EE"/>
+            <stop offset="30%" stop-color="#9B59B6"/>
+            <stop offset="60%" stop-color="#4A90D9"/>
+            <stop offset="100%" stop-color="#7B68EE"/>
+          </linearGradient>
+        </defs>
         <!-- Neck -->
         <rect x="40" y="28" width="10" height="7" rx="3" fill="#F0B8A0"/>
         <!-- Head (broader, masculine jaw) -->
         <ellipse cx="45" cy="17" rx="14" ry="14.5" fill="#F0B8A0"/>
         <path d="M33 22 Q39 30 45 31 Q51 30 57 22" fill="rgba(180,130,110,0.12)"/>
-        <!-- Dark hair (nearly black, full coverage, tapered sides) -->
-        <path d="M31 18 Q31 6 45 1 Q59 6 59 18 Q58 10 45 4 Q32 10 31 18 Z" fill="#1A1008"/>
-        <!-- Side hair coverage (no bald sides) -->
-        <path d="M31 14 Q30 18 31 22" fill="#1A1008" stroke="none"/>
-        <path d="M59 14 Q60 18 59 22" fill="#1A1008" stroke="none"/>
-        <!-- Hair texture on top -->
-        <path d="M33 12 Q36 3 45 3 Q54 3 57 12" fill="#2A1810" opacity="0.4"/>
-        <path d="M34 9 Q40 4 45 3.5 Q50 4 56 9" stroke="#0E0804" stroke-width="0.8" fill="none" opacity="0.3"/>
+        <!-- Black hair — thick swept-back (Johnny Bravo lite) -->
+        <!-- Solid hair cap covering top of head -->
+        <path d="M30 18 Q30 4 45 1 Q60 4 60 18 Q58 10 45 5 Q32 10 30 18 Z" fill="#1A1A1A"/>
+        <!-- Pompadour volume bump -->
+        <path d="M34 8 Q38 1 45 0.5 Q52 1 56 8 Q52 4 45 3 Q38 4 34 8 Z" fill="#111"/>
+        <!-- Hair shine -->
+        <path d="M39 4 Q44 2 50 4" stroke="rgba(255,255,255,0.12)" stroke-width="1.5" fill="none"/>
         <!-- Stubble/beard shadow -->
         <path d="M36 22 Q40 26 45 27 Q50 26 54 22 Q52 28 45 29 Q38 28 36 22" fill="rgba(50,30,18,0.12)"/>
         <ellipse cx="45" cy="25" rx="8" ry="4" fill="rgba(50,30,18,0.06)"/>
-        <!-- Eyebrows (thick, expressive) -->
-        <path d="M36 12.5 Q39 11 43 12" stroke="#1A1008" stroke-width="1.2" fill="none"/>
-        <path d="M47 12 Q51 11 54 12.5" stroke="#1A1008" stroke-width="1.2" fill="none"/>
-        <!-- Eyes (warm brown) -->
-        <ellipse cx="40" cy="16" rx="2.2" ry="2.5" fill="white"/>
-        <circle cx="40" cy="16.2" r="1.6" fill="#5C4030"/>
-        <circle cx="40" cy="16.2" r="0.8" fill="#2A1A10"/>
-        <circle cx="40.5" cy="15.5" r="0.4" fill="white"/>
-        <ellipse cx="50" cy="16" rx="2.2" ry="2.5" fill="white"/>
-        <circle cx="50" cy="16.2" r="1.6" fill="#5C4030"/>
-        <circle cx="50" cy="16.2" r="0.8" fill="#2A1A10"/>
-        <circle cx="50.5" cy="15.5" r="0.4" fill="white"/>
+        <!-- Purple ski goggles pushed up on forehead -->
+        <path d="M31 12 Q45 9 59 12 Q60 16 59 17 Q45 20 31 17 Q30 16 31 12 Z" fill="#9B59B6" stroke="#7D3C98" stroke-width="1"/>
+        <!-- Goggle lenses with green border -->
+        <ellipse cx="38" cy="14.5" rx="6" ry="3.5" fill="url(#kyleGoggleShine)" opacity="0.85" stroke="#2ECC71" stroke-width="1"/>
+        <ellipse cx="52" cy="14.5" rx="6" ry="3.5" fill="url(#kyleGoggleShine)" opacity="0.85" stroke="#2ECC71" stroke-width="1"/>
+        <!-- Goggle bridge -->
+        <path d="M44 14.5 Q45 13 46 14.5" stroke="#7D3C98" stroke-width="1.5" fill="none"/>
+        <!-- Goggle shine highlights -->
+        <ellipse cx="36" cy="13.5" rx="2.5" ry="1.5" fill="rgba(255,255,255,0.3)"/>
+        <ellipse cx="50" cy="13.5" rx="2.5" ry="1.5" fill="rgba(255,255,255,0.3)"/>
+        <!-- Goggle strap -->
+        <path d="M31 14 Q27 14 25 13" stroke="#9B59B6" stroke-width="1.5" fill="none"/>
+        <path d="M59 14 Q63 14 65 13" stroke="#9B59B6" stroke-width="1.5" fill="none"/>
         <!-- Nose (slightly wider, masculine) -->
         <path d="M45 16 Q43 20 43.5 21.5 Q45 22.5 46.5 21.5 Q47 20 45 16" fill="none" stroke="#D4A090" stroke-width="0.7"/>
         <!-- Big happy grin (showing teeth) -->
@@ -573,10 +578,10 @@ canvas {
         <!-- Banksy - based on ref: white dog, hot pink turtleneck, pink ski goggles -->
         <defs>
           <linearGradient id="goggleShine" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#FF6B00"/>
-            <stop offset="30%" stop-color="#FFD700"/>
-            <stop offset="60%" stop-color="#FF4488"/>
-            <stop offset="100%" stop-color="#FF6B00"/>
+            <stop offset="0%" stop-color="#7B68EE"/>
+            <stop offset="30%" stop-color="#9B59B6"/>
+            <stop offset="60%" stop-color="#4A90D9"/>
+            <stop offset="100%" stop-color="#7B68EE"/>
           </linearGradient>
         </defs>
         <!-- Tail (short, straight, wagging) -->
@@ -608,19 +613,19 @@ canvas {
         <path d="M27 23 Q22 16 20 22 Q20 28 25 30" fill="#F5ECD8" opacity="0.5"/>
         <path d="M58 22 Q64 14 66 22 Q66 30 60 32" fill="#F0E4D0"/>
         <path d="M57 23 Q62 16 64 22 Q64 28 59 30" fill="#F5ECD8" opacity="0.5"/>
-        <!-- Pink ski goggles (big, mirrored) -->
-        <path d="M25 22 Q42 18 59 22 Q60 28 59 30 Q42 34 25 30 Q24 28 25 22 Z" fill="#FF69B4" stroke="#FF1493" stroke-width="1.5"/>
-        <!-- Goggle lens (mirrored orange/gold/pink) -->
+        <!-- Purple ski goggles (big, mirrored) -->
+        <path d="M25 22 Q42 18 59 22 Q60 28 59 30 Q42 34 25 30 Q24 28 25 22 Z" fill="#9B59B6" stroke="#7D3C98" stroke-width="1.5"/>
+        <!-- Goggle lens (mirrored purple/blue) -->
         <ellipse cx="34" cy="26" rx="8" ry="5.5" fill="url(#goggleShine)" opacity="0.85"/>
         <ellipse cx="50" cy="26" rx="8" ry="5.5" fill="url(#goggleShine)" opacity="0.85"/>
         <!-- Goggle bridge -->
-        <path d="M42 26 Q42 24 42 26" stroke="#FF1493" stroke-width="2"/>
+        <path d="M42 26 Q42 24 42 26" stroke="#7D3C98" stroke-width="2"/>
         <!-- Goggle shine highlights -->
         <ellipse cx="31" cy="24.5" rx="3" ry="2" fill="rgba(255,255,255,0.3)"/>
         <ellipse cx="47" cy="24.5" rx="3" ry="2" fill="rgba(255,255,255,0.3)"/>
         <!-- Goggle strap -->
-        <path d="M25 25 Q20 25 18 24" stroke="#FF69B4" stroke-width="1.5" fill="none"/>
-        <path d="M59 25 Q64 25 66 24" stroke="#FF69B4" stroke-width="1.5" fill="none"/>
+        <path d="M25 25 Q20 25 18 24" stroke="#9B59B6" stroke-width="1.5" fill="none"/>
+        <path d="M59 25 Q64 25 66 24" stroke="#9B59B6" stroke-width="1.5" fill="none"/>
         <!-- Snout (below goggles) -->
         <ellipse cx="42" cy="36" rx="7" ry="5" fill="#F0E4D0"/>
         <!-- Nose -->
@@ -867,7 +872,7 @@ const G = {
   lastSpecX: 0,
 
   playerName: '',
-  tutorialShown: false, tutorialTimer: 0,
+  tutorialShown: false, tutorialTimer: 0, secondHintShown: false,
   weddingPause: false, weddingTimer: 0, weddingDone: false, partyMode: false,
   companions: [],
   lastTime: 0,
@@ -1384,7 +1389,76 @@ function drawTrees() {
     ctx.save();
     ctx.translate(sx, ty);
 
-    if (t.type === 'bare') {
+    if (t.type === 'chalet') {
+      // Small chalet
+      ctx.fillStyle = 'rgba(90,65,45,0.85)';
+      ctx.fillRect(-t.w * 0.4, -t.h * 0.6, t.w * 0.8, t.h * 0.6);
+      // Sloped roof
+      ctx.fillStyle = 'rgba(120,80,50,0.9)';
+      ctx.beginPath();
+      ctx.moveTo(-t.w * 0.5, -t.h * 0.6);
+      ctx.lineTo(0, -t.h * 0.9);
+      ctx.lineTo(t.w * 0.5, -t.h * 0.6);
+      ctx.closePath();
+      ctx.fill();
+      // Snow on roof
+      ctx.fillStyle = 'rgba(255,255,255,0.7)';
+      ctx.beginPath();
+      ctx.moveTo(-t.w * 0.45, -t.h * 0.6);
+      ctx.lineTo(0, -t.h * 0.85);
+      ctx.lineTo(t.w * 0.45, -t.h * 0.6);
+      ctx.closePath();
+      ctx.fill();
+      // Window
+      ctx.fillStyle = 'rgba(255,220,120,0.6)';
+      ctx.fillRect(-t.w * 0.12, -t.h * 0.45, t.w * 0.24, t.h * 0.18);
+    } else if (t.type === 'umbrella') {
+      // Outdoor table with umbrella
+      ctx.strokeStyle = '#5D4037'; ctx.lineWidth = 2;
+      // Table
+      ctx.beginPath();
+      ctx.moveTo(-t.w * 0.3, -t.h * 0.15);
+      ctx.lineTo(t.w * 0.3, -t.h * 0.15);
+      ctx.stroke();
+      // Table leg
+      ctx.beginPath();
+      ctx.moveTo(0, -t.h * 0.15);
+      ctx.lineTo(0, 0);
+      ctx.stroke();
+      // Umbrella pole
+      ctx.beginPath();
+      ctx.moveTo(0, -t.h * 0.15);
+      ctx.lineTo(0, -t.h * 0.8);
+      ctx.stroke();
+      // Umbrella canopy
+      ctx.fillStyle = 'rgba(200,50,50,0.6)';
+      ctx.beginPath();
+      ctx.moveTo(-t.w * 0.4, -t.h * 0.75);
+      ctx.quadraticCurveTo(0, -t.h, t.w * 0.4, -t.h * 0.75);
+      ctx.closePath();
+      ctx.fill();
+    } else if (t.type === 'skirack') {
+      // Ski rack silhouette
+      ctx.strokeStyle = 'rgba(80,80,80,0.6)'; ctx.lineWidth = 2;
+      // Posts
+      ctx.beginPath();
+      ctx.moveTo(-t.w * 0.2, 0); ctx.lineTo(-t.w * 0.2, -t.h * 0.5);
+      ctx.moveTo(t.w * 0.2, 0); ctx.lineTo(t.w * 0.2, -t.h * 0.5);
+      ctx.stroke();
+      // Crossbar
+      ctx.beginPath();
+      ctx.moveTo(-t.w * 0.25, -t.h * 0.45);
+      ctx.lineTo(t.w * 0.25, -t.h * 0.45);
+      ctx.stroke();
+      // Skis leaning
+      ctx.strokeStyle = 'rgba(250,250,250,0.5)'; ctx.lineWidth = 1.5;
+      for (let i = -2; i <= 2; i++) {
+        ctx.beginPath();
+        ctx.moveTo(i * t.w * 0.08, -t.h * 0.42);
+        ctx.lineTo(i * t.w * 0.06, -t.h * 0.9);
+        ctx.stroke();
+      }
+    } else if (t.type === 'bare') {
       // Bare tree
       ctx.strokeStyle = '#5D4037';
       ctx.lineWidth = 3;
@@ -1782,6 +1856,58 @@ function drawVenue(ctx, venue, sx) {
     ctx.moveTo(sx + w * 0.7, groundY - 98);
     ctx.lineTo(sx + w * 0.7 + 100, groundY - 95);
     ctx.stroke();
+    // --- Giant White Marmot figure (building-sized, behind lodge) ---
+    const marmotX = bx + bw * 0.8;
+    const marmotY = groundY;
+    ctx.save();
+    // Subtle glow behind marmot
+    ctx.shadowColor = 'rgba(255,255,255,0.15)';
+    ctx.shadowBlur = 30;
+    // Body (upright, rounded)
+    ctx.fillStyle = 'rgba(250,244,232,0.85)';
+    ctx.beginPath();
+    ctx.ellipse(marmotX, marmotY - 100, 45, 80, 0, 0, Math.PI * 2);
+    ctx.fill();
+    // Head
+    ctx.beginPath();
+    ctx.arc(marmotX, marmotY - 190, 30, 0, Math.PI * 2);
+    ctx.fill();
+    // Little ears
+    ctx.beginPath();
+    ctx.ellipse(marmotX - 18, marmotY - 212, 8, 12, -0.3, 0, Math.PI * 2);
+    ctx.ellipse(marmotX + 18, marmotY - 212, 8, 12, 0.3, 0, Math.PI * 2);
+    ctx.fill();
+    // Inner ears
+    ctx.fillStyle = 'rgba(240,228,208,0.8)';
+    ctx.beginPath();
+    ctx.ellipse(marmotX - 18, marmotY - 210, 5, 8, -0.3, 0, Math.PI * 2);
+    ctx.ellipse(marmotX + 18, marmotY - 210, 5, 8, 0.3, 0, Math.PI * 2);
+    ctx.fill();
+    // Arms (little, held in front)
+    ctx.fillStyle = 'rgba(250,244,232,0.85)';
+    ctx.beginPath();
+    ctx.ellipse(marmotX - 35, marmotY - 120, 12, 25, 0.4, 0, Math.PI * 2);
+    ctx.ellipse(marmotX + 35, marmotY - 120, 12, 25, -0.4, 0, Math.PI * 2);
+    ctx.fill();
+    // Eyes
+    ctx.fillStyle = '#333';
+    ctx.beginPath();
+    ctx.arc(marmotX - 10, marmotY - 192, 3.5, 0, Math.PI * 2);
+    ctx.arc(marmotX + 10, marmotY - 192, 3.5, 0, Math.PI * 2);
+    ctx.fill();
+    // Eye shine
+    ctx.fillStyle = 'white';
+    ctx.beginPath();
+    ctx.arc(marmotX - 9, marmotY - 193, 1.2, 0, Math.PI * 2);
+    ctx.arc(marmotX + 11, marmotY - 193, 1.2, 0, Math.PI * 2);
+    ctx.fill();
+    // Nose
+    ctx.fillStyle = '#555';
+    ctx.beginPath();
+    ctx.ellipse(marmotX, marmotY - 183, 5, 3.5, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
     // Venue name label
     ctx.fillStyle = 'rgba(212,168,67,0.9)';
     ctx.font = "bold 14px 'IBM Plex Serif', serif";
@@ -1925,31 +2051,18 @@ function drawVenue(ctx, venue, sx) {
     }
     ctx.globalAlpha = 1;
 
-    // --- Partner character(s) waiting at the arch ---
+    // --- Kyle & Jill kissing under the arch ---
     const partnerScale = 28;
-    if (G.char === 'kyle') {
-      // Jill waits at the arch
-      ctx.save();
-      ctx.translate(centerX + 15, groundY - 2);
-      drawJill(ctx, partnerScale);
-      ctx.restore();
-    } else if (G.char === 'jill') {
-      // Kyle waits at the arch
-      ctx.save();
-      ctx.translate(centerX + 15, groundY - 2);
-      drawKyle(ctx, partnerScale);
-      ctx.restore();
-    } else if (G.char === 'banksy') {
-      // Both Kyle and Jill wait at the arch
-      ctx.save();
-      ctx.translate(centerX - 20, groundY - 2);
-      drawKyle(ctx, partnerScale);
-      ctx.restore();
-      ctx.save();
-      ctx.translate(centerX + 20, groundY - 2);
-      drawJill(ctx, partnerScale);
-      ctx.restore();
-    }
+    // Always show them together kissing (close, facing each other)
+    ctx.save();
+    ctx.translate(centerX - 12, groundY - 2);
+    drawKyle(ctx, partnerScale);
+    ctx.restore();
+    ctx.save();
+    ctx.translate(centerX + 12, groundY - 2);
+    ctx.scale(-1, 1); // Mirror Jill to face Kyle
+    drawJill(ctx, partnerScale);
+    ctx.restore();
 
     // --- More cheering guests lining the aisle ---
     for (let i = 0; i < 10; i++) {
@@ -2584,8 +2697,8 @@ function drawKyle(ctx, s) {
   ctx.fillStyle = '#FDBCB4';
   ctx.beginPath(); ctx.arc(0, -s * 0.95, s * 0.15, 0, Math.PI * 2); ctx.fill();
 
-  // Black beanie
-  ctx.fillStyle = '#1A1A1A';
+  // Dark brown beanie
+  ctx.fillStyle = '#2A1A10';
   ctx.beginPath(); ctx.arc(0, -s, s * 0.16, Math.PI, 0); ctx.fill();
   ctx.beginPath(); ctx.arc(0, -s * 1.13, s * 0.04, 0, Math.PI * 2); ctx.fill();
 
@@ -2671,33 +2784,29 @@ function drawJill(ctx, s) {
   ctx.fillStyle = '#FDBCB4';
   ctx.beginPath(); ctx.arc(0, -s * 0.95, s * 0.13, 0, Math.PI * 2); ctx.fill();
 
-  // Hair cap for volume on top of head
-  ctx.fillStyle = '#F5DEB3';
+  // Hair cap for volume on top of head (blonde)
+  ctx.fillStyle = '#F5D88A';
   ctx.beginPath();
   ctx.ellipse(0, -s * 1.02, s * 0.14, s * 0.06, 0, 0, Math.PI * 2);
   ctx.fill();
 
-  // Blonde hair - shoulder length (wheat blonde, distinct from gold poles)
-  ctx.strokeStyle = '#F5DEB3'; ctx.lineWidth = 3.5; ctx.lineCap = 'round';
+  // Blonde hair - single side braid (Elsa-style)
+  // Left side wisp
+  ctx.strokeStyle = '#F5D88A'; ctx.lineWidth = 2; ctx.lineCap = 'round';
   ctx.beginPath();
   ctx.moveTo(-s * 0.06, -s);
-  ctx.quadraticCurveTo(-s * 0.28, -s * 0.8 + hw, -s * 0.24, -s * 0.58);
+  ctx.quadraticCurveTo(-s * 0.2, -s * 0.88 + hw, -s * 0.16, -s * 0.72);
   ctx.stroke();
-  ctx.strokeStyle = '#EBC882'; ctx.lineWidth = 2.5;
-  ctx.beginPath();
-  ctx.moveTo(-s * 0.03, -s * 1.02);
-  ctx.quadraticCurveTo(-s * 0.22, -s * 0.82 + hw, -s * 0.2, -s * 0.6);
-  ctx.stroke();
-  // Right side hair
-  ctx.strokeStyle = '#F5DEB3'; ctx.lineWidth = 3.5;
+  // Right side - thick braid over shoulder
+  ctx.strokeStyle = '#F5D88A'; ctx.lineWidth = 4;
   ctx.beginPath();
   ctx.moveTo(s * 0.05, -s);
-  ctx.quadraticCurveTo(s * 0.2, -s * 0.82 + hw * 0.7, s * 0.22, -s * 0.58);
+  ctx.quadraticCurveTo(s * 0.22, -s * 0.8 + hw * 0.7, s * 0.18, -s * 0.5);
   ctx.stroke();
-  ctx.strokeStyle = '#EBC882'; ctx.lineWidth = 2.5;
+  ctx.strokeStyle = '#E8C870'; ctx.lineWidth = 2.5;
   ctx.beginPath();
-  ctx.moveTo(s * 0.03, -s * 1.02);
-  ctx.quadraticCurveTo(s * 0.18, -s * 0.85 + hw * 0.7, s * 0.19, -s * 0.62);
+  ctx.moveTo(s * 0.04, -s * 1.01);
+  ctx.quadraticCurveTo(s * 0.2, -s * 0.82 + hw * 0.7, s * 0.16, -s * 0.52);
   ctx.stroke();
 
   // Sunglasses on head
@@ -2756,14 +2865,14 @@ function drawJill(ctx, s) {
   ctx.fillText('\u2665', -s * 0.08, s * 0.06);
   ctx.fillText('\u2665', s * 0.12, s * 0.06);
 
-  // Gold/champagne poles
-  ctx.strokeStyle = '#D4A843'; ctx.lineWidth = 1.5;
+  // Black poles
+  ctx.strokeStyle = '#1A1A1A'; ctx.lineWidth = 1.5;
   ctx.beginPath();
   ctx.moveTo(-s * 0.2, -s * 0.55); ctx.lineTo(-s * 0.38, s * 0.1);
   ctx.moveTo(s * 0.18, -s * 0.55); ctx.lineTo(s * 0.35, s * 0.1);
   ctx.stroke();
   // Pole baskets
-  ctx.strokeStyle = '#D4A843'; ctx.lineWidth = 1;
+  ctx.strokeStyle = '#1A1A1A'; ctx.lineWidth = 1;
   ctx.beginPath();
   ctx.arc(-s * 0.38, s * 0.1, 3, 0, Math.PI * 2);
   ctx.arc(s * 0.35, s * 0.1, 3, 0, Math.PI * 2);
@@ -3237,6 +3346,20 @@ function update() {
     }
   }
 
+  // Second hint at ~15 seconds: "Double tap to double flip!"
+  if (G.tutorialShown && !G.secondHintShown && G.frameCount > 900) {
+    tutorialEl.querySelector('.hint').textContent = 'Double tap to double flip!';
+    tutorialEl.classList.remove('hidden');
+    G.secondHintShown = true;
+    G._secondHintTimer = 0;
+  }
+  if (G.secondHintShown && G._secondHintTimer !== undefined && G._secondHintTimer < 180) {
+    G._secondHintTimer++;
+    if (G._secondHintTimer >= 180) {
+      tutorialEl.classList.add('hidden');
+    }
+  }
+
   // Game end — by distance, party timeout, or absolute max time
   // Game end — by distance or absolute max time (fallback if wedding doesn't trigger)
   if (G.distance >= G.segLen * 5 || G.frameCount > 18000) {
@@ -3375,15 +3498,35 @@ function genCollectibles() {
 
 function genTrees() {
   const ahead = G.scrollX + G.W + 300;
+  let treeCount = 0;
   while (G.lastTreeX < ahead) {
     G.lastTreeX += 200 + Math.random() * 350;
-    const types = ['standard', 'standard', 'standard', 'snowy', 'bare'];
-    G.trees.push({
-      x: G.lastTreeX,
-      h: 35 + Math.random() * 40,
-      w: 22 + Math.random() * 16,
-      type: types[Math.floor(Math.random() * types.length)],
-    });
+    treeCount++;
+    const seg = Math.floor(G.lastTreeX / G.segLen);
+    const isApres = (seg === 2); // Après ski segment
+    // Every 3rd-5th tree is large
+    const isLarge = (treeCount % 4 === 0);
+    const baseH = 35 + Math.random() * 40;
+    const baseW = 22 + Math.random() * 16;
+
+    // Occasionally spawn après elements during segment 2
+    if (isApres && Math.random() < 0.2) {
+      const apresTypes = ['chalet', 'umbrella', 'skirack'];
+      G.trees.push({
+        x: G.lastTreeX,
+        h: 60 + Math.random() * 30,
+        w: 40 + Math.random() * 20,
+        type: apresTypes[Math.floor(Math.random() * apresTypes.length)],
+      });
+    } else {
+      const types = ['standard', 'standard', 'standard', 'snowy', 'bare'];
+      G.trees.push({
+        x: G.lastTreeX,
+        h: isLarge ? baseH * 2 : baseH,
+        w: isLarge ? baseW * 2 : baseW,
+        type: types[Math.floor(Math.random() * types.length)],
+      });
+    }
   }
   G.trees = G.trees.filter(t => t.x > G.scrollX - 100);
 }
@@ -3626,7 +3769,7 @@ function showEnd() {
   const totalItems = Object.values(G.collected).reduce((a, b) => a + b, 0);
   const displayName = G.playerName || ch.name;
 
-  $('endTitle').textContent = `${displayName} made it to the aisle!`;
+  $('endTitle').textContent = 'CHEERS TO MR. & MRS. SAMANI!';
   $('finalScore').textContent = G.score;
 
   // Save high score
@@ -3699,6 +3842,7 @@ function resetGame() {
   G.flipCount = 0;
   G.tutorialShown = false;
   G.tutorialTimer = 0;
+  G.secondHintShown = false;
   G.weddingPause = false;
   G.weddingTimer = 0;
   G.weddingDone = false;
