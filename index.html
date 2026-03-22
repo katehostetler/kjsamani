@@ -246,6 +246,7 @@ canvas {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   justify-content: flex-start;
+  align-items: stretch;
   padding-top: max(24px, env(safe-area-inset-top, 24px));
   touch-action: auto;
 }
@@ -518,24 +519,35 @@ canvas {
         <path d="M34 8 Q38 1 45 0.5 Q52 1 56 8 Q52 4 45 3 Q38 4 34 8 Z" fill="#111"/>
         <!-- Hair shine -->
         <path d="M39 4 Q44 2 50 4" stroke="rgba(255,255,255,0.12)" stroke-width="1.5" fill="none"/>
-        <!-- Stubble/beard shadow -->
-        <path d="M36 22 Q40 26 45 27 Q50 26 54 22 Q52 28 45 29 Q38 28 36 22" fill="rgba(50,30,18,0.12)"/>
-        <ellipse cx="45" cy="25" rx="8" ry="4" fill="rgba(50,30,18,0.06)"/>
-        <!-- Purple ski goggles pushed up on forehead -->
-        <path d="M31 12 Q45 9 59 12 Q60 16 59 17 Q45 20 31 17 Q30 16 31 12 Z" fill="#9B59B6" stroke="#7D3C98" stroke-width="1"/>
-        <!-- Goggle lenses with green border -->
-        <ellipse cx="38" cy="14.5" rx="6" ry="3.5" fill="url(#kyleGoggleShine)" opacity="0.85" stroke="#2ECC71" stroke-width="1"/>
-        <ellipse cx="52" cy="14.5" rx="6" ry="3.5" fill="url(#kyleGoggleShine)" opacity="0.85" stroke="#2ECC71" stroke-width="1"/>
-        <!-- Goggle bridge -->
-        <path d="M44 14.5 Q45 13 46 14.5" stroke="#7D3C98" stroke-width="1.5" fill="none"/>
-        <!-- Goggle shine highlights -->
-        <ellipse cx="36" cy="13.5" rx="2.5" ry="1.5" fill="rgba(255,255,255,0.3)"/>
-        <ellipse cx="50" cy="13.5" rx="2.5" ry="1.5" fill="rgba(255,255,255,0.3)"/>
+        <!-- Subtle 5 o'clock shadow -->
+        <path d="M36 23 Q40 26 45 27 Q50 26 54 23 Q52 28 45 29 Q38 28 36 23" fill="rgba(50,30,18,0.07)"/>
+        <!-- Purple ski goggles pushed up on hair -->
+        <path d="M33 8 Q45 5 57 8 Q58 11 57 12 Q45 14.5 33 12 Q32 11 33 8 Z" fill="#9B59B6" stroke="#7D3C98" stroke-width="0.8"/>
+        <ellipse cx="39" cy="10" rx="5" ry="2.8" fill="url(#kyleGoggleShine)" opacity="0.8" stroke="#7D3C98" stroke-width="0.6"/>
+        <ellipse cx="51" cy="10" rx="5" ry="2.8" fill="url(#kyleGoggleShine)" opacity="0.8" stroke="#7D3C98" stroke-width="0.6"/>
+        <path d="M44 10 Q45 9 46 10" stroke="#7D3C98" stroke-width="1" fill="none"/>
+        <ellipse cx="37.5" cy="9.2" rx="2" ry="1.2" fill="rgba(255,255,255,0.25)"/>
+        <ellipse cx="49.5" cy="9.2" rx="2" ry="1.2" fill="rgba(255,255,255,0.25)"/>
         <!-- Goggle strap -->
-        <path d="M31 14 Q27 14 25 13" stroke="#9B59B6" stroke-width="1.5" fill="none"/>
-        <path d="M59 14 Q63 14 65 13" stroke="#9B59B6" stroke-width="1.5" fill="none"/>
-        <!-- Nose (slightly wider, masculine) -->
-        <path d="M45 16 Q43 20 43.5 21.5 Q45 22.5 46.5 21.5 Q47 20 45 16" fill="none" stroke="#D4A090" stroke-width="0.7"/>
+        <path d="M33 10 Q29 10 27 9" stroke="#9B59B6" stroke-width="1.2" fill="none"/>
+        <path d="M57 10 Q61 10 63 9" stroke="#9B59B6" stroke-width="1.2" fill="none"/>
+        <!-- Eyebrows (strong, confident) -->
+        <path d="M36 13.5 Q39 12 42 13" stroke="#2A1A10" stroke-width="1" fill="none"/>
+        <path d="M48 13 Q51 12 54 13.5" stroke="#2A1A10" stroke-width="1" fill="none"/>
+        <!-- Eyes (dark brown, warm) -->
+        <ellipse cx="39.5" cy="17" rx="2.3" ry="2.5" fill="white"/>
+        <circle cx="39.7" cy="17.2" r="1.6" fill="#5C3317"/>
+        <circle cx="39.7" cy="17.2" r="0.8" fill="#2A2A2A"/>
+        <circle cx="40.1" cy="16.5" r="0.4" fill="white"/>
+        <ellipse cx="50.5" cy="17" rx="2.3" ry="2.5" fill="white"/>
+        <circle cx="50.3" cy="17.2" r="1.6" fill="#5C3317"/>
+        <circle cx="50.3" cy="17.2" r="0.8" fill="#2A2A2A"/>
+        <circle cx="50.7" cy="16.5" r="0.4" fill="white"/>
+        <!-- Rosy cheeks -->
+        <circle cx="35.5" cy="21" r="3" fill="rgba(210,140,120,0.15)"/>
+        <circle cx="54.5" cy="21" r="3" fill="rgba(210,140,120,0.15)"/>
+        <!-- Nose (subtle) -->
+        <path d="M45 18.5 Q44 21 44.5 21.8 Q45 22.2 45.5 21.8 Q46 21 45 18.5" fill="none" stroke="#D4A090" stroke-width="0.5"/>
         <!-- Big happy grin (showing teeth) -->
         <path d="M38 23 Q45 29 52 23" stroke="#B07060" stroke-width="1" fill="none"/>
         <path d="M39 23.5 Q45 28 51 23.5" fill="#CC8878" stroke="none"/>
@@ -4057,6 +4069,7 @@ function stopMusic() {
   MUSIC.audio.volume = 0.7;
   MUSIC.started = false;
   MUSIC.state = 'off';
+  MUSIC.audio = null;
 }
 
 function toggleMute() {
