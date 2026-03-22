@@ -4084,7 +4084,7 @@ function saveHighScore(name, score, charName) {
     const scores = JSON.parse(localStorage.getItem('kjsamani_scores') || '[]');
     scores.push({ name: name || 'Guest', score, char: charName, date: Date.now() });
     scores.sort((a, b) => b.score - a.score);
-    if (scores.length > 30) scores.length = 30;
+    if (scores.length > 100) scores.length = 100;
     localStorage.setItem('kjsamani_scores', JSON.stringify(scores));
     // Increment play count
     const plays = parseInt(localStorage.getItem('kjsamani_plays') || '0', 10) + 1;
