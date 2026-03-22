@@ -720,7 +720,7 @@ canvas {
   <div class="final-score" id="finalScore"></div>
   <div class="stats-grid" id="statsGrid"></div>
   <div class="quip" id="endQuip"></div>
-  <div id="leaderboard" style="max-width:320px;margin:12px auto 16px;text-align:left;"></div>
+  <div id="leaderboard" style="max-width:320px;margin:12px auto 16px;text-align:left;max-height:400px;overflow-y:auto;"></div>
   <button class="btn" id="btnPlayAgain">Play Again</button>
   <button class="btn" id="btnShare">Share Score</button>
   <svg class="lockup-bottom" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
@@ -4084,7 +4084,7 @@ function saveHighScore(name, score, charName) {
     const scores = JSON.parse(localStorage.getItem('kjsamani_scores') || '[]');
     scores.push({ name: name || 'Guest', score, char: charName, date: Date.now() });
     scores.sort((a, b) => b.score - a.score);
-    if (scores.length > 20) scores.length = 20;
+    if (scores.length > 30) scores.length = 30;
     localStorage.setItem('kjsamani_scores', JSON.stringify(scores));
     // Increment play count
     const plays = parseInt(localStorage.getItem('kjsamani_plays') || '0', 10) + 1;
@@ -4101,7 +4101,7 @@ function showLeaderboard() {
     if (scores.length > 0) {
       html += '<p style="color:#D4A843;font-size:0.8rem;letter-spacing:0.1em;margin-bottom:12px;text-align:center;">HIGH SCORES</p>';
       html += '<div style="display:flex;flex-direction:column;gap:8px;">';
-      const top = scores.slice(0, 10);
+      const top = scores.slice(0, 30);
       top.forEach((s, i) => {
         const isMe = s.name === (G.playerName || CHARS[G.char].name) && s.score === G.score;
         const bg = isMe ? 'rgba(212,168,67,0.15)' : 'rgba(212,168,67,0.05)';
