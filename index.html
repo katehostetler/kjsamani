@@ -243,11 +243,14 @@ canvas {
   background: radial-gradient(ellipse at 50% 30%, #2a0808 0%, #0d0303 100%);
   text-align: center;
   padding: 24px;
-  overflow-y: scroll;
+  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   justify-content: flex-start;
   padding-top: max(24px, env(safe-area-inset-top, 24px));
   touch-action: auto;
+}
+#endScreen > * {
+  flex-shrink: 0;
 }
 #endScreen h1 {
   font-size: 1.6rem;
